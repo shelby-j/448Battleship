@@ -1,3 +1,5 @@
+
+
 const Player1Ships = ["G2", "B9", "B8"];
 let currentPlayer = 1;
 
