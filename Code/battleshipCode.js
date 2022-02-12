@@ -10,14 +10,17 @@ let p2board = document.getElementById("p2");
 
 function guessPrompt() {
   let guess = prompt("Please enter your guess", "ColRow");
+  alert(currentPlayer);
   if (guess != null) {
 	  if(currentPlayer == 2){
-		  document.getElementById("p2s" + guess).innerHTML = hitOrMiss(guess);
-		  document.getElementById("p1e" + guess).innerHTML = hitOrMiss(guess);
+		  alert("p2e" + guess);
+		  document.getElementById("p2e" + guess).innerHTML = hitOrMiss(guess);
+		  document.getElementById("p1s" + guess).innerHTML = hitOrMiss(guess);
 	  }
 	  else if(currentPlayer == 1){
-		  document.getElementById("p1s" + guess).innerHTML = hitOrMiss(guess);
-		  document.getElementById("p2e" + guess).innerHTML = hitOrMiss(guess);
+		  alert("p1e" + guess);
+		  document.getElementById("p1e" + guess).innerHTML = hitOrMiss(guess);
+		  document.getElementById("p2s" + guess).innerHTML = hitOrMiss(guess);
 	  }
   }
 }
@@ -67,4 +70,7 @@ function winGame(){
 function runGame(){
   alert("Game Start!");
   switchPlayers(startPlayer);
+  while(winGame() == false){
+	
+  }
 }
