@@ -1,0 +1,395 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Battleship</title>
+</head>
+<body>
+<h1>Welcome to the Battleship! game </h1>
+<table>
+    <tbody>
+        <tr>
+        <td>
+            <p>Click the button to choose number of ships to use in game[1-5].</p>
+        </td>
+        <td>
+            <button id="getNoOfShipsBtn" onclick="getNoOfShips()">Ships</button>
+        </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="BShips"></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script src="./gameInit.js"></script>
+
+<table>
+    <tbody>
+        <tr>
+        <td>
+            <p>Select Player 1's ships location in grid of 10X10.{ex. [A2,B3,C3,D3,D4,D5] for 3 ships.}</p>
+        </td>
+        <td>
+            <button id="getShipsForP1Btn" disabled = true onclick="getShipsForP1()">Ships of P1</button>
+        </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="P1Ships"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="showShipsForP1Btn" disabled = true onclick="showShipsForPlayer('P1')">Show Ships of P1</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table style="display:none" border="1" cellpadding="3" id="tlbShipsForP1" >
+    <tbody><tr class="bold">
+        <td> </td>
+        <td>A</td>
+        <td>B</td>
+        <td>C</td>
+        <td>D</td>
+        <td>E</td>
+        <td>F</td>
+        <td>G</td>
+        <td>H</td>
+        <td>I</td>
+        <td>J</td>
+    </tr>
+  
+    <tr>
+        <td class="bold">1</td>
+        <td id="P100"> </td>
+        <td id="P101"> </td>
+        <td id="P102"> </td>
+        <td id="P103"> </td>
+        <td id="P104"> </td>
+        <td id="P105"> </td>
+        <td id="P106"> </td>
+        <td id="P107"> </td>
+        <td id="P108"> </td>
+        <td id="P109"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">2</td>
+        <td id="P110"> </td>
+        <td id="P111"> </td>
+        <td id="P112"> </td>
+        <td id="P113"> </td>
+        <td id="P114"> </td>
+        <td id="P115"> </td>
+        <td id="P116"> </td>
+        <td id="P117"> </td>
+        <td id="P118"> </td>
+        <td id="P119"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">3</td>
+        <td id="P120"> </td>
+        <td id="P121"> </td>
+        <td id="P122"> </td>
+        <td id="P123"> </td>
+        <td id="P124"> </td>
+        <td id="P125"> </td>
+        <td id="P126"> </td>
+        <td id="P127"> </td>
+        <td id="P128"> </td>
+        <td id="P129"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">4</td>
+        <td id="P130"> </td>
+        <td id="P131"> </td>
+        <td id="P132"> </td>
+        <td id="P133"> </td>
+        <td id="P134"> </td>
+        <td id="P135"> </td>
+        <td id="P136"> </td>
+        <td id="P137"> </td>
+        <td id="P138"> </td>
+        <td id="P139"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">5</td>
+        <td id="P140"> </td>
+        <td id="P141"> </td>
+        <td id="P142"> </td>
+        <td id="P143"> </td>
+        <td id="P144"> </td>
+        <td id="P145"> </td>
+        <td id="P146"> </td>
+        <td id="P147"> </td>
+        <td id="P148"> </td>
+        <td id="P149"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">6</td>
+        <td id="P150"> </td>
+        <td id="P151"> </td>
+        <td id="P152"> </td>
+        <td id="P153"> </td>
+        <td id="P154"> </td>
+        <td id="P155"> </td>
+        <td id="P156"> </td>
+        <td id="P157"> </td>
+        <td id="P158"> </td>
+        <td id="P159"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">7</td>
+        <td id="P160"> </td>
+        <td id="P161"> </td>
+        <td id="P162"> </td>
+        <td id="P163"> </td>
+        <td id="P164"> </td>
+        <td id="P165"> </td>
+        <td id="P166"> </td>
+        <td id="P167"> </td>
+        <td id="P168"> </td>
+        <td id="P169"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">8</td>
+        <td id="P170"> </td>
+        <td id="P171"> </td>
+        <td id="P172"> </td>
+        <td id="P173"> </td>
+        <td id="P174"> </td>
+        <td id="P175"> </td>
+        <td id="P176"> </td>
+        <td id="P177"> </td>
+        <td id="P178"> </td>
+        <td id="P179"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">9</td>
+        <td id="P180"> </td>
+        <td id="P181"> </td>
+        <td id="P182"> </td>
+        <td id="P183"> </td>
+        <td id="P184"> </td>
+        <td id="P185"> </td>
+        <td id="P186"> </td>
+        <td id="P187"> </td>
+        <td id="P188"> </td>
+        <td id="P189"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">10</td>
+        <td id="P190"> </td>
+        <td id="P191"> </td>
+        <td id="P192"> </td>
+        <td id="P193"> </td>
+        <td id="P194"> </td>
+        <td id="P195"> </td>
+        <td id="P196"> </td>
+        <td id="P197"> </td>
+        <td id="P198"> </td>
+        <td id="P199"> </td>
+    </tr>
+    </tr>
+</tbody></table>
+<br />
+
+
+<table>
+    <tbody>
+        <tr>
+        <td>
+            <p>Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}</p>
+        </td>
+        <td>
+            <button id="getShipsForP2Btn" disabled = true onclick="getShipsForP2()">Ships of P2</button>
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <p id="P2Ships"></p>
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <button id="showShipsForP2Btn" disabled = true onclick="showShipsForPlayer('P2')">Show Ships of P2</button>
+        </td>
+        </tr>
+    </tbody>
+</table>
+<table style="display:none" border="1" cellpadding="3" id="tlbShipsForP2" >
+    <tbody><tr class="bold">
+        <td> </td>
+        <td>A</td>
+        <td>B</td>
+        <td>C</td>
+        <td>D</td>
+        <td>E</td>
+        <td>F</td>
+        <td>G</td>
+        <td>H</td>
+        <td>I</td>
+        <td>J</td>
+    </tr>
+  
+    <tr>
+        <td class="bold">1</td>
+        <td id="P200"> </td>
+        <td id="P201"> </td>
+        <td id="P202"> </td>
+        <td id="P203"> </td>
+        <td id="P204"> </td>
+        <td id="P205"> </td>
+        <td id="P206"> </td>
+        <td id="P207"> </td>
+        <td id="P208"> </td>
+        <td id="P209"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">2</td>
+        <td id="P210"> </td>
+        <td id="P211"> </td>
+        <td id="P212"> </td>
+        <td id="P213"> </td>
+        <td id="P214"> </td>
+        <td id="P215"> </td>
+        <td id="P216"> </td>
+        <td id="P217"> </td>
+        <td id="P218"> </td>
+        <td id="P219"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">3</td>
+        <td id="P220"> </td>
+        <td id="P221"> </td>
+        <td id="P222"> </td>
+        <td id="P223"> </td>
+        <td id="P224"> </td>
+        <td id="P225"> </td>
+        <td id="P226"> </td>
+        <td id="P227"> </td>
+        <td id="P228"> </td>
+        <td id="P229"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">4</td>
+        <td id="P230"> </td>
+        <td id="P231"> </td>
+        <td id="P232"> </td>
+        <td id="P233"> </td>
+        <td id="P234"> </td>
+        <td id="P235"> </td>
+        <td id="P236"> </td>
+        <td id="P237"> </td>
+        <td id="P238"> </td>
+        <td id="P239"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">5</td>
+        <td id="P240"> </td>
+        <td id="P241"> </td>
+        <td id="P242"> </td>
+        <td id="P243"> </td>
+        <td id="P244"> </td>
+        <td id="P245"> </td>
+        <td id="P246"> </td>
+        <td id="P247"> </td>
+        <td id="P248"> </td>
+        <td id="P249"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">6</td>
+        <td id="P250"> </td>
+        <td id="P251"> </td>
+        <td id="P252"> </td>
+        <td id="P253"> </td>
+        <td id="P254"> </td>
+        <td id="P255"> </td>
+        <td id="P256"> </td>
+        <td id="P257"> </td>
+        <td id="P258"> </td>
+        <td id="P259"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">7</td>
+        <td id="P260"> </td>
+        <td id="P261"> </td>
+        <td id="P262"> </td>
+        <td id="P263"> </td>
+        <td id="P264"> </td>
+        <td id="P265"> </td>
+        <td id="P266"> </td>
+        <td id="P267"> </td>
+        <td id="P268"> </td>
+        <td id="P269"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">8</td>
+        <td id="P270"> </td>
+        <td id="P271"> </td>
+        <td id="P272"> </td>
+        <td id="P273"> </td>
+        <td id="P274"> </td>
+        <td id="P275"> </td>
+        <td id="P276"> </td>
+        <td id="P277"> </td>
+        <td id="P278"> </td>
+        <td id="P279"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">9</td>
+        <td id="P280"> </td>
+        <td id="P281"> </td>
+        <td id="P282"> </td>
+        <td id="P283"> </td>
+        <td id="P284"> </td>
+        <td id="P285"> </td>
+        <td id="P286"> </td>
+        <td id="P287"> </td>
+        <td id="P288"> </td>
+        <td id="P289"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">10</td>
+        <td id="P290"> </td>
+        <td id="P291"> </td>
+        <td id="P292"> </td>
+        <td id="P293"> </td>
+        <td id="P294"> </td>
+        <td id="P295"> </td>
+        <td id="P296"> </td>
+        <td id="P297"> </td>
+        <td id="P298"> </td>
+        <td id="P299"> </td>
+    </tr>
+    </tr>
+</tbody></table>
+<br />
+
+<p>we got all information now lets play game!</p>
+<button id="playGameBtn" disabled = true onclick="window.location.href='./game.html'">Start Game!</button>
+
+</body>
+</html>

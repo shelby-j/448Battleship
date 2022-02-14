@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Battleship</title>
+</head>
+<body onload="loadStoredVars()">
+<script src="./gameInit.js"></script>
+<h1>Play the game </h1>
+
+<p>Pick a space on the opponent's board to "fire" at.</p>
+<p style="font-weight: bold;" id="gameStatus"></p>
+<div>
+    <button id="turnByP1Btn" onclick="frCellTurnOfP1()">Start P1's turn</button>    
+    <button id="frCellByP1Btn" disabled = true onclick="frCellByP1()">Choose Cell to Fire at P1</button>
+    <table>
+        <tbody>
+            <tr>
+                <td><p id="P1FrCell"></p></td>
+                <td><p id="P1FrHitStatus"></p></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<table  style="display:none" border="1" cellpadding="3" id="tlbCellFrAtByP1" >
+    <tbody><tr class="bold">
+        <td> </td>
+        <td>A</td>
+        <td>B</td>
+        <td>C</td>
+        <td>D</td>
+        <td>E</td>
+        <td>F</td>
+        <td>G</td>
+        <td>H</td>
+        <td>I</td>
+        <td>J</td>
+    </tr>
+  
+    <tr>
+        <td class="bold">1</td>
+        <td id="FrAtP100"> </td>
+        <td id="FrAtP101"> </td>
+        <td id="FrAtP102"> </td>
+        <td id="FrAtP103"> </td>
+        <td id="FrAtP104"> </td>
+        <td id="FrAtP105"> </td>
+        <td id="FrAtP106"> </td>
+        <td id="FrAtP107"> </td>
+        <td id="FrAtP108"> </td>
+        <td id="FrAtP109"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">2</td>
+        <td id="FrAtP110"> </td>
+        <td id="FrAtP111"> </td>
+        <td id="FrAtP112"> </td>
+        <td id="FrAtP113"> </td>
+        <td id="FrAtP114"> </td>
+        <td id="FrAtP115"> </td>
+        <td id="FrAtP116"> </td>
+        <td id="FrAtP117"> </td>
+        <td id="FrAtP118"> </td>
+        <td id="FrAtP119"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">3</td>
+        <td id="FrAtP120"> </td>
+        <td id="FrAtP121"> </td>
+        <td id="FrAtP122"> </td>
+        <td id="FrAtP123"> </td>
+        <td id="FrAtP124"> </td>
+        <td id="FrAtP125"> </td>
+        <td id="FrAtP126"> </td>
+        <td id="FrAtP127"> </td>
+        <td id="FrAtP128"> </td>
+        <td id="FrAtP129"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">4</td>
+        <td id="FrAtP130"> </td>
+        <td id="FrAtP131"> </td>
+        <td id="FrAtP132"> </td>
+        <td id="FrAtP133"> </td>
+        <td id="FrAtP134"> </td>
+        <td id="FrAtP135"> </td>
+        <td id="FrAtP136"> </td>
+        <td id="FrAtP137"> </td>
+        <td id="FrAtP138"> </td>
+        <td id="FrAtP139"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">5</td>
+        <td id="FrAtP140"> </td>
+        <td id="FrAtP141"> </td>
+        <td id="FrAtP142"> </td>
+        <td id="FrAtP143"> </td>
+        <td id="FrAtP144"> </td>
+        <td id="FrAtP145"> </td>
+        <td id="FrAtP146"> </td>
+        <td id="FrAtP147"> </td>
+        <td id="FrAtP148"> </td>
+        <td id="FrAtP149"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">6</td>
+        <td id="FrAtP150"> </td>
+        <td id="FrAtP151"> </td>
+        <td id="FrAtP152"> </td>
+        <td id="FrAtP153"> </td>
+        <td id="FrAtP154"> </td>
+        <td id="FrAtP155"> </td>
+        <td id="FrAtP156"> </td>
+        <td id="FrAtP157"> </td>
+        <td id="FrAtP158"> </td>
+        <td id="FrAtP159"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">7</td>
+        <td id="FrAtP160"> </td>
+        <td id="FrAtP161"> </td>
+        <td id="FrAtP162"> </td>
+        <td id="FrAtP163"> </td>
+        <td id="FrAtP164"> </td>
+        <td id="FrAtP165"> </td>
+        <td id="FrAtP166"> </td>
+        <td id="FrAtP167"> </td>
+        <td id="FrAtP168"> </td>
+        <td id="FrAtP169"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">8</td>
+        <td id="FrAtP170"> </td>
+        <td id="FrAtP171"> </td>
+        <td id="FrAtP172"> </td>
+        <td id="FrAtP173"> </td>
+        <td id="FrAtP174"> </td>
+        <td id="FrAtP175"> </td>
+        <td id="FrAtP176"> </td>
+        <td id="FrAtP177"> </td>
+        <td id="FrAtP178"> </td>
+        <td id="FrAtP179"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">9</td>
+        <td id="FrAtP180"> </td>
+        <td id="FrAtP181"> </td>
+        <td id="FrAtP182"> </td>
+        <td id="FrAtP183"> </td>
+        <td id="FrAtP184"> </td>
+        <td id="FrAtP185"> </td>
+        <td id="FrAtP186"> </td>
+        <td id="FrAtP187"> </td>
+        <td id="FrAtP188"> </td>
+        <td id="FrAtP189"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">10</td>
+        <td id="FrAtP190"> </td>
+        <td id="FrAtP191"> </td>
+        <td id="FrAtP192"> </td>
+        <td id="FrAtP193"> </td>
+        <td id="FrAtP194"> </td>
+        <td id="FrAtP195"> </td>
+        <td id="FrAtP196"> </td>
+        <td id="FrAtP197"> </td>
+        <td id="FrAtP198"> </td>
+        <td id="FrAtP199"> </td>
+    </tr>
+    </tr>
+</tbody></table>
+<br />
+<div>
+    <button id="turnByP2Btn" disabled = true  onclick="frCellTurnOfP2()">Start P2's turn</button>    
+    <button id="frCellByP2Btn"  disabled = true onclick="frCellByP2()">Choose Cell to Fire at P2</button>
+    <table>
+        <tbody>
+            <tr>
+                <td><p id="P2FrCell"></p></td>
+                <td><p id="P2FrHitStatus"></p></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<table  style="display:none" border="1" cellpadding="3" id="tlbCellFrAtByP2" >
+    <tbody><tr class="bold">
+        <td> </td>
+        <td>A</td>
+        <td>B</td>
+        <td>C</td>
+        <td>D</td>
+        <td>E</td>
+        <td>F</td>
+        <td>G</td>
+        <td>H</td>
+        <td>I</td>
+        <td>J</td>
+    </tr>
+  
+    <tr>
+        <td class="bold">1</td>
+        <td id="FrAtP200"> </td>
+        <td id="FrAtP201"> </td>
+        <td id="FrAtP202"> </td>
+        <td id="FrAtP203"> </td>
+        <td id="FrAtP204"> </td>
+        <td id="FrAtP205"> </td>
+        <td id="FrAtP206"> </td>
+        <td id="FrAtP207"> </td>
+        <td id="FrAtP208"> </td>
+        <td id="FrAtP209"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">2</td>
+        <td id="FrAtP210"> </td>
+        <td id="FrAtP211"> </td>
+        <td id="FrAtP212"> </td>
+        <td id="FrAtP213"> </td>
+        <td id="FrAtP214"> </td>
+        <td id="FrAtP215"> </td>
+        <td id="FrAtP216"> </td>
+        <td id="FrAtP217"> </td>
+        <td id="FrAtP218"> </td>
+        <td id="FrAtP219"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">3</td>
+        <td id="FrAtP220"> </td>
+        <td id="FrAtP221"> </td>
+        <td id="FrAtP222"> </td>
+        <td id="FrAtP223"> </td>
+        <td id="FrAtP224"> </td>
+        <td id="FrAtP225"> </td>
+        <td id="FrAtP226"> </td>
+        <td id="FrAtP227"> </td>
+        <td id="FrAtP228"> </td>
+        <td id="FrAtP229"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">4</td>
+        <td id="FrAtP230"> </td>
+        <td id="FrAtP231"> </td>
+        <td id="FrAtP232"> </td>
+        <td id="FrAtP233"> </td>
+        <td id="FrAtP234"> </td>
+        <td id="FrAtP235"> </td>
+        <td id="FrAtP236"> </td>
+        <td id="FrAtP237"> </td>
+        <td id="FrAtP238"> </td>
+        <td id="FrAtP239"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">5</td>
+        <td id="FrAtP240"> </td>
+        <td id="FrAtP241"> </td>
+        <td id="FrAtP242"> </td>
+        <td id="FrAtP243"> </td>
+        <td id="FrAtP244"> </td>
+        <td id="FrAtP245"> </td>
+        <td id="FrAtP246"> </td>
+        <td id="FrAtP247"> </td>
+        <td id="FrAtP248"> </td>
+        <td id="FrAtP249"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">6</td>
+        <td id="FrAtP250"> </td>
+        <td id="FrAtP251"> </td>
+        <td id="FrAtP252"> </td>
+        <td id="FrAtP253"> </td>
+        <td id="FrAtP254"> </td>
+        <td id="FrAtP255"> </td>
+        <td id="FrAtP256"> </td>
+        <td id="FrAtP257"> </td>
+        <td id="FrAtP258"> </td>
+        <td id="FrAtP259"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">7</td>
+        <td id="FrAtP260"> </td>
+        <td id="FrAtP261"> </td>
+        <td id="FrAtP262"> </td>
+        <td id="FrAtP263"> </td>
+        <td id="FrAtP264"> </td>
+        <td id="FrAtP265"> </td>
+        <td id="FrAtP266"> </td>
+        <td id="FrAtP267"> </td>
+        <td id="FrAtP268"> </td>
+        <td id="FrAtP269"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">8</td>
+        <td id="FrAtP270"> </td>
+        <td id="FrAtP271"> </td>
+        <td id="FrAtP272"> </td>
+        <td id="FrAtP273"> </td>
+        <td id="FrAtP274"> </td>
+        <td id="FrAtP275"> </td>
+        <td id="FrAtP276"> </td>
+        <td id="FrAtP277"> </td>
+        <td id="FrAtP278"> </td>
+        <td id="FrAtP279"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">9</td>
+        <td id="FrAtP280"> </td>
+        <td id="FrAtP281"> </td>
+        <td id="FrAtP282"> </td>
+        <td id="FrAtP283"> </td>
+        <td id="FrAtP284"> </td>
+        <td id="FrAtP285"> </td>
+        <td id="FrAtP286"> </td>
+        <td id="FrAtP287"> </td>
+        <td id="FrAtP288"> </td>
+        <td id="FrAtP289"> </td>
+    </tr>
+
+    <tr>
+        <td class="bold">10</td>
+        <td id="FrAtP290"> </td>
+        <td id="FrAtP291"> </td>
+        <td id="FrAtP292"> </td>
+        <td id="FrAtP293"> </td>
+        <td id="FrAtP294"> </td>
+        <td id="FrAtP295"> </td>
+        <td id="FrAtP296"> </td>
+        <td id="FrAtP297"> </td>
+        <td id="FrAtP298"> </td>
+        <td id="FrAtP299"> </td>
+    </tr>
+    </tr>
+</tbody></table>
+<br />
+</body>
+</html>
