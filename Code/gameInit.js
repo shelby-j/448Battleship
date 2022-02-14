@@ -32,7 +32,7 @@ var p2sFireAtLoc = matrix( 10, 10, 0);// 10 lines, 10 cols filled with 0
 var p1ShipsLocArry2Row;
 var p2ShipsLocArry2Row;
 
-function loadStoredVars()
+function loadStoredVars() //stores local json variables
 {
   p1ShipsLoc = JSON.parse(window.localStorage.getItem("p1ShipsLoc")); // Retrieving
   p2ShipsLoc = JSON.parse(window.localStorage.getItem("p2ShipsLoc")); // Retrieving
@@ -403,5 +403,4 @@ function frCellTurnOfP2()
   showFireAtLocCellsForPlayer('P2');
 
 }
-
 
