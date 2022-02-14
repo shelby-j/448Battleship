@@ -1,3 +1,0 @@
-This is the Lab 01 project for team 6 in class EECS 448
-
-//add more
