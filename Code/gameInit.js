@@ -115,12 +115,74 @@ function getNoOfShips() {
 //gets plalyer one's ships, shows the player 1 grid, adds a disabled button
 function getShipsForP1() {
   Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-  if (Player1Ships != null) {
+  let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
+  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+  console.log(findDuplicates(shipArray))
+  console.log(shipArray)
+  while (findDuplicates(shipArray).length != 0) {
+    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+    shipArray = Player1Ships.split(',')
+  }
+  let isValid = false;
+  let isRowValid = true;
+  let isColValid = true;
+  while (Player1Ships == null) {
+    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+    shipArray = Player1Ships.split(',')
+  }
+  while (!isValid) {
+    let isRowSame = [true, true, true, true, true]
+    let isColSame = [true, true, true, true, true]
+    console.log("hello", shipArray.length)
+    for (let i = 0; i < shipArray.length; i++) {
+      if (i == 1) {
+        for (let j = i; j < 3; j++) {
+          
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) {
+            isRowSame[0] = false
+          }
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
+            isColSame[0] = false
+          }
+        }
+      }
+      if (i == 3) {
+        for (let j = i; j < 5; j++) {
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+        }
+      }
+      if (i == 6) {
+        for (let j = i; j < 10; j++) {
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+        }
+      }
+      if (i == 10) {
+        for (let j = i; j < 15; j++) {
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+        }
+      }
+    }
+    console.log(isValid)
+    for (let i = 0; i < isRowSame.length; i++) {
+      if (isRowSame[i] == false) isRowValid = false;
+      if (isColSame[i] == false) isColValid = false;
+    }
+    isValid = isRowValid | isColValid
+    console.log(isValid)
+    if (!isValid) {
+      Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+      shipArray = Player1Ships.split(',')
+    }
+  }
+  
+  if (isValid) {
     fillShipsLoc(p1ShipsLoc,Player1Ships);
     p1ShipsLocArry2Row= getShipsLocArry(Player1Ships);
     document.getElementById("getShipsForP2Btn").disabled = false;
     document.getElementById("showShipsForP1Btn").disabled = false;
-    
     document.getElementById("P1Ships").innerHTML = Player1Ships  + " ships locations!";
     document.getElementById("getShipsForP1Btn").disabled = true;
   }
