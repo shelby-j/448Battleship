@@ -123,14 +123,14 @@ function getShipsForP1() {
     Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
     shipArray = Player1Ships.split(',')
   }
-  let isValid = false;
+  let isValid = true;
   let isRowValid = true;
   let isColValid = true;
   while (Player1Ships == null) {
     Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
     shipArray = Player1Ships.split(',')
   }
-  while (!isValid) {
+  do {
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
     console.log("hello", shipArray.length)
@@ -148,35 +148,36 @@ function getShipsForP1() {
       }
       if (i == 3) {
         for (let j = i; j < 5; j++) {
+          console.log(j);
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
         }
       }
       if (i == 6) {
-        for (let j = i; j < 10; j++) {
+        for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
         }
       }
       if (i == 10) {
-        for (let j = i; j < 15; j++) {
+        for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
         }
       }
-    }
-    console.log(isValid)
+    } 
+    
     for (let i = 0; i < isRowSame.length; i++) {
-      if (isRowSame[i] == false) isRowValid = false;
-      if (isColSame[i] == false) isColValid = false;
+      if (isRowSame[i] == false && isColSame[i] == false) isValid = false;
+      console.log(isRowSame[i], isColSame[i], isValid)
     }
-    isValid = isRowValid | isColValid
-    console.log(isValid)
+    
+    
     if (!isValid) {
       Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
       shipArray = Player1Ships.split(',')
     }
-  }
+  }while (!isValid)
   
   if (isValid) {
     fillShipsLoc(p1ShipsLoc,Player1Ships);
