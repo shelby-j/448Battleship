@@ -1,6 +1,7 @@
 let numShips = 3; //default ship number
 let Player1Ships;
 let Player2Ships;
+let difficulty = "Easy";
 
 var p1ShipsLoc = matrix();// 
 var p2ShipsLoc = matrix();// 
@@ -29,6 +30,28 @@ function matrix(){
   }
 
 return arr;
+}
+
+function humanBtn(){
+  document.getElementById("humanBtn").disabled = true;
+  document.getElementById("AIbtn").disabled = true;
+  document.getElementById("getNoOfShipsBtn").disabled = false;
+}
+
+function AIbtn() {
+  difficulty = prompt("What difficulty would you like to play? (Easy, Medium, or Hard)", difficulty);
+  difficulty = difficulty.toLowerCase();
+
+  if(difficulty == "easy" || difficulty == "medium" || difficulty == "hard") {
+    document.getElementById("difficulty").innerHTML = "The AI's difficulty is set to " + difficulty + " .";
+    document.getElementById("humanBtn").disabled = true;
+    document.getElementById("humanBtn").disabled = true;
+    document.getElementById("getNoOfShipsBtn").disabled = false;
+  }
+  else
+  {
+    window.alert("Invalid difficulty option. Try again.");
+  }
 }
 
 function loadStoredVars() //stores local json variables

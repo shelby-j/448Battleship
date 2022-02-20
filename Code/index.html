@@ -5,7 +5,32 @@
 <title>Battleship</title>
 </head>
 <body>
-<h1>Welcome to the Battleship! game </h1>
+<h1 style="text-align:center">Welcome to Battleship! </h1>
+
+<table>
+    <tbody>
+        <tr>
+        <td>
+            <p>Would you like to play against another player or AI?</p>
+        </td>
+        <td>
+        </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="humanBtn" onclick="humanBtn()">Human</button>
+                &nbsp;
+                <button id="AIbtn" onclick="AIbtn()">AI</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="difficulty"></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 <table>
     <tbody>
         <tr>
@@ -13,7 +38,7 @@
             <p>Click the button to choose number of ships to use in game[1-5].</p>
         </td>
         <td>
-            <button id="getNoOfShipsBtn" onclick="getNoOfShips()">Ships</button>
+            <button id="getNoOfShipsBtn" disabled = true onclick="getNoOfShips()">Ships</button>
         </td>
         </tr>
         <tr>
