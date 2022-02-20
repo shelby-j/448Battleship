@@ -105,10 +105,14 @@ function fillShipsLoc(arr,shipsLoc){
 //gets ships for players
 function getNoOfShips() {
   numShips = prompt("Please enter number of ships", numShips);
-  if (numShips != null) {
+  if (numShips > 0 && numShips <= 5) {
     document.getElementById("getShipsForP1Btn").disabled = false;
     document.getElementById("BShips").innerHTML = numShips  + " ships will be used!";
     document.getElementById("getNoOfShipsBtn").disabled = true;
+  }
+  else
+  {
+    window.alert("Invalid number of ships. Try again.")
   }
 }
 
