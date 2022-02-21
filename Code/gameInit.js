@@ -6,6 +6,13 @@ var p1ShipsLoc = matrix();//
 var p2ShipsLoc = matrix();// 
 var p1sFireAtLoc = matrix();// 
 var p2sFireAtLoc = matrix();// 
+
+//These two contains the location of all ships for each ship
+//Each variable contains two arrays
+//The first array contains these locations 
+//The second contains whether that ship is hit or not, which is either 0 or 1
+//0 for not hit
+//1 for sunk
 var p1ShipsLocArry2Row;
 var p2ShipsLocArry2Row;
 
@@ -463,85 +470,132 @@ function fillFireAtLoc(frAtarr,frAtCell){
    
 }
 
+//Shows the player's view of their opponent
+//Takes in plyrNo, which is the player's number
 function showFireAtLocCellsForPlayer(plyrNo) {
   
-  //let btnId="fireAtBy"+ plyrNo +"Btn";
-  //let tblId="tlbCellFrAtBy"+ plyrNo;
-  //let frCellbtn="frCellBy"+plyrNo+"Btn";
+  //Represent the player's view of teir opponent's board
   let plyrFireAtLocaArry;
+
+  //Represent the opponent's board
   let OpnplyrShipsLocaArry;
+
+  //Represent the location of all ships the opponent's has
   let opnShipsLocArry2Row;
 
+  //If the number of the player is P1
   if(plyrNo=="P1")
   {
+    //Set plyrFirstAtLocaArray to be p1sFireAtLoc
     plyrFireAtLocaArry=p1sFireAtLoc;
+
+    //Set OpnplyrShisLocaArry to be p2ShipsLoc
     OpnplyrShipsLocaArry=p2ShipsLoc;
+
+    //Set opnShipsLocArry2Row to be p2ShipsLocArryRow
     opnShipsLocArry2Row=p2ShipsLocArry2Row;
 
   }
+  //Otherwise if plyrNo is P2
   else
   {
+    //Set plyrFireAtLocaArry to be p2sFireAtLoc
     plyrFireAtLocaArry=p2sFireAtLoc;
+
+    //Set OpnplyrShipsLocaArry to be p1ShipsLoc
     OpnplyrShipsLocaArry=p1ShipsLoc;
+
+    //Set opnShipsLocArray2Row to be p1ShipsLocArry2Row
     opnShipsLocArry2Row=p1ShipsLocArry2Row;
   }
-  
-    //console.log(plyrFireAtLocaArry.length);
+
+    //Represent an element of the plyrFireAtLocaArry
     let arrElm=0;
+
+    //Represent an element of OpnplyrShipsLocaArry
     let arrElmShip=0;
+
+    //The id of the element td at row i and column j
     let elmId="";
+
+    //Represent the row of the opponent's ship
     let opnShipsLocRow=0;
+
+    //Represent the column of the opponent's ships
     let opnShipsLocCol=0;
+
+    //Represent the location of the  opponent's ship
     let opnShipsLocStr="";
+
+    //Represenst the number of ship positions 
     let noShipsArrLen=0;
+
+    //Loop starting 1 and until numShips
+    //The loop is used to set noShipsArrLen
     for(var a=1;a<=numShips;a++)
     {
+      //Add a to noShipsArrLen 
       noShipsArrLen=noShipsArrLen+a;
     }
-    console.log("opnShipsLocArry2Row before for loop:"+opnShipsLocArry2Row);
+
+    //Goes through each row and column of plyrFireAtLocaArray
     for(var i=0;i<plyrFireAtLocaArry.length;i++)
     {
       for(var j=0;j<plyrFireAtLocaArry.length;j++)
       {
+        //Set arrElm to the be element of plyrFireAtLocaArry at row i and column j
         arrElm=plyrFireAtLocaArry[i][j];
-        //console.log(typeof plyrFireAtLocaArry);
-        //console.log("plyrFireAtLocaArry="+plyrFireAtLocaArry);
+
+        //Set arrElmShip to be the element of plyrFireAtLocaArray at row i and column j
         arrElmShip=OpnplyrShipsLocaArry[i][j]; 
-        //console.log("noShipsArrLen="+noShipsArrLen);
-        //console.log("opnShipsLocArry2Row.length="+opnShipsLocArry2Row.length);
-        //console.log("opnShipsLocArry="+opnShipsLocArry2Row);
-        //console.log("opnShipsLocArry2Row[0]="+opnShipsLocArry2Row[0]);
-        //console.log("opnShipsLocArry2Row[1]="+opnShipsLocArry2Row[1]);
+  
+        //Go through each ship location in opnShipsLocArray2Row
         for(var k=0;k<noShipsArrLen;k++)
         {
+          //Set the location of the oponent ships to be the kth index of the ith array of
+          //opnShipsLocArray2Row
           opnShipsLocStr=opnShipsLocArry2Row[0][k];
-         // console.log(typeof opnShipsLocArry2Row);
-          //console.log("opnShipsLocStr="+opnShipsLocStr+" opnShipsLocArry2Row[1][k]="+opnShipsLocArry2Row[1][k]);
-          //console.log(typeof opnShipsLocStr);
-          //console.log(opnShipsLocArry2Row[1][k]);
           
+          //Get ASCII code of the first character of opnShpsLocStr
+          //Then, subtract it by 97 to get the column of the ship location
           opnShipsLocCol=opnShipsLocStr.charCodeAt(0) - 97;
+
+          //Next, set the row of the ship location to the rest of opnShipsLocCol, except the first character
+          //Convert the substring to a number
           opnShipsLocRow=Number(opnShipsLocStr.substring(1,opnShipsLocStr.length))-1;
-          //console.log("opnShipsLocRow="+opnShipsLocRow+" i="+i+ " opnShipsLocCol="+opnShipsLocCol+" j="+j);
-          //console.log("opnShipsLocArry2Row[1][k]="+opnShipsLocArry2Row[1][k]+" arrElmShip="+arrElmShip);
-          //console.log("opnShipsLocRow="+opnShipsLocRow);
+          
+          //Next, check the following conditions are all true
+          //1. opnShipsLocRow is equal to i, which is the current row 
+          //2. opnShipsLocCol is equal to j, which is the current column
+          //3. The ship at that location is not sunk
+          //4. There is an opponent's ship at at location
+          //5. The player attack at that location
+          //If all these conditions are true
           if(opnShipsLocRow==i && opnShipsLocCol==j && opnShipsLocArry2Row[1][k]=='0' && arrElmShip>0 && arrElm!=0)
           {
+            //The ship is hit
+            //So, set opnShipLocArray2Row[1][k] to be 1 
             opnShipsLocArry2Row[1][k]='1';
-            //console.log("opnShipsLocArry2Row[0][k]="+opnShipsLocArry2Row[0][k]);
-            //console.log("opnShipsLocArry2Row[1][k]="+opnShipsLocArry2Row[1][k]);
+            
           }
         }
+
+        //If there is an attack at the location
         if(arrElm!=0) //check if hit or not
         {
+          //Set elmId to be FrAt plus plyrNo plus row i plus j
           elmId="FrAt"+ plyrNo.toString()+i.toString()+j.toString();
-          console.log(elmId);
+          
+          //If arrElmShip is 0
           if(arrElmShip==0)
           {
+            //Set the inner html of id to be Miss
             document.getElementById(elmId).innerHTML = "Miss";
           }
+          //Otherwise, if arrElmShip is 1
           else 
           {
+            //Set the innter html of id to be Hit S+arrElmShip
             document.getElementById(elmId).innerHTML = "Hit S"+arrElmShip.toString();
           }
         }
@@ -601,7 +655,7 @@ function frCellByP1() {
   
   let row, col;
   col = frCell.toUpperCase().charCodeAt(1)-65;
-  let snd = new Audio("file.wav")
+  //let snd = new Audio("file.wav")
  
   if(frCell.length == 4)
   { row = frCell.substring(2,3)-1;}
@@ -615,7 +669,7 @@ function frCellByP1() {
 
   if (p1sFireAtLoc[row][col] == 0) { // check if sunk
     fillFireAtLoc(p1sFireAtLoc,frCell);
-    snd.play()
+    //snd.play()
     document.getElementById("P1FrCell").innerHTML = frCell  + " Fire at locations!";
     showFireAtLocCellsForPlayer('P1');
     nShipsDn=Gameover('P1');
@@ -687,10 +741,10 @@ function frCellTurnOfP1()
 
 function frCellTurnOfP2()
 {
-  // document.getElementById("turnByP2Btn").disabled = true;
-  // document.getElementById("frCellByP2Btn").disabled = false;
-  // document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
-  // document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
+  document.getElementById("turnByP2Btn").disabled = true;
+  document.getElementById("frCellByP2Btn").disabled = false;
+  document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
+  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireAtLocCellsForPlayer('P2');
 
 }
