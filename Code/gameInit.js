@@ -2,6 +2,7 @@ let numShips = 3; //default ship number
 let Player1Ships;
 let Player2Ships;
 let difficulty = "Easy";
+let AIactivated = false;
 
 var p1ShipsLoc = matrix();// 
 var p2ShipsLoc = matrix();// 
@@ -36,6 +37,8 @@ function humanBtn(){
   document.getElementById("humanBtn").disabled = true;
   document.getElementById("AIbtn").disabled = true;
   document.getElementById("getNoOfShipsBtn").disabled = false;
+  changeVisibility();
+  document.getElementById("Opponent").innerHTML = "Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}";
 }
 
 function AIbtn() {
@@ -47,11 +50,20 @@ function AIbtn() {
     document.getElementById("humanBtn").disabled = true;
     document.getElementById("humanBtn").disabled = true;
     document.getElementById("getNoOfShipsBtn").disabled = false;
+    changeVisibility();
+    AIactivated = true;
   }
   else
   {
     window.alert("Invalid difficulty option. Try again.");
   }
+}
+
+function changeVisibility()
+{
+  document.getElementById("Opponent").style.removeProperty("display");
+  document.getElementById("endingLine").style.removeProperty("display");
+  document.getElementById("playGameBtn").style.removeProperty("display");
 }
 
 function loadStoredVars() //stores local json variables
@@ -96,6 +108,7 @@ console.log("arr1.length="+arr1.length);
 console.log(typeof arr1);
   return arr1;
 }
+
 function fillShipsLoc(arr,shipsLoc){
   shipsLoc = shipsLoc.substring(1, (shipsLoc.length-1));
   const strArry = shipsLoc.split(",");
@@ -213,6 +226,9 @@ function getShipsForP1() {
     document.getElementById("showShipsForP1Btn").disabled = false;
     document.getElementById("P1Ships").innerHTML = Player1Ships  + " ships locations!";
     document.getElementById("getShipsForP1Btn").disabled = true;
+
+    if(AIactivated)
+    { AIsetup();}
   }
 }
 
@@ -237,6 +253,19 @@ function getShipsForP2() {
        
      
   }
+}
+
+function AIsetup() {
+  let AIships;
+
+  for(let i=0; i<numShips; i++)
+  {
+    Math.floor(Math.random * 10)
+  }
+
+  fillShipsLoc(p2ShipsLoc, AIships);
+  document.getElementById("Opponent").innerHTML = "AI's board is set.";
+  document.getElementById("playGameBtn").disabled = false;
 }
 
 //the code and buttons to show the board for each player
@@ -429,6 +458,7 @@ function Gameover(plyrNo) {
     }
   return nShipsDn;
 }
+
 function frCellByP1() {
   let nShipsDn=0;
   let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
