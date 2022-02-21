@@ -105,18 +105,18 @@ function fillShipsLoc(arr,shipsLoc){
 //Gets ships for players
 function getNoOfShips() {
   //Asks the player for the number of ships
-  noShips = prompt("Please enter number of ships", noShips);
+  numShips = prompt("Please enter number of ships", numShips);
 
   //Next, check if noShips is valid
   //If the input was canceled
-  if(noShips == null)
+  if(numShips == null)
   {
     //Tell the user that the input was canceled
     alert("Input Canceled.");
   }
   //Otherwise, if noShips is an empty prompt
   //Which mean noShips has a length of 0
-  else if(noShips.length == 0)
+  else if(numShips.length == 0)
   {
     //Alert the user that the prompt is empty
     alert("Input is empty. Please try again.");
@@ -125,14 +125,14 @@ function getNoOfShips() {
   //spaces and 
   //Does this check by uisng indexOf to see if there is an index of noShips
   //that contains a space
-  else if(noShips.indexOf(' ') >= 0)
+  else if(numShips.indexOf(' ') >= 0)
   {
       //Tell the user that the prompy has whitespace
       alert("Input has whitespace. Input must be a number. Please try again.");
   }
   //Otherwise, if noShips is not a number
   //Use isNaN, which returns true if noShips is not a number
-  else if(isNaN(noShips) == true)
+  else if(isNaN(numShips) == true)
   {
       //Alert the user that the input is not a number
       alert("Input is not a number. Input must be a number. Please try again.");
@@ -140,13 +140,13 @@ function getNoOfShips() {
   //Otherwise, if the length of noShips does not equal to 1
   //Prevents inputs that are way too big or small for javascript to handle
   //It also prevent negative and decminal
-  else if(noShips.length != 1)
+  else if(numShips.length != 1)
   {
       //Alert the user that input have more that 1 digit
       alert("Input is not a 1-digit number. Input must can have only 1 digit. No negative signs, decimal symbols, and extra digits. Please try again.");
   }
   //Otherwise, if noShips is not in range of 1-5
-  else if(noShips < 1 || noShips > 5)
+  else if(numShips < 1 || numShips > 5)
   {
       //Alert the user that the input is invalid
       alert("Input is invalid. Input must be between 1 and 5. Please try again.")
@@ -159,23 +159,23 @@ function getNoOfShips() {
 
     //Tell the user the number of ships being used
     //If the number of ships being use is only 1
-    if(noShips == 1)
+    if(numShips == 1)
     {
         //Set the inner html of BShips to be "1 ship will be used!"
-        document.getElementById("BShips").innerHTML = noShips  + " ship will be used!";
+        document.getElementById("BShips").innerHTML = numShips  + " ship will be used!";
     }
     //Otherwise, if noShips is greater than 1
     else
     {
         //Set the inner html of BShips to be noShip + " ships will be used"
-        document.getElementById("BShips").innerHTML = noShips  + " ships will be used!";
+        document.getElementById("BShips").innerHTML = numShips  + " ships will be used!";
     }
     
     //Disable getNoOfShipsBtn to be prevented from being used again
     document.getElementById("getNoOfShipsBtn").disabled = true;
 
     //Finally, convert noShips to be a number
-    noShips = parseInt(noShips);
+    numShips = parseInt(numShips);
   }
 }
 
@@ -237,10 +237,10 @@ function validPlayerShips(playerShips)
    //Next, check shipPositions if it is valid
    //If the length of shipPositions does not equal to the total number of positions 
    //the total number of postion is noShip(noShips+1)/2
-   if(shipPositions.length != (noShips*(noShips+1))/2)
+   if(shipPositions.length != (numShips*(numShips+1))/2)
    {
      //Tell the user that the size of the list does not equal to the total number of positions the user can have
-     alert("The size of the list does not equal to the total number of ship positions. The size of the list must be " + ((noShips*(noShips+1))/2) +".");
+     alert("The size of the list does not equal to the total number of ship positions. The size of the list must be " + ((numShips*(numShips+1))/2) +".");
 
      //Return false
      return false;
@@ -677,10 +677,10 @@ function frCellByP2() {
 
 function frCellTurnOfP1()
 {
-  // document.getElementById("turnByP1Btn").disabled = true;
-  // document.getElementById("frCellByP1Btn").disabled = false;
-  // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
-  // document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
+   document.getElementById("turnByP1Btn").disabled = true;
+   document.getElementById("frCellByP1Btn").disabled = false;
+   document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
+   document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireAtLocCellsForPlayer('P1');
 
 }
