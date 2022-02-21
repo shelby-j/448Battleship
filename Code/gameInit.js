@@ -1,64 +1,41 @@
-// Number of Ships that each palyer has
-let noShips = 3; //default ship number
-
-//Player 1's Ships
+let numShips = 3; //default ship number
 let Player1Ships;
-
-//Player 2's Ships
 let Player2Ships;
 
-//Creates a new 2D array with a default value
-//Rows-Number of Rows
-//Cols-Number of Cols
-//defaultValue-The value being filled for each
-function matrix( rows, cols, defaultValue){
+var p1ShipsLoc = matrix();// 
+var p2ShipsLoc = matrix();// 
+var p1sFireAtLoc = matrix();// 
+var p2sFireAtLoc = matrix();// 
+var p1ShipsLocArry2Row;
+var p2ShipsLocArry2Row;
 
-  //The array of ships
+function matrix(){
+
   var arr = [];
 
   // Creates all lines:
-  for(var i=0; i < rows; i++){
+  for(var i=0; i < 10; i++){
 
       // Creates an empty line
       arr.push([]);
 
       // Adds cols to the empty line:
-      arr[i].push( new Array(cols));
+      arr[i].push( new Array(10));
 
-      //Go through each column of the matrix
-      for(var j=0; j < cols; j++){
+      for(var j=0; j < 10; j++){
         // Initializes:
-        arr[i][j] = defaultValue;
+        arr[i][j] = 0;
       }
   }
 
-//Return array
 return arr;
 }
-
-//The Board that contains Player 1's Ships
-var p1ShipsLoc = matrix( 10, 10, 0);// 10 lines, 10 cols filled with 0
-
-//The board that contains Player 2's Ships
-var p2ShipsLoc = matrix( 10, 10, 0);// 10 lines, 10 cols filled with 0
-
-//The board that contains the locations where Player 1 can attack
-var p1sFireAtLoc = matrix( 10, 10, 0);// 10 lines, 10 cols filled with 0
-
-//The board that contains the locations where Player 2 can attack
-var p2sFireAtLoc = matrix( 10, 10, 0);// 10 lines, 10 cols filled with 0
-
-//Contains the location of all ships for Player 1
-var p1ShipsLocArry2Row;
-
-//Contains the locations of all ships for Player 2
-var p2ShipsLocArry2Row;
 
 function loadStoredVars() //stores local json variables
 {
   p1ShipsLoc = JSON.parse(window.localStorage.getItem("p1ShipsLoc")); // Retrieving
   p2ShipsLoc = JSON.parse(window.localStorage.getItem("p2ShipsLoc")); // Retrieving
-  noShips = JSON.parse(window.localStorage.getItem("noShips")); // Retrieving
+  numShips = JSON.parse(window.localStorage.getItem("numShips")); // Retrieving
   p1ShipsLocArry2Row=JSON.parse(window.localStorage.getItem("p1ShipsLocArry2Row")); // Retrieving
   p2ShipsLocArry2Row=JSON.parse(window.localStorage.getItem("p2ShipsLocArry2Row")); // Retrieving
   
@@ -327,35 +304,88 @@ function validPlayerShips(playerShips)
    return true;
 }
 
-//gets player's one's ships, shows the player 1 grid, adds a disabled button
-function getShipsForP1() {
-  //Ask the user to input a list of locations for the ship
-  Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
 
-  //Next, check if Player1Ships is valid
-  //Using a boolean value to check if Player1Ships is valid or not
-  //If player1Ships is valid
-  if (validPlayerShips(Player1Ships)) {
+//gets plalyer one's ships, shows the player 1 grid, adds a disabled button
+function getShipsForP1() {
+  Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+  let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
+  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+  console.log(findDuplicates(shipArray))
+  console.log(shipArray)
+  while (findDuplicates(shipArray).length != 0) {
+    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+    shipArray = Player1Ships.split(',')
+  }
+  let isValid = true;
+  let isRowValid = true;
+  let isColValid = true;
+  while (Player1Ships == null) {
+    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+    shipArray = Player1Ships.split(',')
+  }
+  do {
+    let isRowSame = [true, true, true, true, true]
+    let isColSame = [true, true, true, true, true]
+    console.log("hello", shipArray.length)
+    for (let i = 0; i < shipArray.length; i++) {
+      if (i == 1) {
+        for (let j = i; j < 3; j++) {
+          
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) {
+            isRowSame[0] = false
+          }
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
+            isColSame[0] = false
+          }
+        }
+      }
+      if (i == 3) {
+        for (let j = i; j < 5; j++) {
+          console.log(j);
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+        }
+      }
+      if (i == 6) {
+        for (let j = i; j < 9; j++) {
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+        }
+      }
+      if (i == 10) {
+        for (let j = i; j < 14; j++) {
+          if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
+          if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+        }
+      }
+    } 
+    
+    for (let i = 0; i < isRowSame.length; i++) {
+      if (isRowSame[i] == false && isColSame[i] == false) isValid = false;
+      console.log(isRowSame[i], isColSame[i], isValid)
+    }
+    
+    
+    if (!isValid) {
+      Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+      shipArray = Player1Ships.split(',')
+    }
+  }while (!isValid)
+  
+  if (isValid) {
     fillShipsLoc(p1ShipsLoc,Player1Ships);
     p1ShipsLocArry2Row= getShipsLocArry(Player1Ships);
     document.getElementById("getShipsForP2Btn").disabled = false;
     document.getElementById("showShipsForP1Btn").disabled = false;
-    
     document.getElementById("P1Ships").innerHTML = Player1Ships  + " ships locations!";
     document.getElementById("getShipsForP1Btn").disabled = true;
   }
-  //Otherwise, the user must try again to input the correct value
 }
 
 //same as above, but with added local storage to transfer pages
 function getShipsForP2() {
-  //Firstly, ask the user to end the positions for ship using a prompt
-  //Store the input into Player2Ships
   Player2Ships = prompt("Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-
-  //Next, check if Player2Ships is valid
-  //If Player2Ships is valid
-  if (validPlayerShips(Player2Ships)) {
+  if (Player2Ships != null) {
     fillShipsLoc(p2ShipsLoc,Player2Ships);
     p2ShipsLocArry2Row= getShipsLocArry(Player2Ships);
     document.getElementById("showShipsForP1Btn").disabled = true;
@@ -365,7 +395,7 @@ function getShipsForP2() {
     document.getElementById("playGameBtn").disabled = false;
     window.localStorage.setItem("p1ShipsLoc", JSON.stringify(p1ShipsLoc)); // Saving
     window.localStorage.setItem("p2ShipsLoc", JSON.stringify(p2ShipsLoc)); // Saving
-    window.localStorage.setItem("noShips", JSON.stringify(noShips)); // Saving
+    window.localStorage.setItem("numShips", JSON.stringify(numShips)); // Saving
     //console.log("saveP1="+p1ShipsLocArry2Row);
     window.localStorage.setItem("p1ShipsLocArry2Row", JSON.stringify(p1ShipsLocArry2Row)); // Saving
     //console.log("saveP2="+p2ShipsLocArry2Row);
@@ -373,7 +403,6 @@ function getShipsForP2() {
        
      
   }
-  //Otherwise, the user must try again to input the correct value
 }
 
 //the code and buttons to show the board for each player
@@ -465,7 +494,7 @@ function showFireAtLocCellsForPlayer(plyrNo) {
     let opnShipsLocCol=0;
     let opnShipsLocStr="";
     let noShipsArrLen=0;
-    for(var a=1;a<=noShips;a++)
+    for(var a=1;a<=numShips;a++)
     {
       noShipsArrLen=noShipsArrLen+a;
     }
@@ -477,7 +506,7 @@ function showFireAtLocCellsForPlayer(plyrNo) {
         arrElm=plyrFireAtLocaArry[i][j];
         //console.log(typeof plyrFireAtLocaArry);
         //console.log("plyrFireAtLocaArry="+plyrFireAtLocaArry);
-        arrElmShip=OpnplyrShipsLocaArry[i][j];
+        arrElmShip=OpnplyrShipsLocaArry[i][j]; 
         //console.log("noShipsArrLen="+noShipsArrLen);
         //console.log("opnShipsLocArry2Row.length="+opnShipsLocArry2Row.length);
         //console.log("opnShipsLocArry="+opnShipsLocArry2Row);
@@ -503,7 +532,7 @@ function showFireAtLocCellsForPlayer(plyrNo) {
             //console.log("opnShipsLocArry2Row[1][k]="+opnShipsLocArry2Row[1][k]);
           }
         }
-        if(arrElm!=0)
+        if(arrElm!=0) //check if hit or not
         {
           elmId="FrAt"+ plyrNo.toString()+i.toString()+j.toString();
           console.log(elmId);
@@ -511,7 +540,7 @@ function showFireAtLocCellsForPlayer(plyrNo) {
           {
             document.getElementById(elmId).innerHTML = "Miss";
           }
-          else
+          else 
           {
             document.getElementById(elmId).innerHTML = "Hit S"+arrElmShip.toString();
           }
@@ -530,12 +559,12 @@ function showFireAtLocCellsForPlayer(plyrNo) {
 }
 
 //calculates the number of ships down a player has to detect win
-function NumbOfShipsDown(plyrNo) {
+function Gameover(plyrNo) {
   let nShipsDn=0;
   let noShipsArrLen=0;
   let shipNo=1;
   let opnShipsLocArry2Row;
-    for(var a=1;a<=noShips;a++)
+    for(var a=1;a<=numShips;a++)
     {
       noShipsArrLen=noShipsArrLen+a;
     }
@@ -568,14 +597,30 @@ function NumbOfShipsDown(plyrNo) {
 }
 function frCellByP1() {
   let nShipsDn=0;
-  frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
-  if (frCell != null) {
+  let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
+  
+  let row, col;
+  col = frCell.toUpperCase().charCodeAt(1)-65;
+  let snd = new Audio("file.wav")
+ 
+  if(frCell.length == 4)
+  { row = frCell.substring(2,3)-1;}
+  else if(frCell.length == 5)
+  { row = frCell.substring(2,4)-1;}
+
+  if(row < 0 || row > 9 || col < 0 || col > 9)
+  {
+    window.alert("Attack coordinate out of bounds. Try again.");
+  }
+
+  if (p1sFireAtLoc[row][col] == 0) { // check if sunk
     fillFireAtLoc(p1sFireAtLoc,frCell);
+    snd.play()
     document.getElementById("P1FrCell").innerHTML = frCell  + " Fire at locations!";
     showFireAtLocCellsForPlayer('P1');
-    nShipsDn=NumbOfShipsDown('P1');
-    document.getElementById("P1FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(noShips-nShipsDn) + " to go";
-    if((noShips-nShipsDn)==0)
+    nShipsDn=Gameover('P1');
+    document.getElementById("P1FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    if((numShips-nShipsDn)==0)
     {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
       document.getElementById("turnByP2Btn").disabled = true;
@@ -586,18 +631,35 @@ function frCellByP1() {
       document.getElementById("frCellByP1Btn").disabled = true;
     }
   }
+  else{
+    window.alert("Invalid attack coordinate. Try again.");
+  }
 }
 
 function frCellByP2() {
   let nShipsDn=0;
   frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[A10]");
-  if (frCell != null) {
+
+  let row, col;
+  col = frCell.toUpperCase().charCodeAt(1)-65;
+ 
+  if(frCell.length == 4)
+  { row = frCell.substring(2,3)-1;}
+  else if(frCell.length == 5)
+  { row = frCell.substring(2,4)-1;}
+
+  if(row < 0 || row > 9 || col < 0 || col > 9)
+  {
+    window.alert("Attack coordinate out of bounds. Try again.");
+  }
+
+  if (p2sFireAtLoc[row][col] == 0) {
     fillFireAtLoc(p2sFireAtLoc,frCell);
     document.getElementById("P2FrCell").innerHTML = frCell  + " Fire at locations!";
     showFireAtLocCellsForPlayer('P2');
-    nShipsDn=NumbOfShipsDown('P2');
-    document.getElementById("P2FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(noShips-nShipsDn) + " to go";
-    if((noShips-nShipsDn)==0)
+    nShipsDn=Gameover('P2');
+    document.getElementById("P2FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    if((numShips-nShipsDn)==0)
     {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 2.";
       document.getElementById("turnByP2Btn").disabled = true;
@@ -608,27 +670,28 @@ function frCellByP2() {
       document.getElementById("frCellByP2Btn").disabled = true;
     }
   }
+  else{
+    window.alert("Invalid attack coordinate. Try again.");
+  }
 }
 
 function frCellTurnOfP1()
 {
-  document.getElementById("turnByP1Btn").disabled = true;
-  document.getElementById("frCellByP1Btn").disabled = false;
-  document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
-  document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
+  // document.getElementById("turnByP1Btn").disabled = true;
+  // document.getElementById("frCellByP1Btn").disabled = false;
+  // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
+  // document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireAtLocCellsForPlayer('P1');
 
 }
 
 function frCellTurnOfP2()
 {
-  document.getElementById("turnByP2Btn").disabled = true;
-  document.getElementById("frCellByP2Btn").disabled = false;
-  document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
-  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
+  // document.getElementById("turnByP2Btn").disabled = true;
+  // document.getElementById("frCellByP2Btn").disabled = false;
+  // document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
+  // document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireAtLocCellsForPlayer('P2');
 
 }
-
-
 
