@@ -238,6 +238,7 @@ function getShipsForP1() {
 function AIsetup() { 
   let AIships = "[";
   let row = 0, col = 0;
+  let temp;
   let adjuster = true; 
   let checker = true;
 
@@ -246,7 +247,7 @@ function AIsetup() {
     adjuster = Math.random() < .5;
 
     do{
-      checker = true;
+      temp = "";
 
       do{
         row = Math.floor(Math.random() * 10); 
@@ -257,9 +258,15 @@ function AIsetup() {
       {
         if(adjuster)
         {
-          if(row+j <= 9)
+          if(row+j < 9)
           {
-            if(p2ShipsLoc[row+j][col] != 0) checker = false;
+            temp = String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
+            checker = AIships.search(temp) <= 0;
+          }
+          else if(row+j == 9)
+          {
+            temp = String.fromCharCode(col+65) + "10";
+            checker = AIships.search(temp) <= 0;
           }
           else checker = false;
         }
@@ -267,14 +274,17 @@ function AIsetup() {
         {
           if(col+j <= 9)
           {
-            if(p2ShipsLoc[row][col+j] != 0) checker = false;
+            temp = String.fromCharCode(col+j+65);
+
+            if(row+j < 9) temp +=String.fromCharCode(row+49);
+            else temp += "10";
+
+            checker = AIships.search(temp) <= 0;
           }
           else checker = false;
         }
       }
     }while(!checker);
-
-    console.log(row + "," + col);
 
     for(let j=0; j< i+1; j++)
     {
@@ -286,15 +296,17 @@ function AIsetup() {
         }
         else
         {
-          AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+48);
+          AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
         }
       }
       else
       {
-        AIships += String.fromCharCode(col+j+65) + String.fromCharCode(row+48);
+        AIships += String.fromCharCode(col+j+65);
+        if(row+j < 9) AIships +=String.fromCharCode(row+49);
+        else AIships += "10";
       }
 
-      if(i+j <= ((numShips*(numShips-1))/2)) AIships += ",";
+      if(((j*(j+1))/2) < ((numShips*(numShips-1))/2)) AIships += ",";
     }
   }
   AIships += "]";
