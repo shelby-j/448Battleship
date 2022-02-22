@@ -602,14 +602,6 @@ function showFireAtLocCellsForPlayer(plyrNo) {
       }
         
     }
-    console.log("opnShipsLocArry2Row after for loop:"+opnShipsLocArry2Row);
-    //document.getElementById(btnId).disabled = true;
-    //document.getElementById(frCellbtn).disabled = true;
-    //document.getElementById(btnId).innerHTML = "Hide Ships of " + plyrNo;
-    //document.getElementById(tblId).style.removeProperty("display");
-  
-  
-    
 }
 
 //calculates the number of ships down a player has to detect win
@@ -749,3 +741,103 @@ function frCellTurnOfP2()
 
 }
 
+//Create a new board by taking in a node and i
+function createBoard(node, id)
+{
+  //Firstly, create a new table that will store the board
+  let table = document.createElement("table");
+
+  //Next, set the table style to be none
+  //table.style.display = 'none';
+
+  //Next, set the border of table to be 1
+  table.setAttribute("border", "1");
+
+  //Next, set the cellpadding to be 3
+  table.setAttribute("cellpadding", "3");
+
+  //Finally, set the id of table to id
+  table.setAttribute("id", id);
+
+  //Next, add create a new element that will store the tbody tag
+  let tableBody = document.createElement("tbody");
+
+  //Next, create a row that will store all the columns names
+  let columnsNames = document.createElement("tr");
+
+  //Set the class of columnsNames to be bold
+  columnsNames.setAttribute("class", "bold");
+
+  //Next, create a column that is empty
+  let emptyColumn = document.createElement("td");
+
+  //Set the innerhtml of emptyColumn to be space
+  emptyColumn.innerHTML = " ";
+
+  //Add it to columnsNames
+  columnsNames.appendChild(emptyColumn);
+
+  //Next, loop 10 times
+  for(let i = 0; i < 10; i++)
+  {
+    //Create a new column
+    let column = document.createElement("td");
+
+    //Next, set the innerhtml of column to be the ascii character from i+65
+    column.innerHTML = String.fromCharCode(i+65);
+
+    //Add column to columnsNames
+    columnsNames.appendChild(column);
+  }
+
+  //Next, add columnsNames to tableBody
+  tableBody.appendChild(columnsNames)
+
+  
+  //Next, loop for ten times
+  for(let i = 0; i < 10; i++)
+  {
+    //Create a new row
+    let row = document.createElement("tr");
+
+    //Create a new column that contains the number of row
+    let columnNumber = document.createElement("td");
+
+    //Next, set the class of columnNumber to be bold
+    //columnNumber.setAttribute("class", "bold");
+
+    //Set the innerhtml to be i+1
+    columnNumber.innerHTML = (i+1).toString();
+
+    //Add columnNumber to row
+    row.appendChild(columnNumber);
+
+    
+    //Next loop for ten times
+    for(let j = 0; j < 10; j++)
+    {
+      //Create a new column
+      let column = document.createElement("td");
+
+      //Next, create the id for column to id + i + j
+      let elementId = id + i.toString() + j.toString();
+
+      //Set the id of column to be elementId
+      column.setAttribute("id", elementId);
+
+      //Add column to to row
+      row.appendChild(column);
+    }
+
+    //Next, add row to to tableBody
+    tableBody.appendChild(row);
+  }
+  
+  //Next, add tableBody to table
+  table.appendChild(tableBody);
+
+  console.log(table);
+
+  //Finally, append table to  node
+  node.appendChild(table);
+}
