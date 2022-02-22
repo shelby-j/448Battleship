@@ -405,10 +405,11 @@ function Gameover(plyrNo) {
 function frCellByP1() {
   let nShipsDn=0;
   let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
+  console.log('hello')
   
   let row, col;
   col = frCell.toUpperCase().charCodeAt(1)-65;
-  let snd = new Audio("file.wav")
+  
  
   if(frCell.length == 4)
   { row = frCell.substring(2,3)-1;}
@@ -422,7 +423,7 @@ function frCellByP1() {
 
   if (p1sFireAtLoc[row][col] == 0) { // check if sunk
     fillFireAtLoc(p1sFireAtLoc,frCell);
-    snd.play()
+    
     document.getElementById("P1FrCell").innerHTML = frCell  + " Fire at locations!";
     showFireAtLocCellsForPlayer('P1');
     nShipsDn=Gameover('P1');
@@ -484,20 +485,20 @@ function frCellByP2() {
 
 function frCellTurnOfP1()
 {
-  // document.getElementById("turnByP1Btn").disabled = true;
-  // document.getElementById("frCellByP1Btn").disabled = false;
-  // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
-  // document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
+  document.getElementById("turnByP1Btn").disabled = true;
+  document.getElementById("frCellByP1Btn").disabled = false;
+  document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
+  document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireAtLocCellsForPlayer('P1');
 
 }
 
 function frCellTurnOfP2()
 {
-  // document.getElementById("turnByP2Btn").disabled = true;
-  // document.getElementById("frCellByP2Btn").disabled = false;
-  // document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
-  // document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
+  document.getElementById("turnByP2Btn").disabled = true;
+  document.getElementById("frCellByP2Btn").disabled = false;
+  document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
+  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireAtLocCellsForPlayer('P2');
 
 }
