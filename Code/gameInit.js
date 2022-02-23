@@ -34,6 +34,7 @@ return arr;
 }
 
 function humanBtn(){
+  document.getElementById("getShipsForP2Btn").style.removeProperty("display");
   document.getElementById("humanBtn").disabled = true;
   document.getElementById("AIbtn").disabled = true;
   document.getElementById("getNoOfShipsBtn").disabled = false;
