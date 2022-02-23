@@ -405,10 +405,6 @@ function getShipsForP2() {
 //the code and buttons to show the board for each player
 
 function showShips(plyrNo) {
-  
-  // let btnId="showShipsFor"+ plyrNo +"Btn";
-  // let tblId="tlbShipsFor"+ plyrNo;
-
   let plyrShipsLocaArry;
 
   if(plyrNo=="P1")
