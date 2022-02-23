@@ -406,8 +406,8 @@ function getShipsForP2() {
 
 function showShips(plyrNo) {
   
-  let btnId="showShipsFor"+ plyrNo +"Btn";
-  let tblId="tlbShipsFor"+ plyrNo;
+  // let btnId="showShipsFor"+ plyrNo +"Btn";
+  // let tblId="tlbShipsFor"+ plyrNo;
 
   let plyrShipsLocaArry;
 
