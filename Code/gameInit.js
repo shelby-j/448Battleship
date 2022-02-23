@@ -261,12 +261,12 @@ function AIsetup() {
           if(row+j < 9)
           {
             temp = String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
-            checker = AIships.search(temp) <= 0;
+            checker = AIships.search(temp) < 0;
           }
           else if(row+j == 9)
           {
             temp = String.fromCharCode(col+65) + "10";
-            checker = AIships.search(temp) <= 0;
+            checker = AIships.search(temp) < 0;
           }
           else checker = false;
         }
@@ -276,10 +276,10 @@ function AIsetup() {
           {
             temp = String.fromCharCode(col+j+65);
 
-            if(row+j < 9) temp +=String.fromCharCode(row+49);
+            if(row < 9) temp +=String.fromCharCode(row+49);
             else temp += "10";
 
-            checker = AIships.search(temp) <= 0;
+            checker = AIships.search(temp) < 0;
           }
           else checker = false;
         }
@@ -345,19 +345,45 @@ function getShipsForP2() {
 
 //the code and buttons to show the board for each player
 function showShipsForPlayer(plyrNo) {
-  
-  let btnId="showShipsFor"+ plyrNo +"Btn";
-  let tblId="tlbShipsFor"+ plyrNo;
+ 
   let plyrShipsLocaArry;
+
   if(plyrNo=="P1")
   {
+    var btnId="showShipsFor"+ plyrNo +"Btn";
+    var tblId="tlbShipsFor"+ plyrNo;
     plyrShipsLocaArry=p1ShipsLoc;
   }
   else
   {
+    var btnId="showShipsFor"+ plyrNo +"Btn";
+    var tblId="tlbShipsFor"+ plyrNo;
     plyrShipsLocaArry=p2ShipsLoc;
   }
-  if(document.getElementById(btnId).innerHTML =="Show Ships of " + plyrNo)
+  
+  if(AIactivated && plyrNo == "P2")
+  {
+    document.getElementById(btnId).innerHTML =="Show Ships of AI";
+    let arrElm=0;
+    let elmId="";
+    for(var i=0;i<10;i++)
+    {
+      for(var j=0;j<10;j++)
+      {
+        arrElm=plyrShipsLocaArry[i][j];
+        if(arrElm!=0)
+        {
+          elmId=plyrNo.toString()+i.toString()+j.toString();
+          console.log(elmId);
+          document.getElementById(elmId).innerHTML = "S"+arrElm.toString();
+        }
+      }
+        
+    }
+    document.getElementById(btnId).innerHTML = "Hide Ships of " + plyrNo;
+    document.getElementById(tblId).style.removeProperty("display");
+  }
+  else if(document.getElementById(btnId).innerHTML =="Show Ships of " + plyrNo)
   {
     //console.log(plyrShipsLocaArry.length);
     let arrElm=0;
