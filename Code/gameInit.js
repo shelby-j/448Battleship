@@ -3,6 +3,8 @@ let Player1Ships;
 let Player2Ships;
 let difficulty = "Easy";
 let AIactivated = false;
+let gameSetup = false;
+let shipsShown = false;
 
 var p1ShipLoc = matrix();// 
 var p2ShipLoc = matrix();// 
@@ -40,7 +42,7 @@ function humanBtn(){
   document.getElementById("getNoOfShipsBtn").disabled = false;
   changeVisibility();
   document.getElementById("Opponent").innerHTML = "Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}";
-  document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for Player 2";
+  document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for P2";
 }
 
 function AIbtn() {
@@ -78,8 +80,10 @@ function loadStoredVars() //stores local json variables
   numShips = JSON.parse(window.localStorage.getItem("numShips")); // Retrieving
   p1ShipLocArr=JSON.parse(window.localStorage.getItem("p1ShipLocArr")); // Retrieving
   p2ShipLocArr=JSON.parse(window.localStorage.getItem("p2ShipLocArr")); // Retrieving
-  
+  AIactivated=JSON.parse(window.localStorage.getItem("AIactivated"));
+  difficulty=JSON.parse(window.localStorage.getItem("difficulty"));
 }
+
 function getShipsLocArry(shipsLoc){
   shipsLoc = shipsLoc.substring(1, (shipsLoc.length-1));
   var strArry = shipsLoc.split(",");
@@ -308,13 +312,15 @@ function AIsetup() {
     }
   }
   AIships += "]";
-  console.log(AIships);
+
+  window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
+  window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
 
   document.getElementById("Opponent").innerHTML = "AI's board is set.";
   document.getElementById("P2Ships").disabled = false;
   document.getElementById("showShipsForP2Btn").disabled = false;
   document.getElementById("playGameBtn").disabled = false;
-  fillShipsLoc(p2ShipsLoc, AIships);
+  fillShipsLoc(p2ShipLoc, AIships);
   p2ShipsLocArry2Row = getShipsLocArry(AIships);
 }
 
@@ -419,12 +425,10 @@ function showShips(plyrNo) {
     var btnId="showShipsFor"+ plyrNo +"Btn";
     var tblId="tlbShipsFor"+ plyrNo;
     plyrShipsLocaArry=p2ShipLoc;
-
   }
   
-  if(AIactivated && plyrNo == "P2")
+  if(AIactivated && plyrNo == "P2" && !shipsShown)
   {
-    document.getElementById(btnId).innerHTML =="Show Ships of AI";
     let arrElm=0;
     let elmId="";
     for(var i=0;i<10;i++)
@@ -438,13 +442,13 @@ function showShips(plyrNo) {
           console.log(elmId);
           document.getElementById(elmId).innerHTML = "S"+arrElm.toString();
         }
-      }
-        
+      }   
     }
-    document.getElementById(btnId).innerHTML = "Hide Ships of " + plyrNo;
+    document.getElementById(btnId).innerHTML = "Hide Ships of AI";
     document.getElementById(tblId).style.removeProperty("display");
+    shipsShown = true;
   }
-  else if(document.getElementById(btnId).innerHTML =="Show Ships of " + plyrNo)
+  else if(!shipsShown)
   {
     //console.log(plyrShipsLocaArry.length);
     let arrElm=0;
@@ -465,10 +469,12 @@ function showShips(plyrNo) {
     }
     document.getElementById(btnId).innerHTML = "Hide Ships of " + plyrNo;
     document.getElementById(tblId).style.removeProperty("display");
+    shipsShown = true;
   }
   else
   {
-    document.getElementById(btnId).innerHTML = "Show Ships of " + plyrNo;
+    if(AIactivated && plyrNo == "P2") document.getElementById(btnId).innerHTML = "Show Ships of AI";
+    else document.getElementById(btnId).innerHTML = "Show Ships of " + plyrNo;
     document.getElementById(btnId).disabled = true;
     document.getElementById(tblId).style.setProperty("display","none");
   }
@@ -629,7 +635,6 @@ function frCellByP1() {
   
   let row, col;
   col = frCell.toUpperCase().charCodeAt(1)-65;
-  
  
   if(frCell.length == 4)
   { row = frCell.substring(2,3)-1;}
@@ -705,6 +710,12 @@ function frCellByP2() {
 
 function frCellTurnOfP1()
 {
+  if(!gameSetup)
+  {
+    opponentNaming();
+    gameSetup = true;
+  }
+
   document.getElementById("turnByP1Btn").disabled = true;
   document.getElementById("frCellByP1Btn").disabled = false;
   // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
@@ -717,9 +728,22 @@ function frCellTurnOfP2()
 {
   document.getElementById("turnByP2Btn").disabled = true;
   document.getElementById("frCellByP2Btn").disabled = false;
-  // document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
   document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
-
 }
 
+function opponentNaming() {
+  document.getElementById("turnByP2Btn").style.removeProperty("display");
+  document.getElementById("frCellByP2Btn").style.removeProperty("display");
+
+  if(AIactivated) 
+  {
+    document.getElementById("turnByP2Btn").innerHTML = "Start AI's turn";
+    document.getElementById("frCellByP2Btn").innerHTML = "Launch AI attack";
+  }
+  else
+  {
+    document.getElementById("turnByP2Btn").innerHTML = "Start P2's turn";
+    document.getElementById("frCellByP2Btn").innerHTML = "Choose Cell to Fire at P2";
+  }
+}
