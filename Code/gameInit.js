@@ -80,7 +80,7 @@ function loadStoredVars() //stores local json variables
   numShips = JSON.parse(window.localStorage.getItem("numShips")); // Retrieving
   p1ShipLocArr=JSON.parse(window.localStorage.getItem("p1ShipLocArr")); // Retrieving
   p2ShipLocArr=JSON.parse(window.localStorage.getItem("p2ShipLocArr")); // Retrieving
-  AIactivated=JSON.parse(window.localStorage.getItem("AIactivated"));
+  AIactivated = JSON.parse(window.localStorage.getItem("AIactivated"));
   difficulty=JSON.parse(window.localStorage.getItem("difficulty"));
 }
 
@@ -405,6 +405,7 @@ function getShipsForP2() {
     window.localStorage.setItem("p1ShipLocArr", JSON.stringify(p1ShipLocArr)); // Saving
     //console.log("saveP2="+p2ShipLocArr);
     window.localStorage.setItem("p2ShipLocArr", JSON.stringify(p2ShipLocArr)); // Saving
+    window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
   }
   
 }
@@ -631,7 +632,6 @@ function Gameover(plyrNo) {
 function frCellByP1() {
   let nShipsDn=0;
   let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
-  console.log('hello')
   
   let row, col;
   col = frCell.toUpperCase().charCodeAt(1)-65;
@@ -746,4 +746,48 @@ function opponentNaming() {
     document.getElementById("turnByP2Btn").innerHTML = "Start P2's turn";
     document.getElementById("frCellByP2Btn").innerHTML = "Choose Cell to Fire at P2";
   }
+}
+
+function secondAttacker(){
+  if(AIactivated)
+  {
+    AIattack();
+  }
+  else
+  {
+    frCellByP2();
+  }
+}
+
+function AIattack() {
+  let sunkShips =0;
+  sunkShips = Gameover('P2')
+
+  if(difficulty == "easy") easyAttack();
+  else if(difficulty == "medium") mediumAttack();
+  else hardAttack();
+
+  if((numShips-sunkShips)==0)
+  {
+    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the AI.";
+    document.getElementById("turnByP2Btn").disabled = true;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  } 
+  else
+  {
+    document.getElementById("turnByP1Btn").disabled = false;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  }
+}
+
+function easyAttack() {
+
+}
+
+function mediumAttack() {
+
+}
+
+function hardAttack() {
+
 }
