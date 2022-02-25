@@ -1028,14 +1028,11 @@ function mediumAttack() {
 
 }
 
-//Create a new board by taking in a node and i
+//Create a new board by taking in a node, rowId, and tableId
 function createBoard(node, rowId, tableId)
 {
   //Firstly, create a new table that will store the board
   let table = document.createElement("table");
-
-  //Next, set the table style to be none
-  //table.style.display = 'none';
 
   //Next, set the border of table to be 1
   table.setAttribute("border", "1");
@@ -1043,9 +1040,10 @@ function createBoard(node, rowId, tableId)
   //Next, set the cellpadding to be 3
   table.setAttribute("cellpadding", "3");
 
-  //Finally, set the id of table to id
+  //Finally, set the id of table to be tableId
   table.setAttribute("id", tableId);
 
+  //Set the table's margin from from to be 10 pixels
   table.style.marginTop = "10px";
 
   //Next, add create a new element that will store the tbody tag
@@ -1082,7 +1080,6 @@ function createBoard(node, rowId, tableId)
   //Next, add columnsNames to tableBody
   tableBody.appendChild(columnsNames)
 
-  
   //Next, loop for ten times
   for(let i = 0; i < 10; i++)
   {
@@ -1093,7 +1090,7 @@ function createBoard(node, rowId, tableId)
     let columnNumber = document.createElement("td");
 
     //Next, set the class of columnNumber to be bold
-    //columnNumber.setAttribute("class", "bold");
+    columnNumber.setAttribute("class", "bold");
 
     //Set the innerhtml to be i+1
     columnNumber.innerHTML = (i+1).toString();
@@ -1101,14 +1098,13 @@ function createBoard(node, rowId, tableId)
     //Add columnNumber to row
     row.appendChild(columnNumber);
 
-    
     //Next loop for ten times
     for(let j = 0; j < 10; j++)
     {
       //Create a new column
       let column = document.createElement("td");
 
-      //Next, create the id for column to id + i + j
+      //Next, create the id for column to be rowID + i + j
       let elementId = rowId + i.toString() + j.toString();
 
       //Set the id of column to be elementId
@@ -1184,7 +1180,18 @@ function markAIAttack(attackCoordinate) {
   }
 }
 
+//This eventListener create two boards in game.html
+//Adds an even listener to window when game.html loads
 window.addEventListener("load", () => {
+  //Firstly, create a new table for Player 1
+  //Look for the div that have the id P1
+  //Next, use createBoard to add a new table to P1, with the rowId being FrAtP1 and 
+  //the tableId to be tlbCellFrAtByP1
   createBoard(window.document.querySelector("#P1"), "FrAtP1", "tlbCellFrAtByP1");
+
+  //Next, create a new table for Player 2 or AI 
+  //Look for the div that have the id P2
+  //Next, use createBoard to add a new table to P2, with the rowId being FrAtP2 and
+  //the tableId to be tlbCellFrAtByP2
   createBoard(window.document.querySelector("#P2"), "FrAtP2", "tlbCellFrAtByP2");
 });
