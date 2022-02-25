@@ -965,7 +965,7 @@ function frCellTurnOfP1()
 
   document.getElementById("turnByP1Btn").disabled = true;
   document.getElementById("frCellByP1Btn").disabled = false;
-  document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
+ // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
   document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireLocations('P1');
 
@@ -1029,7 +1029,7 @@ function mediumAttack() {
 }
 
 //Create a new board by taking in a node and i
-function createBoard(node, id)
+function createBoard(node, rowId, tableId)
 {
   //Firstly, create a new table that will store the board
   let table = document.createElement("table");
@@ -1044,7 +1044,9 @@ function createBoard(node, id)
   table.setAttribute("cellpadding", "3");
 
   //Finally, set the id of table to id
-  table.setAttribute("id", id);
+  table.setAttribute("id", tableId);
+
+  table.style.marginTop = "10px";
 
   //Next, add create a new element that will store the tbody tag
   let tableBody = document.createElement("tbody");
@@ -1107,7 +1109,7 @@ function createBoard(node, id)
       let column = document.createElement("td");
 
       //Next, create the id for column to id + i + j
-      let elementId = id + i.toString() + j.toString();
+      let elementId = rowId + i.toString() + j.toString();
 
       //Set the id of column to be elementId
       column.setAttribute("id", elementId);
@@ -1123,8 +1125,7 @@ function createBoard(node, id)
   //Next, add tableBody to table
   table.appendChild(tableBody);
 
-  console.log(table);
-
+  
   //Finally, append table to  node
   node.appendChild(table);
 }
@@ -1182,3 +1183,8 @@ function markAIAttack(attackCoordinate) {
     document.getElementById("frCellByP2Btn").disabled = true;
   }
 }
+
+window.addEventListener("load", () => {
+  createBoard(window.document.querySelector("#P1"), "FrAtP1", "tlbCellFrAtByP1");
+  createBoard(window.document.querySelector("#P2"), "FrAtP2", "tlbCellFrAtByP2");
+});
