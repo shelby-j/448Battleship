@@ -523,7 +523,7 @@ function specialAttack(shipArr, attackLocation) {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            arr[row - 1][col - 1] = 1;
+            shipArr[row - 1][col - 1] = 1;
             col++;
         }
         row++;
