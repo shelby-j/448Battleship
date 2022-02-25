@@ -1180,10 +1180,33 @@ function markAIAttack(attackCoordinate) {
   }
 }
 
-//This eventListener create two boards in game.html
-//Adds an even listener to window when game.html loads
-window.addEventListener("load", () => {
-  //Firstly, create a new table for Player 1
+//Create the players board when the game starts
+//Can only be used in game.html not index.html
+function createPlayerBoards()
+{
+  //First, set the Player's 1 Board label at the beginning of the game
+  //Look for the div in game.html that have the id P1
+  //Then, set the inner html of P1 to be Player's 1 Board
+  window.document.querySelector("#P1").innerHTML = "Player 1's Board";
+
+  //Next, set Player's 2/AI's Board lable at the beginning of the game
+  //Check if the ai is activated or not
+  //If the AI is not activated 
+  if(AIactivated == false)
+  {
+    //Look for the div in game.hmtl that has the id P2
+    //Then, set the inner html of P2 to be Player's 2 Board
+    window.document.querySelector("#P2").innerHTML = "Player 2's Board";
+  }
+  //Otherwise, if the AI is activated
+  else
+  {
+    //Look for the div in game.hmtl that has the id P2
+    //Then, set the inner html of P2 to be Player's 2 Board
+    window.document.querySelector("#P2").innerHTML = "AI's Board";
+  }
+
+  //Next, create a new table for Player 1
   //Look for the div that have the id P1
   //Next, use createBoard to add a new table to P1, with the rowId being FrAtP1 and 
   //the tableId to be tlbCellFrAtByP1
@@ -1194,4 +1217,16 @@ window.addEventListener("load", () => {
   //Next, use createBoard to add a new table to P2, with the rowId being FrAtP2 and
   //the tableId to be tlbCellFrAtByP2
   createBoard(window.document.querySelector("#P2"), "FrAtP2", "tlbCellFrAtByP2");
+}
+
+//This eventListener create two boards in game.html
+//Adds an event listener to window when game.html loads
+window.addEventListener("load", () => {
+  //Create both player's board in game.html
+  //Use a try and catch block to catch an error if createPlayerBoards is use in index.html
+  //rather than in game.html
+  try {
+    createPlayerBoards();
+  } catch (error) {
+  }
 });
