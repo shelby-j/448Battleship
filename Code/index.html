@@ -5,7 +5,32 @@
 <title>Battleship</title>
 </head>
 <body>
-<h1>Welcome to the Battleship! game </h1>
+<h1 style="text-align:center">Welcome to Battleship! </h1>
+
+<table>
+    <tbody>
+        <tr>
+        <td>
+            <p>Would you like to play against another player or AI?</p>
+        </td>
+        <td>
+        </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="humanBtn" onclick="humanBtn()">Human</button>
+                &nbsp;
+                <button id="AIbtn" onclick="AIbtn()">AI</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="difficulty"></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 <table>
     <tbody>
         <tr>
@@ -13,7 +38,7 @@
             <p>Click the button to choose number of ships to use in game[1-5].</p>
         </td>
         <td>
-            <button id="getNoOfShipsBtn" onclick="getNoOfShips()">Ships</button>
+            <button id="getNoOfShipsBtn" disabled = true onclick="getNoOfShips()">Ships</button>
         </td>
         </tr>
         <tr>
@@ -212,20 +237,20 @@
     <tbody>
         <tr>
         <td>
-            <p>Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}</p>
+            <p id="Opponent" style="display:none"></p>
         </td>
         <td>
-            <button id="getShipsForP2Btn" disabled = true onclick="getShipsForP2()">Ships of P2</button>
-        </td>
-        </tr>
-        <tr>
-        <td>
-            <p id="P2Ships"></p>
+            <button id="getShipsForP2Btn" disabled = true style="display:none" onclick="getShipsForP2()">Ships of P2</button>
         </td>
         </tr>
         <tr>
         <td>
-            <button id="showShipsForP2Btn" disabled = true onclick="showShips('P2')">Show Ships of P2</button>
+            <p id="P2Ships" style="display:none"></p>
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <button id="showShipsForP2Btn" style="display:none" disabled = true onclick="showShips('P2')"></button>
         </td>
         </tr>
     </tbody>
@@ -388,8 +413,8 @@
 </tbody></table>
 <br />
 
-<p>we got all information now lets play game!</p>
-<button id="playGameBtn" disabled = true onclick="window.location.href='./game.html'">Start Game!</button>
+<p id="endingLine" style="display:none">Let's play Battleship!</p>
+<button id="playGameBtn" disabled = true style="display:none" onclick="window.location.href='./game.html'">Start Game!</button>
 
 </body>
 </html>

@@ -1,6 +1,13 @@
 let numShips = 3; //default ship number
 let Player1Ships;
 let Player2Ships;
+let difficulty = "Easy";
+let AIactivated = false;
+let gameSetup = false;
+let gameShownForP1 = false;
+let gameShownForP2 = false;
+let firstTurn = false;
+let enemyShips = [];
 
 var p1ShipLoc = matrix();// 
 var p2ShipLoc = matrix();// 
@@ -38,6 +45,44 @@ function matrix(){
 return arr;
 }
 
+function humanBtn(){
+  document.getElementById("getShipsForP2Btn").style.removeProperty("display");
+  document.getElementById("humanBtn").disabled = true;
+  document.getElementById("AIbtn").disabled = true;
+  document.getElementById("getNoOfShipsBtn").disabled = false;
+  changeVisibility();
+  document.getElementById("Opponent").innerHTML = "Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}";
+  document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for P2";
+}
+
+function AIbtn() {
+  difficulty = prompt("What difficulty would you like to play? (Easy, Medium, or Hard)", difficulty);
+  difficulty = difficulty.toLowerCase();
+
+  if(difficulty == "easy" || difficulty == "medium" || difficulty == "hard") {
+    document.getElementById("difficulty").innerHTML = "The AI's difficulty is set to " + difficulty + " .";
+    document.getElementById("AIbtn").disabled = true;
+    document.getElementById("humanBtn").disabled = true;
+    document.getElementById("getNoOfShipsBtn").disabled = false;
+    changeVisibility();
+    document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for AI";
+    AIactivated = true;
+  }
+  else
+  {
+    window.alert("Invalid difficulty option. Try again.");
+  }
+}
+
+function changeVisibility()
+{
+  document.getElementById("Opponent").style.removeProperty("display");
+  document.getElementById("endingLine").style.removeProperty("display");
+  document.getElementById("playGameBtn").style.removeProperty("display");
+  document.getElementById("P2Ships").style.removeProperty("display");
+  document.getElementById("showShipsForP2Btn").style.removeProperty("display");
+}
+
 function loadStoredVars() //stores local json variables
 {
   p1ShipLoc = JSON.parse(window.localStorage.getItem("p1ShipLoc")); // Retrieving
@@ -45,8 +90,10 @@ function loadStoredVars() //stores local json variables
   numShips = JSON.parse(window.localStorage.getItem("numShips")); // Retrieving
   p1ShipLocArr=JSON.parse(window.localStorage.getItem("p1ShipLocArr")); // Retrieving
   p2ShipLocArr=JSON.parse(window.localStorage.getItem("p2ShipLocArr")); // Retrieving
-  
+  AIactivated = JSON.parse(window.localStorage.getItem("AIactivated"));
+  difficulty=JSON.parse(window.localStorage.getItem("difficulty"));
 }
+
 function getShipsLocArry(shipsLoc){
   shipsLoc = shipsLoc.substring(1, (shipsLoc.length-1));
   var strArry = shipsLoc.split(",");
@@ -80,6 +127,7 @@ console.log("arr1.length="+arr1.length);
 console.log(typeof arr1);
   return arr1;
 }
+
 function fillShipsLoc(arr,shipsLoc){
   shipsLoc = shipsLoc.substring(1, (shipsLoc.length-1));
   const strArry = shipsLoc.split(",");
@@ -383,7 +431,100 @@ function getShipsForP1() {
     document.getElementById("showShipsForP1Btn").disabled = false;
     document.getElementById("P1Ships").innerHTML = Player1Ships  + " ships locations!";
     document.getElementById("getShipsForP1Btn").disabled = true;
+
+    if(AIactivated) AIsetup();
   }
+}
+
+function AIsetup() { 
+  let AIships = "[";
+  let row = 0, col = 0;
+  let temp;
+  let adjuster = true; 
+  let checker = true;
+
+  for(let i=0; i<numShips; i++)
+  {
+    adjuster = Math.random() < .5;
+
+    do{
+      temp = "";
+
+      do{
+        row = Math.floor(Math.random() * 10); 
+        col = Math.floor(Math.random() * 10);
+      }while(row == 9-i && col == 9-i);
+
+      for(let j=0; j < i+1; j++)
+      {
+        if(adjuster)
+        {
+          if(row+j < 9)
+          {
+            temp = String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
+            checker = AIships.search(temp) < 0;
+          }
+          else if(row+j == 9)
+          {
+            temp = String.fromCharCode(col+65) + "10";
+            checker = AIships.search(temp) < 0;
+          }
+          else checker = false;
+        }
+        else
+        {
+          if(col+j <= 9)
+          {
+            temp = String.fromCharCode(col+j+65);
+
+            if(row < 9) temp +=String.fromCharCode(row+49);
+            else temp += "10";
+
+            checker = AIships.search(temp) < 0;
+          }
+          else checker = false;
+        }
+      }
+    }while(!checker);
+
+    for(let j=0; j< i+1; j++)
+    {
+      if(adjuster)
+      {
+        if(row+j == 9)
+        {
+          AIships += String.fromCharCode(col+65) + "10";
+        }
+        else
+        {
+          AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
+        }
+      }
+      else
+      {
+        AIships += String.fromCharCode(col+j+65);
+        if(col+j < 9) AIships +=String.fromCharCode(row+49);
+        else AIships += "10";
+      }
+
+      if(((j*(j+1))/2) < ((numShips*(numShips-1))/2)) AIships += ",";
+    }
+  }
+  AIships += "]";
+
+  console.log(AIships);
+
+  window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
+  window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
+
+  document.getElementById("Opponent").innerHTML = "AI placed their ships at " + AIships + ".";
+  document.getElementById("P2Ships").disabled = false;
+  document.getElementById("showShipsForP2Btn").disabled = false;
+  document.getElementById("playGameBtn").disabled = false;
+  fillShipsLoc(p2ShipLoc, AIships);
+  p2ShipLocArr = getShipsLocArry(AIships);
+  window.localStorage.setItem("p2ShipLoc", JSON.stringify(p2ShipLoc));
+  window.localStorage.setItem("p2ShipLocArr", JSON.stringify(p2ShipLocArr));
 }
 
 //same as above, but with added local storage to transfer pages
@@ -467,25 +608,58 @@ function getShipsForP2() {
     window.localStorage.setItem("p1ShipLocArr", JSON.stringify(p1ShipLocArr)); // Saving
     //console.log("saveP2="+p2ShipLocArr);
     window.localStorage.setItem("p2ShipLocArr", JSON.stringify(p2ShipLocArr)); // Saving
+    window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
   }
   
 }
 
 //the code and buttons to show the board for each player
+
 function showShips(plyrNo) {
-  
-  let btnId="showShipsFor"+ plyrNo +"Btn";
-  let tblId="tlbShipsFor"+ plyrNo;
   let plyrShipsLocaArry;
+
   if(plyrNo=="P1")
   {
+    var btnId="showShipsFor"+ plyrNo +"Btn";
+    var tblId="tlbShipsFor"+ plyrNo;
     plyrShipsLocaArry=p1ShipLoc;
   }
   else
   {
+    var btnId="showShipsFor"+ plyrNo +"Btn";
+    var tblId="tlbShipsFor"+ plyrNo;
     plyrShipsLocaArry=p2ShipLoc;
   }
-  if(document.getElementById(btnId).innerHTML =="Show Ships of " + plyrNo)
+  
+  if(plyrNo == "P2" && !gameShownForP2)
+  {
+    let arrElm=0;
+    let elmId="";
+    for(var i=0;i<10;i++)
+    {
+      for(var j=0;j<10;j++)
+      {
+        arrElm=plyrShipsLocaArry[i][j];
+        if(arrElm!=0)
+        {
+          elmId=plyrNo.toString()+i.toString()+j.toString();
+          console.log(elmId);
+          document.getElementById(elmId).innerHTML = "S"+arrElm.toString();
+        }
+      }   
+    }
+    if(AIactivated){
+      document.getElementById(btnId).innerHTML = "Hide Ships of AI";
+      document.getElementById(tblId).style.removeProperty("display");
+    }
+    else{
+      document.getElementById(btnId).innerHTML = "Hide Ships of P2";
+      document.getElementById(tblId).style.removeProperty("display");
+    }
+    
+    gameShownForP2 = true;
+  }
+  else if(!gameShownForP1)
   {
     //console.log(plyrShipsLocaArry.length);
     let arrElm=0;
@@ -506,10 +680,12 @@ function showShips(plyrNo) {
     }
     document.getElementById(btnId).innerHTML = "Hide Ships of " + plyrNo;
     document.getElementById(tblId).style.removeProperty("display");
+    gameShownForP1 = true;
   }
   else
   {
-    document.getElementById(btnId).innerHTML = "Show Ships of " + plyrNo;
+    if(AIactivated && plyrNo == "P2") document.getElementById(btnId).innerHTML = "Show Ships of AI";
+    else document.getElementById(btnId).innerHTML = "Show Ships of " + plyrNo;
     document.getElementById(btnId).disabled = true;
     document.getElementById(tblId).style.setProperty("display","none");
   }
@@ -525,7 +701,7 @@ function attack(shipArr,attackLocation){
   let col,row;
   col=attackLocation.toLowerCase().charCodeAt(0) - 97;
   row=Number(attackLocation.toLowerCase().substring(1,attackLocation.length))-1;
-   shipArr[row][col]= 1;
+  shipArr[row][col]= 1;
   
    
 }
@@ -699,14 +875,13 @@ function Gameover(plyrNo) {
     }
   return nShipsDn;
 }
+
 function frCellByP1() {
   let nShipsDn=0;
   let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
-  console.log('hello')
   
   let row, col;
   col = frCell.toUpperCase().charCodeAt(1)-65;
-  
  
   if(frCell.length == 4)
   { row = frCell.substring(2,3)-1;}
@@ -782,6 +957,12 @@ function frCellByP2() {
 
 function frCellTurnOfP1()
 {
+  if(!gameSetup)
+  {
+    opponentNaming();
+    gameSetup = true;
+  }
+
   document.getElementById("turnByP1Btn").disabled = true;
   document.getElementById("frCellByP1Btn").disabled = false;
   document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
@@ -794,9 +975,56 @@ function frCellTurnOfP2()
 {
   document.getElementById("turnByP2Btn").disabled = true;
   document.getElementById("frCellByP2Btn").disabled = false;
-  document.getElementById("tlbCellFrAtByP1").style.setProperty("display","none");
   document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
+}
+
+function opponentNaming() {
+  document.getElementById("turnByP2Btn").style.removeProperty("display");
+  document.getElementById("frCellByP2Btn").style.removeProperty("display");
+
+  if(AIactivated) 
+  {
+    document.getElementById("turnByP2Btn").innerHTML = "Start AI's turn";
+    document.getElementById("frCellByP2Btn").innerHTML = "Launch AI attack";
+  }
+  else
+  {
+    document.getElementById("turnByP2Btn").innerHTML = "Start P2's turn";
+    document.getElementById("frCellByP2Btn").innerHTML = "Choose Cell to Fire at P2";
+  }
+}
+
+function secondAttacker(){
+  if(AIactivated)
+  {
+    if(difficulty == "easy") easyAttack();
+    else if(difficulty == "medium") mediumAttack();
+    else hardAttack();
+  }
+  else
+  {
+    frCellByP2();
+  }
+}
+
+function easyAttack() {
+  let row = 0, col = 0;
+  let attackCoordinate = "[";
+
+  do{
+    row = Math.floor(Math.random() * 10); 
+    col = Math.floor(Math.random() * 10);
+  }while(p2sFireLoc[row][col] != 0);
+
+  if(row == 9) attackCoordinate += String.fromCharCode(col+65) + "10";
+  else attackCoordinate += String.fromCharCode(col+65) + String.fromCharCode(row+49);
+  attackCoordinate += "]";
+
+  markAIAttack(attackCoordinate);
+}
+
+function mediumAttack() {
 
 }
 
@@ -899,4 +1127,58 @@ function createBoard(node, id)
 
   //Finally, append table to  node
   node.appendChild(table);
+}
+function hardAttack() { //p1ShipLocArr
+  let attackCoordinate = "";
+  let length;
+  let index;
+  let temp = "";
+
+  if(!firstTurn)
+  {
+    temp += p1ShipLocArr[0];
+    console.log(temp)
+    enemyShips = temp.split(',');
+    firstTurn = true;
+  }
+  console.log(enemyShips);
+  console.log(enemyShips[1]);
+
+  length = enemyShips.length;
+  console.log(length);
+  index = Math.floor(Math.random() * length);
+  console.log(index);
+  attackCoordinate += enemyShips[index];
+
+  console.log(attackCoordinate);
+
+  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
+  attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
+
+  console.log(attackCoordinate);
+
+  markAIAttack(attackCoordinate);
+}
+
+function markAIAttack(attackCoordinate) {
+
+  let sunkShips = 0;
+
+  attack(p2sFireLoc,attackCoordinate);
+  document.getElementById("P2FrCell").innerHTML = attackCoordinate  + " Fire at locations!";
+  showFireLocations('P2');
+  sunkShips = Gameover('P2')
+  document.getElementById("P2FrHitStatus").innerHTML = sunkShips  + " ship down! "+(numShips-sunkShips) + " to go";
+
+  if((numShips-sunkShips)==0)
+  {
+    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
+    document.getElementById("turnByP2Btn").disabled = true;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  } 
+  else
+  {
+    document.getElementById("turnByP1Btn").disabled = false;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  }
 }
