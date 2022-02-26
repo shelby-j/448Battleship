@@ -369,14 +369,14 @@ function getShipsForP1() {
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0) { // check for duplicates
+  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player1Ships)) { // check for duplicates
     alert("Wrong input!");
     return
   }
   let isValid = true;
   console.log(Player1Ships)
   while (Player1Ships == '') {
-    alert("Wrong input!");
+    alert("Wrong input! You gave an empty input");
     return
   }
   do {
@@ -536,7 +536,7 @@ function getShipsForP2() {
   let shipArray = Player2Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0) {
+  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player2Ships)) {
     alert("Wrong input!");
     return
   }
@@ -698,7 +698,7 @@ function showShips(plyrNo) {
 
 function askForSpecial() {
   if (!specCountP1) {
-    document.getElementById("specAttack").disabled = true
+    document.getElementById("specAttack").style.setProperty("display","none");
     return
   }
   let nShipsDn=0;
@@ -724,6 +724,8 @@ function askForSpecial() {
     showFireLocations('P1');
     nShipsDn=Gameover('P1');
     document.getElementById("P1FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    specCountP1--
+    document.getElementById("specAttack").innerHTML = "Use Special attack Count: " + specCountP1;
     if((numShips-nShipsDn)==0)
     {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
@@ -741,12 +743,11 @@ function askForSpecial() {
   }
 
   
-  specCountP1--
 }
 
 function askForSpecialP2() {
   if (!specCountP2) {
-    document.getElementById("specAttackP2").disabled = true
+    document.getElementById("specAttackP2").style.setProperty("display","none");
     return
   }
   let nShipsDn=0;
@@ -772,6 +773,8 @@ function askForSpecialP2() {
     showFireLocations('P2');
     nShipsDn=Gameover('P2');
     document.getElementById("P2FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    specCountP2--
+    document.getElementById("specAttackP2").innerHTML = "Use Special attack Count: " + specCountP2;
     if((numShips-nShipsDn)==0)
     {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
@@ -788,7 +791,6 @@ function askForSpecialP2() {
     window.alert("Invalid attack coordinate. Try again.");
   }
 
-  specCountP2--
 }
 
 function attack(shipArr,attackLocation){
@@ -1112,6 +1114,7 @@ function frCellTurnOfP1()
 
   //Show all attacks on Player's 1 Board
   document.getElementById("specAttack").disabled = false;
+  document.getElementById("specAttack").innerHTML = "Use Special attack Count: " + specCountP1;
   // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
   document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireLocations('P1');
@@ -1131,6 +1134,7 @@ function frCellTurnOfP2()
   //Enable frCellByP2Btn button
   document.getElementById("frCellByP2Btn").disabled = false;
   document.getElementById("specAttackP2").disabled = false;
+  document.getElementById("specAttackP2").innerHTML = "Use Special attack Count: " + specCountP2;
   document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
 
@@ -1158,6 +1162,8 @@ function opponentNaming() {
   {
     document.getElementById("turnByP2Btn").innerHTML = "Start AI's turn";
     document.getElementById("frCellByP2Btn").innerHTML = "Launch AI attack";
+    document.getElementById('specAttackP2').style.setProperty("display","none")
+    document.getElementById('specAttackP2').id = 'null'
   }
   else
   {
