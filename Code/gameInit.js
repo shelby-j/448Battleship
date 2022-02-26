@@ -535,6 +535,7 @@ function askForSpecial() {
     {
       document.getElementById("turnByP2Btn").disabled = false;
       document.getElementById("specAttack").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
     }
   }
   else{
@@ -566,22 +567,23 @@ function askForSpecialP2() {
     window.alert("Attack coordinate out of bounds. Try again.");
   }
 
-  if (p1sFireLoc[row][col] == 0) { // check if sunk
-    specialAttack(p1sFireLoc,frCell);
+  if (p2sFireLoc[row][col] == 0) { // check if sunk
+    specialAttack(p2sFireLoc,frCell);
 
-    document.getElementById("P1FrCell").innerHTML = frCell  + " Fire at locations!";
-    showFireLocations('P1');
-    nShipsDn=Gameover('P1');
-    document.getElementById("P1FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    document.getElementById("P2FrCell").innerHTML = frCell  + " Fire at locations!";
+    showFireLocations('P2');
+    nShipsDn=Gameover('P2');
+    document.getElementById("P2FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
     if((numShips-nShipsDn)==0)
     {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
-      document.getElementById("turnByP2Btn").disabled = true;
+      document.getElementById("turnByP1Btn").disabled = true;
       document.getElementById("frCellByP1Btn").disabled = true;
     } else
     {
-      document.getElementById("turnByP2Btn").disabled = false;
+      document.getElementById("turnByP1Btn").disabled = false;
       document.getElementById("specAttackP2").disabled = true;
+      document.getElementById("frCellByP2Btn").disabled = true;
     }
   }
   else{
@@ -796,10 +798,12 @@ function frCellByP1() {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
       document.getElementById("turnByP2Btn").disabled = true;
       document.getElementById("frCellByP1Btn").disabled = true;
+      document.getElementById("specAttack").disabled = true;
     } else
     {
       document.getElementById("turnByP2Btn").disabled = false;
       document.getElementById("frCellByP1Btn").disabled = true;
+      document.getElementById("specAttack").disabled = true;
     }
   }
   else{
@@ -835,10 +839,12 @@ function frCellByP2() {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 2.";
       document.getElementById("turnByP2Btn").disabled = true;
       document.getElementById("frCellByP2Btn").disabled = true;
+      document.getElementById("specAttackP2").disabled = true;
     } else
     {
       document.getElementById("turnByP1Btn").disabled = false;
       document.getElementById("frCellByP2Btn").disabled = true;
+      document.getElementById("specAttackP2").disabled = true;
     }
   }
   else{
@@ -856,6 +862,7 @@ function frCellTurnOfP1()
 
   document.getElementById("turnByP1Btn").disabled = true;
   document.getElementById("frCellByP1Btn").disabled = false;
+  document.getElementById("specAttack").disabled = false;
   // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
   document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireLocations('P1');
@@ -866,6 +873,7 @@ function frCellTurnOfP2()
 {
   document.getElementById("turnByP2Btn").disabled = true;
   document.getElementById("frCellByP2Btn").disabled = false;
+  document.getElementById("specAttackP2").disabled = false;
   document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
 }
