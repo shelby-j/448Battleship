@@ -13,7 +13,8 @@
 
 <div>
     <button id="turnByP1Btn" onclick="frCellTurnOfP1()">Start P1's turn</button>    
-    <button id="frCellByP1Btn" disabled = true onclick="frCellByP1()">Choose Cell to Fire at P1</button>
+    <button id="frCellByP1Btn" disabled = true onclick="frCellByP1()">Use normal attack</button>
+    <button id="specAttack" disabled = true onclick="askForSpecial()">Use Special attack </button>
     <table>
         <tbody>
             <tr>
@@ -29,6 +30,7 @@
 <div>
     <button id="turnByP2Btn" style="display:none" disabled = true onclick="frCellTurnOfP2()"></button>    
     <button id="frCellByP2Btn"  style="display:none" disabled = true onclick="secondAttacker()"></button>
+    <button id="specAttackP2" style="display:none" disabled = true onclick="askForSpecialP2()">Use Special attack</button>
     <table>
         <tbody>
             <tr>

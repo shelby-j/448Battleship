@@ -1,6 +1,8 @@
 let numShips = 3; //default ship number
 let Player1Ships;
 let Player2Ships;
+let specCountP1 = 2
+let specCountP2 = 2
 let difficulty = "Easy";
 let AIactivated = false;
 let gameSetup = false;
@@ -691,7 +693,102 @@ function showShips(plyrNo) {
     document.getElementById(btnId).disabled = true;
     document.getElementById(tblId).style.setProperty("display","none");
   }
-    
+  
+}
+
+function askForSpecial() {
+  if (!specCountP1) {
+    document.getElementById("specAttack").disabled = true
+    return
+  }
+  let nShipsDn=0;
+  let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
+  
+  let row, col;
+  col = frCell.toUpperCase().charCodeAt(1)-65;
+ 
+  if(frCell.length == 4)
+  { row = frCell.substring(2,3)-1;}
+  else if(frCell.length == 5)
+  { row = frCell.substring(2,4)-1;}
+
+  if(row < 0 || row > 9 || col < 0 || col > 9)
+  {
+    window.alert("Attack coordinate out of bounds. Try again.");
+  }
+
+  if (p1sFireLoc[row][col] == 0) { // check if sunk
+    specialAttack(p1sFireLoc,frCell);
+
+    document.getElementById("P1FrCell").innerHTML = frCell  + " Fire at locations!";
+    showFireLocations('P1');
+    nShipsDn=Gameover('P1');
+    document.getElementById("P1FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    if((numShips-nShipsDn)==0)
+    {
+      document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
+      document.getElementById("turnByP2Btn").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
+    } else
+    {
+      document.getElementById("turnByP2Btn").disabled = false;
+      document.getElementById("specAttack").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
+    }
+  }
+  else{
+    window.alert("Invalid attack coordinate. Try again.");
+  }
+
+  
+  specCountP1--
+}
+
+function askForSpecialP2() {
+  if (!specCountP2) {
+    document.getElementById("specAttackP2").disabled = true
+    return
+  }
+  let nShipsDn=0;
+  let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
+  
+  let row, col;
+  col = frCell.toUpperCase().charCodeAt(1)-65;
+ 
+  if(frCell.length == 4)
+  { row = frCell.substring(2,3)-1;}
+  else if(frCell.length == 5)
+  { row = frCell.substring(2,4)-1;}
+
+  if(row < 0 || row > 9 || col < 0 || col > 9)
+  {
+    window.alert("Attack coordinate out of bounds. Try again.");
+  }
+
+  if (p2sFireLoc[row][col] == 0) { // check if sunk
+    specialAttack(p2sFireLoc,frCell);
+
+    document.getElementById("P2FrCell").innerHTML = frCell  + " Fire at locations!";
+    showFireLocations('P2');
+    nShipsDn=Gameover('P2');
+    document.getElementById("P2FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    if((numShips-nShipsDn)==0)
+    {
+      document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
+      document.getElementById("turnByP1Btn").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
+    } else
+    {
+      document.getElementById("turnByP1Btn").disabled = false;
+      document.getElementById("specAttackP2").disabled = true;
+      document.getElementById("frCellByP2Btn").disabled = true;
+    }
+  }
+  else{
+    window.alert("Invalid attack coordinate. Try again.");
+  }
+
+  specCountP2--
 }
 
 function attack(shipArr,attackLocation){
@@ -708,7 +805,10 @@ function attack(shipArr,attackLocation){
    
 }
 
+
+
 function specialAttack(shipArr, attackLocation) {
+    attackLocation = attackLocation.substring(1, (attackLocation.length-1));
     let col = attackLocation.toLowerCase().charCodeAt(0) - 97;
     let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1;
 
@@ -721,8 +821,13 @@ function specialAttack(shipArr, attackLocation) {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            shipArr[row - 1][col - 1] = 1;
-            col++;
+            if (row - 1 < 0 || col - 1 < 0) {
+              
+            } else {
+              if (row > 10 || col > 10) break
+              shipArr[row - 1][col - 1] = 1;
+            }
+            col++
         }
         row++;
         col = originalCol;
@@ -928,10 +1033,12 @@ function frCellByP1() {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
       document.getElementById("turnByP2Btn").disabled = true;
       document.getElementById("frCellByP1Btn").disabled = true;
+      document.getElementById("specAttack").disabled = true;
     } else
     {
       document.getElementById("turnByP2Btn").disabled = false;
       document.getElementById("frCellByP1Btn").disabled = true;
+      document.getElementById("specAttack").disabled = true;
     }
   }
   else{
@@ -967,10 +1074,12 @@ function frCellByP2() {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 2.";
       document.getElementById("turnByP2Btn").disabled = true;
       document.getElementById("frCellByP2Btn").disabled = true;
+      document.getElementById("specAttackP2").disabled = true;
     } else
     {
       document.getElementById("turnByP1Btn").disabled = false;
       document.getElementById("frCellByP2Btn").disabled = true;
+      document.getElementById("specAttackP2").disabled = true;
     }
   }
   else{
@@ -1002,6 +1111,9 @@ function frCellTurnOfP1()
   showOrHidePlayerShips(1, true);
 
   //Show all attacks on Player's 1 Board
+  document.getElementById("specAttack").disabled = false;
+  // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
+  document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireLocations('P1');
 
   //Hide Player 2's/AI's Ships
@@ -1018,8 +1130,8 @@ function frCellTurnOfP2()
 
   //Enable frCellByP2Btn button
   document.getElementById("frCellByP2Btn").disabled = false;
-
-  //Show all attack on Player's 2/AI's Board
+  document.getElementById("specAttackP2").disabled = false;
+  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
 
   //Next, determine whether to hide or show player 1's and player's ships
@@ -1041,7 +1153,7 @@ function frCellTurnOfP2()
 function opponentNaming() {
   document.getElementById("turnByP2Btn").style.removeProperty("display");
   document.getElementById("frCellByP2Btn").style.removeProperty("display");
-
+  document.getElementById("specAttackP2").style.removeProperty("display");
   if(AIactivated) 
   {
     document.getElementById("turnByP2Btn").innerHTML = "Start AI's turn";
