@@ -452,25 +452,7 @@ function showShips(plyrNo) {
         }
       }   
     }
-  else if(document.getElementById(btnId).innerHTML =="Show Ships of " + plyrNo)
-  {
-    //console.log(plyrShipsLocaArry.length);
-    let arrElm=0;
-    let elmId="";
-    for(var i=0;i<10;i++)
-    {
-      for(var j=0;j<10;j++)
-      {
-        arrElm=plyrShipsLocaArry[i][j];
-        if(arrElm!=0)
-        {
-          elmId=plyrNo.toString()+i.toString()+j.toString();
-          console.log(elmId);
-          document.getElementById(elmId).innerHTML = "S"+arrElm.toString();
-        }
-      }
-    } 
-  }
+    
     if(AIactivated){
       document.getElementById(btnId).innerHTML = "Hide Ships of AI";
       document.getElementById(tblId).style.removeProperty("display");
