@@ -706,6 +706,27 @@ function attack(shipArr,attackLocation){
    
 }
 
+function specialAttack(shipArr, attackLocation) {
+    let col = attackLocation.toLowerCase().charCodeAt(0) - 97;
+    let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1;
+
+    if (shipArr[row][col] != 0) {
+        alert("Invalid attack position.");
+        return;
+    }
+
+    let originalCol = attackLocation.toLowerCase().charCodeAt(0) - 97;
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            shipArr[row - 1][col - 1] = 1;
+            col++;
+        }
+        row++;
+        col = originalCol;
+    }
+}
+
 //Shows the player's view of their opponent
 //Takes in plyrNo, which is the player's number
 function showFireLocations(plyrNo) {
