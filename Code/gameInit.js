@@ -13,6 +13,13 @@ var p1ShipLoc = matrix();//
 var p2ShipLoc = matrix();// 
 var p1sFireLoc = matrix();// 
 var p2sFireLoc = matrix();// 
+
+//These two contains the location of all ships for each ship
+//Each variable contains two arrays
+//The first array contains these locations 
+//The second contains whether that ship is hit or not, which is either 0 or 1
+//0 for not hit
+//1 for sunk
 var p1ShipLocArr;
 var p2ShipLocArr;
 
@@ -150,23 +157,213 @@ function fillShipsLoc(arr,shipsLoc){
    
 }
 
-//gets ships for players
+//Gets ships for players
 function getNoOfShips() {
+  //Asks the player for the number of ships
   numShips = prompt("Please enter number of ships", numShips);
-  if (numShips > 0 && numShips <= 5) {
-    document.getElementById("getShipsForP1Btn").disabled = false;
-    document.getElementById("BShips").innerHTML = numShips  + " ships will be used!";
-    document.getElementById("getNoOfShipsBtn").disabled = true;
+
+  //Next, check if noShips is valid
+  //If the input was canceled
+  if(numShips == null)
+  {
+    //Tell the user that the input was canceled
+    alert("Input Canceled.");
   }
+  //Otherwise, if noShips is an empty prompt
+  //Which mean noShips has a length of 0
+  else if(numShips.length == 0)
+  {
+    //Alert the user that the prompt is empty
+    alert("Input is empty. Please try again.");
+  }
+  //Otherwise, if noShips contains whitespace, which includes
+  //spaces and 
+  //Does this check by uisng indexOf to see if there is an index of noShips
+  //that contains a space
+  else if(numShips.indexOf(' ') >= 0)
+  {
+      //Tell the user that the prompy has whitespace
+      alert("Input has whitespace. Input must be a number. Please try again.");
+  }
+  //Otherwise, if noShips is not a number
+  //Use isNaN, which returns true if noShips is not a number
+  else if(isNaN(numShips) == true)
+  {
+      //Alert the user that the input is not a number
+      alert("Input is not a number. Input must be a number. Please try again.");
+  }
+  //Otherwise, if the length of noShips does not equal to 1
+  //Prevents inputs that are way too big or small for javascript to handle
+  //It also prevent negative and decminal
+  else if(numShips.length != 1)
+  {
+      //Alert the user that input have more that 1 digit
+      alert("Input is not a 1-digit number. Input must can have only 1 digit. No negative signs, decimal symbols, and extra digits. Please try again.");
+  }
+  //Otherwise, if noShips is not in range of 1-5
+  else if(numShips < 1 || numShips > 5)
+  {
+      //Alert the user that the input is invalid
+      alert("Input is invalid. Input must be between 1 and 5. Please try again.")
+  }
+  //Otherwise, noShips is valid 
   else
   {
-    window.alert("Invalid number of ships. Try again.")
+    //Enable the getShipsForP1Btn button for Player 1 to set up their board
+    document.getElementById("getShipsForP1Btn").disabled = false;
+
+    //Tell the user the number of ships being used
+    //If the number of ships being use is only 1
+    if(numShips == 1)
+    {
+        //Set the inner html of BShips to be "1 ship will be used!"
+        document.getElementById("BShips").innerHTML = numShips  + " ship will be used!";
+    }
+    //Otherwise, if noShips is greater than 1
+    else
+    {
+        //Set the inner html of BShips to be noShip + " ships will be used"
+        document.getElementById("BShips").innerHTML = numShips  + " ships will be used!";
+    }
+    
+    //Disable getNoOfShipsBtn to be prevented from being used again
+    document.getElementById("getNoOfShipsBtn").disabled = true;
+
+    //Finally, convert noShips to be a number
+    numShips = parseInt(numShips);
   }
 }
+
+//Checks if the input for Player's Ships is valid or not
+//Return true if the input is valid and false if not
+function validPlayerShips(playerShips)
+{
+  //First, we need to check if playerShips is valid
+  if(playerShips == null)
+  {
+    //Tell the user that input was canceled
+    alert("Input Canceled.")
+
+    //Return false
+    return false;
+  }
+  //Otherwise, if the input is empty
+   //Which means Player1Shps has a length of 0
+   else if(playerShips.length == 0)
+   {
+     //Alert the user that the prompt is empty
+     alert("Input is empty. Please try again.");
+
+     //Return false
+     return false;
+   }
+   //Otherwise, if Player1Ships contains whitespace, which includes
+   //spaces and tabs
+   //Does this check by uisng indexOf to see if there is an index of Player1Ships
+   //that contains a space
+   else if(playerShips.indexOf(' ') >= 0)
+   {
+       //Tell the user that the input has whitespace
+       alert("Input has whitespace. Please try again.");
+
+       //Return false
+       return false;
+   }
+   //Otherwise, check if the input is a list
+   //If the input is not a list
+   else if(playerShips.charAt(0) != '[' || playerShips.charAt(playerShips.length-1) != ']')
+   {
+      //Tell the user that the input is not a list
+      alert("Input is not a list. Must be in the format [], Please try again")
+
+      //Return false
+      return false;
+   }
+
+   //Otherwise, convert playerShips to be an array
+   //Remove the brackets the surround the list
+   //Store it in a new array that will store the position of the ships
+   let shipPositions = playerShips.substring(1, (playerShips.length-1));
+
+   //Split shipPosition for each comma used to create a new array of strings
+   //Each element of the new array should contain a position of the ship
+   shipPositions = shipPositions.split(",");
+
+   //Next, check shipPositions if it is valid
+   //If the length of shipPositions does not equal to the total number of positions 
+   //the total number of postion is noShip(noShips+1)/2
+   if(shipPositions.length != (numShips*(numShips+1))/2)
+   {
+     //Tell the user that the size of the list does not equal to the total number of positions the user can have
+     alert("The size of the list does not equal to the total number of ship positions. The size of the list must be " + ((numShips*(numShips+1))/2) +".");
+
+     //Return false
+     return false;
+   }
+
+   //Next, go through each position in shipPositions to check if it is valid or not
+   for(const position of shipPositions)
+   {  
+      //Firstly, check the size of position
+      //If the size of position is not 2 or 3
+      if(position.length != 2 && position.length != 3)
+      {
+        //Tell the user that position is not the correct length
+        alert(position + " is not the correct length. Length must be either 2 or 3. Please try again.");
+
+        //Return false
+        return false;
+      }
+      //Otherwise if not
+      else
+      {
+        //Get the column by getting the first character and subtract 65 from it
+        let col = position.charCodeAt(0) - 65;
+      
+        //Next, get the row by converting the substring after index 0 into a number
+        let row = Number(position.substring(1, position.length));
+
+        //Next, check that that row and col are valid
+        //If col is less 0 or greater than 9
+        if(col < 0 || col > 9)
+        {
+           //Tell the user that column is invalid
+           alert("In " + position + ", column is invalid. Must be from A to J. Please try again.");
+
+           //Return false
+           return false;
+        }
+        //Otherwise, if row is not a number
+        else if(isNaN(row))
+        {
+          //Tell the user that row is not a number
+          alert("In " + position + ", row is not a number. Row must be a number. Please try again.");
+
+          //Return false
+          return false;
+        }
+        //Otherwise, if row is out of obunds
+        else if(row < 1 || row > 10)
+        {
+          //Tell the user that row is out of bounds
+          alert("In " + position + ", row is out of bounds. Row must be between 1 and 10. Please try again.");
+
+          //Return false
+          return false;
+        }
+      }
+   }
+
+   //Return true if input is valid
+   //Duplicates and Correct Ship Placement will be checked later
+   return true;
+}
+
 
 //gets plalyer one's ships, shows the player 1 grid, adds a disabled button
 function getShipsForP1() {
   Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
@@ -532,99 +729,136 @@ function specialAttack(shipArr, attackLocation) {
     }
 }
 
+//Shows the player's view of their opponent
+//Takes in plyrNo, which is the player's number
 function showFireLocations(plyrNo) {
-  
-  //let btnId="fireAtBy"+ plyrNo +"Btn";
-  //let tblId="tlbCellFrAtBy"+ plyrNo;
-  //let frCellbtn="frCellBy"+plyrNo+"Btn";
+  //Represent the player's view of their opponent's board
   let fireLocationArr;
+
+  //Represent the opponent's board
   let enemyShipLocArr;
+
+  //Represent the location of all ships the opponent's has
   let enemyShipLocString;
 
+  //If the number of the player is P1
   if(plyrNo=="P1")
   {
+    //Set fireLocationArr to be p1sFireLoc
     fireLocationArr=p1sFireLoc;
+
+    //Set enemyShipLocArr to be p2ShipLoc
     enemyShipLocArr=p2ShipLoc;
+
+    //Set enemyShipLocString to be p2ShipLocArr
     enemyShipLocString=p2ShipLocArr;
 
   }
+  //Otherwise if plyrNo is P2
   else
   {
+    //Set fireLocationArr to be p2sFireLoc
     fireLocationArr=p2sFireLoc;
+
+    //Set enemyShipLocArr to be p1ShipLoc
     enemyShipLocArr=p1ShipLoc;
+
+    //Set enemyShipLocString to be p1ShipLocArr
     enemyShipLocString=p1ShipLocArr;
   }
-  
-    //console.log(fireLocationArr.length);
+    //Represent an element of the plyrFireAtLocaArry
     let arrElm=0;
+
+    //Represent an element of OpnplyrShipsLocaArry
     let arrElmShip=0;
+
+    //The id of the element td at row i and column j
     let elmId="";
+
+    //Represent the row of the opponent's ship
     let opnShipsLocRow=0;
+
+    //Represent the column of the opponent's ships
     let opnShipsLocCol=0;
+
+    //Represent the location of the  opponent's ship
     let opnShipsLocStr="";
+
+    //Represenst the number of ship positions 
     let noShipsArrLen=0;
+
+    //Loop starting 1 and until numShips
+    //The loop is used to set noShipsArrLen
     for(var a=1;a<=numShips;a++)
     {
+      //Add a to noShipsArrLen 
       noShipsArrLen=noShipsArrLen+a;
     }
-    console.log("enemyShipLocString before for loop:"+enemyShipLocString);
+
+    //Next, go through each row and column of fireLocationArr
     for(var i=0;i<fireLocationArr.length;i++)
     {
       for(var j=0;j<fireLocationArr.length;j++)
       {
+        //Set arrElm to the be element of fireLocationArr at row i and column j
         arrElm=fireLocationArr[i][j];
-        //console.log(typeof fireLocationArr);
-        //console.log("fireLocationArr="+fireLocationArr);
+
+        //Set arrElmShip to be the element of enemyShipLocArr at row i and column j
         arrElmShip=enemyShipLocArr[i][j]; 
-        //console.log("noShipsArrLen="+noShipsArrLen);
-        //console.log("enemyShipLocString.length="+enemyShipLocString.length);
-        //console.log("opnShipsLocArry="+enemyShipLocString);
-        //console.log("enemyShipLocString[0]="+enemyShipLocString[0]);
-        //console.log("enemyShipLocString[1]="+enemyShipLocString[1]);
+  
+        //Go through each ship location in =enemyShipLocString
         for(var k=0;k<noShipsArrLen;k++)
         {
+          //Set the location of the oponent ships to be the kth index of the ith array of
+          //enemyShipLocString
           opnShipsLocStr=enemyShipLocString[0][k];
-         // console.log(typeof enemyShipLocString);
-          //console.log("opnShipsLocStr="+opnShipsLocStr+" enemyShipLocString[1][k]="+enemyShipLocString[1][k]);
-          //console.log(typeof opnShipsLocStr);
-          //console.log(enemyShipLocString[1][k]);
           
+          //Get ASCII code of the first character of opnShpsLocStr
+          //Then, subtract it by 97 to get the column of the ship location
           opnShipsLocCol=opnShipsLocStr.charCodeAt(0) - 97;
+
+
+          //Next, set the row of the ship location to the rest of opnShipsLocCol, except the first character
+          //Convert the substring to a number
           opnShipsLocRow=Number(opnShipsLocStr.substring(1,opnShipsLocStr.length))-1;
-          //console.log("opnShipsLocRow="+opnShipsLocRow+" i="+i+ " opnShipsLocCol="+opnShipsLocCol+" j="+j);
-          //console.log("enemyShipLocString[1][k]="+enemyShipLocString[1][k]+" arrElmShip="+arrElmShip);
-          //console.log("opnShipsLocRow="+opnShipsLocRow);
+          
+          //Next, check the following conditions are all true
+          //1. opnShipsLocRow is equal to i, which is the current row 
+          //2. opnShipsLocCol is equal to j, which is the current column
+          //3. The ship at that location is not sunk
+          //4. There is an opponent's ship at at location
+          //5. The player attack at that location
+          //If all these conditions are true
           if(opnShipsLocRow==i && opnShipsLocCol==j && enemyShipLocString[1][k]=='0' && arrElmShip>0 && arrElm!=0)
           {
+            //The ship is hit
+            //So, set enemyShipLocString to be 1 
             enemyShipLocString[1][k]='1';
-            //console.log("enemyShipLocString[0][k]="+enemyShipLocString[0][k]);
-            //console.log("enemyShipLocString[1][k]="+enemyShipLocString[1][k]);
           }
         }
+
+        //If there is an attack at the location
         if(arrElm!=0) //check if hit or not
         {
+          //Set elmId to be FrAt plus plyrNo plus row i plus j
           elmId="FrAt"+ plyrNo.toString()+i.toString()+j.toString();
-          console.log(elmId);
+          
+          //If arrElmShip is 0
           if(arrElmShip==0)
           {
+            //Set the inner html of id to be Miss
             document.getElementById(elmId).innerHTML = "Miss";
           }
+          //Otherwise, if arrElmShip is 1
           else 
           {
+            //Set the innter html of id to be Hit S+arrElmShip
             document.getElementById(elmId).innerHTML = "Hit S"+arrElmShip.toString();
           }
         }
       }
         
     }
-    console.log("enemyShipLocString after for loop:"+enemyShipLocString);
-    //document.getElementById(btnId).disabled = true;
-    //document.getElementById(frCellbtn).disabled = true;
-    //document.getElementById(btnId).innerHTML = "Hide Ships of " + plyrNo;
-    //document.getElementById(tblId).style.removeProperty("display");
-  
-  
-    
 }
 
 //calculates the number of ships down a player has to detect win
@@ -744,28 +978,64 @@ function frCellByP2() {
   }
 }
 
+//Update both boards for player's 1 turn
+//Only activates if turnByP1btn button is pressed
 function frCellTurnOfP1()
 {
+  //If the game is not setup
   if(!gameSetup)
   {
+    //Name all buttons use in the game
     opponentNaming();
+
+    //Set gameSetup to be ture
     gameSetup = true;
   }
 
+  //Disable turnByP1Btn button
   document.getElementById("turnByP1Btn").disabled = true;
+
+  //Enable frCellByP1Btn 
   document.getElementById("frCellByP1Btn").disabled = false;
-  // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
-  document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
+
+  //Show Player's 1 Ships on Player's 1 Board
+  showOrHidePlayerShips(1, true);
+
+  //Show all attacks on Player's 1 Board
   showFireLocations('P1');
 
+  //Hide Player 2's/AI's Ships
+  showOrHidePlayerShips(2, false);
+  
 }
 
+//Updates both boards during Player's 2 Turn
+//Can only be used when turnByP2Btn is press
 function frCellTurnOfP2()
 {
+  //Disable turnByP2Btn button
   document.getElementById("turnByP2Btn").disabled = true;
+
+  //Enable frCellByP2Btn button
   document.getElementById("frCellByP2Btn").disabled = false;
-  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
+
+  //Show all attack on Player's 2/AI's Board
   showFireLocations('P2');
+
+  //Next, determine whether to hide or show player 1's and player's ships
+  //depending on whether the AI is activated or not
+  //If the AI is not activated
+  if(AIactivated == false)
+  {
+    //Hide Player's 1 Ships
+    showOrHidePlayerShips(1, false);
+
+    //Shows Player's 2 Ships
+    showOrHidePlayerShips(2, true);
+  }
+  //Otherwise, if the AI is activated
+  //There is no need to show Player's 2 ships 
+  //or hide Player's 1 Ships
 }
 
 function opponentNaming() {
@@ -817,6 +1087,103 @@ function mediumAttack() {
 
 }
 
+//Create a new board by taking in a node, rowId, and tableId
+function createBoard(node, rowId, tableId)
+{
+  //Firstly, create a new table that will store the board
+  let table = document.createElement("table");
+
+  //Next, set the border of table to be 1
+  table.setAttribute("border", "1");
+
+  //Next, set the cellpadding to be 3
+  table.setAttribute("cellpadding", "3");
+
+  //Finally, set the id of table to be tableId
+  table.setAttribute("id", tableId);
+
+  //Set the table's margin from from to be 10 pixels
+  table.style.marginTop = "10px";
+
+  //Next, add create a new element that will store the tbody tag
+  let tableBody = document.createElement("tbody");
+
+  //Next, create a row that will store all the columns names
+  let columnsNames = document.createElement("tr");
+
+  //Set the class of columnsNames to be bold
+  columnsNames.setAttribute("class", "bold");
+
+  //Next, create a column that is empty
+  let emptyColumn = document.createElement("td");
+
+  //Set the innerhtml of emptyColumn to be space
+  emptyColumn.innerHTML = " ";
+
+  //Add it to columnsNames
+  columnsNames.appendChild(emptyColumn);
+
+  //Next, loop 10 times
+  for(let i = 0; i < 10; i++)
+  {
+    //Create a new column
+    let column = document.createElement("td");
+
+    //Next, set the innerhtml of column to be the ascii character from i+65
+    column.innerHTML = String.fromCharCode(i+65);
+
+    //Add column to columnsNames
+    columnsNames.appendChild(column);
+  }
+
+  //Next, add columnsNames to tableBody
+  tableBody.appendChild(columnsNames)
+
+  //Next, loop for ten times
+  for(let i = 0; i < 10; i++)
+  {
+    //Create a new row
+    let row = document.createElement("tr");
+
+    //Create a new column that contains the number of row
+    let columnNumber = document.createElement("td");
+
+    //Next, set the class of columnNumber to be bold
+    columnNumber.setAttribute("class", "bold");
+
+    //Set the innerhtml to be i+1
+    columnNumber.innerHTML = (i+1).toString();
+
+    //Add columnNumber to row
+    row.appendChild(columnNumber);
+
+    //Next loop for ten times
+    for(let j = 0; j < 10; j++)
+    {
+      //Create a new column
+      let column = document.createElement("td");
+
+      //Next, create the id for column to be rowID + i + j
+      let elementId = rowId + i.toString() + j.toString();
+
+      //Set the id of column to be elementId
+      column.setAttribute("id", elementId);
+
+      //Add column to to row
+      row.appendChild(column);
+    }
+
+    //Next, add row to to tableBody
+    tableBody.appendChild(row);
+  }
+  
+  //Next, add tableBody to table
+  table.appendChild(tableBody);
+
+  
+  //Finally, append table to  node
+  node.appendChild(table);
+}
 function hardAttack() { //p1ShipLocArr
   let attackCoordinate = "";
   let length;
@@ -869,5 +1236,137 @@ function markAIAttack(attackCoordinate) {
   {
     document.getElementById("turnByP1Btn").disabled = false;
     document.getElementById("frCellByP2Btn").disabled = true;
+  }
+}
+
+//Create the players board when the game starts
+//Can only be used in game.html not index.html
+function createPlayerBoards()
+{
+  //First, set the Player's 1 Board label at the beginning of the game
+  //Look for the div in game.html that have the id P1
+  //Then, set the inner html of P1 to be Player's 1 Board
+  window.document.querySelector("#P1").innerHTML = "Player 1's Board";
+
+  //Next, set Player's 2/AI's Board lable at the beginning of the game
+  //Check if the ai is activated or not
+  //If the AI is not activated 
+  if(AIactivated == false)
+  {
+    //Look for the div in game.hmtl that has the id P2
+    //Then, set the inner html of P2 to be Player's 2 Board
+    window.document.querySelector("#P2").innerHTML = "Player 2's Board";
+  }
+  //Otherwise, if the AI is activated
+  else
+  {
+    //Look for the div in game.hmtl that has the id P2
+    //Then, set the inner html of P2 to be Player's 2 Board
+    window.document.querySelector("#P2").innerHTML = "AI's Board";
+  }
+
+  //Next, create a new table for Player 1
+  //Look for the div that have the id P1
+  //Next, use createBoard to add a new table to P1, with the rowId being FrAtP2 and 
+  //the tableId to be tlbCellFrAtByP2
+  createBoard(window.document.querySelector("#P1"), "FrAtP2", "tlbCellFrAtByP2");
+
+  //Next, create a new table for Player 2 or AI 
+  //Look for the div that have the id P2
+  //Next, use createBoard to add a new table to P2, with the rowId being FrAtP1 and
+  //the tableId to be tlbCellFrAtByP1
+  createBoard(window.document.querySelector("#P2"), "FrAtP1", "tlbCellFrAtByP1");
+
+  //Note, FrAtP1 and FrAtP2 rerpresent the board where the player's going to attack
+  //So FrAtP1 is where the Player 2 will attack and FrAtP2 is where Player 1 will attack
+  //That is why Player 1's Board is FrAtP2 and Player 2's Board/AI's is FrAtP1
+}
+
+//This eventListener create two boards in game.html
+//Adds an event listener to window when game.html loads
+window.addEventListener("load", () => {
+  //Create both player's board in game.html
+  //Use a try and catch block to catch an error if createPlayerBoards is use in index.html
+  //rather than in game.html
+  try {
+    createPlayerBoards();
+  } catch (error) {
+  }
+});
+
+//Show a Player's Ships on their board
+//It takes in playerNum, either 1 or 2, which represent Player 1 and Plyaer 2
+//It also take a boolean value, showShips, to either to show or hide the ship
+//true to show ships or false to hide ships
+function showOrHidePlayerShips(playerNum, showShips)
+{
+  //Firstly, create a new variable, which will contain the location of the ships for the player
+  let playerShips;
+
+  //Create another variable which will contian the player's board
+  let playerBoard;
+
+  //Check, check playerNum to determine which ships to show
+  //If playerNum is 1
+  if(playerNum == 1)
+  {
+    //Set playerShips to be p1ShipLocArr
+    playerShips = p1ShipLocArr;
+
+    //Set playerBoard to be p1ShipLoc
+    playerBoard = p1ShipLoc;
+
+    //Change playerNum to 2
+    playerNum = 2;
+  }
+  //Otherwise, if playerNum is 2
+  else
+  {
+    //Set playerShips to be p2ShipLocArr
+    playerShips = p2ShipLocArr;
+
+    //Set playerBoard to be p2ShipLoc
+    playerBoard = p2ShipLoc;
+
+    //Change playerNum to 1
+    playerNum = 1;
+  }
+
+  //Note: playerNum is changed to its opposite value
+  //So that it is easier to display the ships on the correct board
+
+  //Next, go through each position in playerShips[0]
+  for(let i = 0; i < playerShips[0].length; i++)
+  {
+    //First, check if the player's ship position in playerShips is not sunked
+    //If the player's ship position is not sunk
+    if(playerShips[1][i] == '0')
+    {
+      //Get the row and column of the playerShips
+      //Let column be the ASCII code of the first character of the ship position minus 97
+      let shipCol = playerShips[0][i].charCodeAt(0) - 97;
+
+      //Let row be the rest of the ship's position, which only include numbers, minus 1
+      let shipRow = Number(playerShips[0][i].substring(1,playerShips[0][i].length))-1
+
+      //Next, create the id that is the id of the tag where the ship is on the player's board
+      //Set it to be FrAtP + playerNum + shipRow + shipCol
+      let shipPositionId = "#FrAtP" + playerNum.toString() + shipRow.toString() + shipCol.toString();
+
+      //Next, set the inner html of shipPositionId depending on whether we are showing the ships or hiding the ships
+      //If showShips is true
+      if(showShips == true)
+      {
+        //Show the ship by setting the inner html of shipPositionId to be S + playerBoard[shipRow][shipCol]
+        window.document.querySelector(shipPositionId).innerHTML = "S" + playerBoard[shipRow][shipCol].toString();
+      }
+      else
+      //Otherwise, if show ships is false
+      {
+        //Hide the ship by setting the inner html of shipPositionId to be nothing
+        window.document.querySelector(shipPositionId).innerHTML = "";
+      }
+    }
+    //Otherwise, the ship is sunk and do not display the ship
   }
 }
