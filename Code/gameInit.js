@@ -366,15 +366,15 @@ function getShipsForP1() {
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0) {
-    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-    shipArray = Player1Ships.split(',')
+  while (findDuplicates(shipArray).length != 0) { // check for duplicates
+    alert("Wrong input!");
+    return
   }
   let isValid = true;
-  
-  while (Player1Ships == null) {
-    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-    shipArray = Player1Ships.split(',')
+  console.log(Player1Ships)
+  while (Player1Ships == '') {
+    alert("Wrong input!");
+    return
   }
   do {
     let isRowSame = [true, true, true, true, true]
@@ -419,8 +419,8 @@ function getShipsForP1() {
     
     
     if (!isValid) {
-      Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-      shipArray = Player1Ships.split(',')
+      alert("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+      return
     }
   }while (!isValid)
   
@@ -534,14 +534,14 @@ function getShipsForP2() {
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
   while (findDuplicates(shipArray).length != 0) {
-    Player2Ships = prompt("Wrong input! Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-    shipArray = Player2Ships.split(',')
+    alert("Wrong input!");
+    return
   }
   let isValid = true;
   
   while (Player1Ships == null) {
-    Player2Ships = prompt("Wrong input! Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-    shipArray = Player2Ships.split(',')
+    alert("Wrong input!");
+    return
   }
   do {
     let isRowSame = [true, true, true, true, true]
@@ -588,8 +588,8 @@ function getShipsForP2() {
     
     
     if (!isValid) {
-      Player2Ships = prompt("Wrong input! Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-      shipArray = Player2Ships.split(',')
+      alert("Wrong input!");
+      return
     }
   }while (!isValid)
   
