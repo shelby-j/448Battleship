@@ -363,6 +363,7 @@ function validPlayerShips(playerShips)
 //gets plalyer one's ships, shows the player 1 grid, adds a disabled button
 function getShipsForP1() {
   Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
@@ -764,7 +765,6 @@ function showFireLocations(plyrNo) {
     //Set enemyShipLocString to be p1ShipLocArr
     enemyShipLocString=p1ShipLocArr;
   }
-  
     //Represent an element of the plyrFireAtLocaArry
     let arrElm=0;
 
@@ -810,11 +810,12 @@ function showFireLocations(plyrNo) {
         {
           //Set the location of the oponent ships to be the kth index of the ith array of
           //enemyShipLocString
-          opnShipsLocStr==enemyShipLocString[0][k];
+          opnShipsLocStr=enemyShipLocString[0][k];
           
           //Get ASCII code of the first character of opnShpsLocStr
           //Then, subtract it by 97 to get the column of the ship location
           opnShipsLocCol=opnShipsLocStr.charCodeAt(0) - 97;
+
 
           //Next, set the row of the ship location to the rest of opnShipsLocCol, except the first character
           //Convert the substring to a number
@@ -976,28 +977,64 @@ function frCellByP2() {
   }
 }
 
+//Update both boards for player's 1 turn
+//Only activates if turnByP1btn button is pressed
 function frCellTurnOfP1()
 {
+  //If the game is not setup
   if(!gameSetup)
   {
+    //Name all buttons use in the game
     opponentNaming();
+
+    //Set gameSetup to be ture
     gameSetup = true;
   }
 
+  //Disable turnByP1Btn button
   document.getElementById("turnByP1Btn").disabled = true;
+
+  //Enable frCellByP1Btn 
   document.getElementById("frCellByP1Btn").disabled = false;
- // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
-  document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
+
+  //Show Player's 1 Ships on Player's 1 Board
+  showOrHidePlayerShips(1, true);
+
+  //Show all attacks on Player's 1 Board
   showFireLocations('P1');
 
+  //Hide Player 2's/AI's Ships
+  showOrHidePlayerShips(2, false);
+  
 }
 
+//Updates both boards during Player's 2 Turn
+//Can only be used when turnByP2Btn is press
 function frCellTurnOfP2()
 {
+  //Disable turnByP2Btn button
   document.getElementById("turnByP2Btn").disabled = true;
+
+  //Enable frCellByP2Btn button
   document.getElementById("frCellByP2Btn").disabled = false;
-  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
+
+  //Show all attack on Player's 2/AI's Board
   showFireLocations('P2');
+
+  //Next, determine whether to hide or show player 1's and player's ships
+  //depending on whether the AI is activated or not
+  //If the AI is not activated
+  if(AIactivated == false)
+  {
+    //Hide Player's 1 Ships
+    showOrHidePlayerShips(1, false);
+
+    //Shows Player's 2 Ships
+    showOrHidePlayerShips(2, true);
+  }
+  //Otherwise, if the AI is activated
+  //There is no need to show Player's 2 ships 
+  //or hide Player's 1 Ships
 }
 
 function opponentNaming() {
@@ -1049,14 +1086,11 @@ function mediumAttack() {
 
 }
 
-//Create a new board by taking in a node and i
+//Create a new board by taking in a node, rowId, and tableId
 function createBoard(node, rowId, tableId)
 {
   //Firstly, create a new table that will store the board
   let table = document.createElement("table");
-
-  //Next, set the table style to be none
-  //table.style.display = 'none';
 
   //Next, set the border of table to be 1
   table.setAttribute("border", "1");
@@ -1064,9 +1098,10 @@ function createBoard(node, rowId, tableId)
   //Next, set the cellpadding to be 3
   table.setAttribute("cellpadding", "3");
 
-  //Finally, set the id of table to id
+  //Finally, set the id of table to be tableId
   table.setAttribute("id", tableId);
 
+  //Set the table's margin from from to be 10 pixels
   table.style.marginTop = "10px";
 
   //Next, add create a new element that will store the tbody tag
@@ -1103,7 +1138,6 @@ function createBoard(node, rowId, tableId)
   //Next, add columnsNames to tableBody
   tableBody.appendChild(columnsNames)
 
-  
   //Next, loop for ten times
   for(let i = 0; i < 10; i++)
   {
@@ -1114,7 +1148,7 @@ function createBoard(node, rowId, tableId)
     let columnNumber = document.createElement("td");
 
     //Next, set the class of columnNumber to be bold
-    //columnNumber.setAttribute("class", "bold");
+    columnNumber.setAttribute("class", "bold");
 
     //Set the innerhtml to be i+1
     columnNumber.innerHTML = (i+1).toString();
@@ -1122,14 +1156,13 @@ function createBoard(node, rowId, tableId)
     //Add columnNumber to row
     row.appendChild(columnNumber);
 
-    
     //Next loop for ten times
     for(let j = 0; j < 10; j++)
     {
       //Create a new column
       let column = document.createElement("td");
 
-      //Next, create the id for column to id + i + j
+      //Next, create the id for column to be rowID + i + j
       let elementId = rowId + i.toString() + j.toString();
 
       //Set the id of column to be elementId
@@ -1205,7 +1238,134 @@ function markAIAttack(attackCoordinate) {
   }
 }
 
+//Create the players board when the game starts
+//Can only be used in game.html not index.html
+function createPlayerBoards()
+{
+  //First, set the Player's 1 Board label at the beginning of the game
+  //Look for the div in game.html that have the id P1
+  //Then, set the inner html of P1 to be Player's 1 Board
+  window.document.querySelector("#P1").innerHTML = "Player 1's Board";
+
+  //Next, set Player's 2/AI's Board lable at the beginning of the game
+  //Check if the ai is activated or not
+  //If the AI is not activated 
+  if(AIactivated == false)
+  {
+    //Look for the div in game.hmtl that has the id P2
+    //Then, set the inner html of P2 to be Player's 2 Board
+    window.document.querySelector("#P2").innerHTML = "Player 2's Board";
+  }
+  //Otherwise, if the AI is activated
+  else
+  {
+    //Look for the div in game.hmtl that has the id P2
+    //Then, set the inner html of P2 to be Player's 2 Board
+    window.document.querySelector("#P2").innerHTML = "AI's Board";
+  }
+
+  //Next, create a new table for Player 1
+  //Look for the div that have the id P1
+  //Next, use createBoard to add a new table to P1, with the rowId being FrAtP2 and 
+  //the tableId to be tlbCellFrAtByP2
+  createBoard(window.document.querySelector("#P1"), "FrAtP2", "tlbCellFrAtByP2");
+
+  //Next, create a new table for Player 2 or AI 
+  //Look for the div that have the id P2
+  //Next, use createBoard to add a new table to P2, with the rowId being FrAtP1 and
+  //the tableId to be tlbCellFrAtByP1
+  createBoard(window.document.querySelector("#P2"), "FrAtP1", "tlbCellFrAtByP1");
+
+  //Note, FrAtP1 and FrAtP2 rerpresent the board where the player's going to attack
+  //So FrAtP1 is where the Player 2 will attack and FrAtP2 is where Player 1 will attack
+  //That is why Player 1's Board is FrAtP2 and Player 2's Board/AI's is FrAtP1
+}
+
+//This eventListener create two boards in game.html
+//Adds an event listener to window when game.html loads
 window.addEventListener("load", () => {
-  createBoard(window.document.querySelector("#P1"), "FrAtP1", "tlbCellFrAtByP1");
-  createBoard(window.document.querySelector("#P2"), "FrAtP2", "tlbCellFrAtByP2");
+  //Create both player's board in game.html
+  //Use a try and catch block to catch an error if createPlayerBoards is use in index.html
+  //rather than in game.html
+  try {
+    createPlayerBoards();
+  } catch (error) {
+  }
 });
+
+//Show a Player's Ships on their board
+//It takes in playerNum, either 1 or 2, which represent Player 1 and Plyaer 2
+//It also take a boolean value, showShips, to either to show or hide the ship
+//true to show ships or false to hide ships
+function showOrHidePlayerShips(playerNum, showShips)
+{
+  //Firstly, create a new variable, which will contain the location of the ships for the player
+  let playerShips;
+
+  //Create another variable which will contian the player's board
+  let playerBoard;
+
+  //Check, check playerNum to determine which ships to show
+  //If playerNum is 1
+  if(playerNum == 1)
+  {
+    //Set playerShips to be p1ShipLocArr
+    playerShips = p1ShipLocArr;
+
+    //Set playerBoard to be p1ShipLoc
+    playerBoard = p1ShipLoc;
+
+    //Change playerNum to 2
+    playerNum = 2;
+  }
+  //Otherwise, if playerNum is 2
+  else
+  {
+    //Set playerShips to be p2ShipLocArr
+    playerShips = p2ShipLocArr;
+
+    //Set playerBoard to be p2ShipLoc
+    playerBoard = p2ShipLoc;
+
+    //Change playerNum to 1
+    playerNum = 1;
+  }
+
+  //Note: playerNum is changed to its opposite value
+  //So that it is easier to display the ships on the correct board
+
+  //Next, go through each position in playerShips[0]
+  for(let i = 0; i < playerShips[0].length; i++)
+  {
+    //First, check if the player's ship position in playerShips is not sunked
+    //If the player's ship position is not sunk
+    if(playerShips[1][i] == '0')
+    {
+      //Get the row and column of the playerShips
+      //Let column be the ASCII code of the first character of the ship position minus 97
+      let shipCol = playerShips[0][i].charCodeAt(0) - 97;
+
+      //Let row be the rest of the ship's position, which only include numbers, minus 1
+      let shipRow = Number(playerShips[0][i].substring(1,playerShips[0][i].length))-1
+
+      //Next, create the id that is the id of the tag where the ship is on the player's board
+      //Set it to be FrAtP + playerNum + shipRow + shipCol
+      let shipPositionId = "#FrAtP" + playerNum.toString() + shipRow.toString() + shipCol.toString();
+
+      //Next, set the inner html of shipPositionId depending on whether we are showing the ships or hiding the ships
+      //If showShips is true
+      if(showShips == true)
+      {
+        //Show the ship by setting the inner html of shipPositionId to be S + playerBoard[shipRow][shipCol]
+        window.document.querySelector(shipPositionId).innerHTML = "S" + playerBoard[shipRow][shipCol].toString();
+      }
+      else
+      //Otherwise, if show ships is false
+      {
+        //Hide the ship by setting the inner html of shipPositionId to be nothing
+        window.document.querySelector(shipPositionId).innerHTML = "";
+      }
+    }
+    //Otherwise, the ship is sunk and do not display the ship
+  }
+}
