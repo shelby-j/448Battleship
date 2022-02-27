@@ -10,6 +10,9 @@ let gameShownForP1 = false;
 let gameShownForP2 = false;
 let firstTurn = false;
 let enemyShips = [];
+let hitship = false;
+let hitCoordinates = [];
+let differentShips = false;
 
 var p1ShipLoc = matrix();// 
 var p2ShipLoc = matrix();// 
@@ -1203,7 +1206,154 @@ function easyAttack() {
 }
 
 function mediumAttack() {
+  let row = 0, col = 0;
+  let temp = "";
+  let sunkCheck = Gameover('P2');
+  let alreadyAdjusted = false;
+  let verticalShip = false, horizontalShip = false;
+  let firstHit; let lastHit;
+  let index = 0;
 
+  if(hitship) {
+    index = hitCoordinates.length;
+    temp = hitCoordinates[index-1];
+    col = temp.charCodeAt(0)-65;
+    if(temp.length == 3) row = 10;
+    else row = temp.charCodeAt(1)-49;
+
+    if(index > 1){
+      firstHit = String(hitCoordinates.slice(index-2));
+      lastHit = String(hitCoordinates.slice(index-1));
+
+      if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true;
+      else horizontalShip = true;
+    }
+    if(horizontalShip) {
+      if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { 
+        if(p2sFireLoc[row][col+1] == 0) {
+          col += 1;
+          alreadyAdjusted = true;
+        }
+      }
+      if(!alreadyAdjusted) {
+        temp = hitCoordinates[0];
+        col = temp.charCodeAt(0)-65;
+        if(temp.length == 3) row = 10;
+        else row = temp.charCodeAt(1)-49;
+
+        col -= 1;
+        alreadyAdjusted = true;
+      }
+    }
+    else if(verticalShip) { 
+      if(firstHit.length == 3) firstHit = 9;
+      else firstHit = firstHit.charCodeAt(1)-49;
+
+      if(firstHit > lastHit.charCodeAt(1)-49 && row > 0) {
+        if(p2sFireLoc[row-1][col] == 0) {
+          row -= 1;
+          alreadyAdjusted = true;
+        }
+      }
+      if(!alreadyAdjusted) {
+        row += 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(row-1 >= 0 && !alreadyAdjusted){ //Up
+      if(p2sFireLoc[row-1][col] == 0) {
+        row -= 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(col+1 < 10 && !alreadyAdjusted){ //right
+      if(p2sFireLoc[row][col+1] == 0) {
+        col += 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(row+1 < 10 && !alreadyAdjusted){ //down
+      if(p2sFireLoc[row+1][col] == 0) {
+        row += 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(col-1 >= 0 && !alreadyAdjusted){ //left
+      if(p2sFireLoc[row][col-1] == 0) {
+        col -= 1;
+        alreadyAdjusted = true;
+      }
+    }
+  }
+  else {
+    do{
+      row = Math.floor(Math.random() * 10); 
+      col = Math.floor(Math.random() * 10);
+    }while(p2sFireLoc[row][col] != 0);  
+  }
+
+  temp = "";
+  if(row == 9) temp += String.fromCharCode(col+65) + "10";
+  else temp += String.fromCharCode(col+65) + String.fromCharCode(row+49);
+
+  hitCoordinates.push(temp);
+  console.log(hitCoordinates);
+  temp = "[" + temp + "]";
+
+  markAIAttack(temp);
+
+  if(p1ShipLoc[row][col] != 0) {
+    hitship = true; 
+    if(col < 9) if(p2sFireLoc[row][col+1] == 1 && horizontalShip) hitCoordinates.sort();
+    else if(col == 9 && horizontalShip) hitCoordinates.sort();
+    if(row > 0) if(p2sFireLoc[row-1][col] == 1 && verticalShip) hitCoordinates.sort();
+    else if(row == 0 && verticalShip) hitCoordinates.sort();
+  }
+  else {
+    hitCoordinates.pop();
+    if(hitship && index>1) hitCoordinates.sort();
+  }
+
+  if(hitship && index>1){
+    let tempValue = "";
+    let tempRow = 0; tempCol = 0;
+
+    tempValue = hitCoordinates[index-2];
+    tempCol = tempValue.charCodeAt(0)-65;
+    if(tempValue == 3) tempRow = 10;
+    else tempRow = tempValue.charCodeAt(1)-49;
+
+    if(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
+  }
+
+  console.log("sunkCheck variable: " + sunkCheck);
+  console.log("Gameover function: " + Gameover('P2'));
+
+  if(sunkCheck != Gameover('P2')) {
+    if(differentShips) {
+      let shipNumber = p1ShipLoc[row][col];
+
+      for(let i=0; i<hitCoordinates.length; i++)
+      {
+        let tempValue = "";
+        let tempRow = 0; tempCol = 0;
+
+        tempValue = hitCoordinates[i];
+        tempCol = tempValue.charCodeAt(0)-65;
+        if(tempValue == 3) tempRow = 10;
+        else tempRow = tempValue.charCodeAt(1)-49;
+
+        if(p1ShipLoc[tempRow][tempCol] == shipNumber) {
+          hitCoordinates.filter((value) => value != tempValue);
+        }
+      }
+      differentShips = false;
+    }
+    else{
+      hitCoordinates = [];
+      hitship = false;
+    }
+  }
 }
 
 //Create a new board by taking in a node, rowId, and tableId
