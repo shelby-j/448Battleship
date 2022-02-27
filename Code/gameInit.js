@@ -460,33 +460,37 @@ function AIsetup() {
 
       for(let j=0; j < i+1; j++)
       {
+        if(!checker){
+          do{
+            row = Math.floor(Math.random() * 10); 
+            col = Math.floor(Math.random() * 10);
+          }while(row == 9-i && col == 9-i);
+        }
+
         if(adjuster)
         {
-          if(row+j < 9)
-          {
+          if(row+j < 9){
             temp = String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
-            checker = AIships.search(temp) < 0;
+            checker = (AIships.search(temp) == -1);
           }
-          else if(row+j == 9)
-          {
+          else if(row+j == 9){
             temp = String.fromCharCode(col+65) + "10";
-            checker = AIships.search(temp) < 0;
+            checker = AIships.search(temp) == -1;
           }
           else checker = false;
         }
-        else
-        {
-          if(col+j <= 9)
-          {
+        else{
+          if(col+j <= 9){
             temp = String.fromCharCode(col+j+65);
-
             if(row < 9) temp +=String.fromCharCode(row+49);
             else temp += "10";
 
-            checker = AIships.search(temp) < 0;
+            checker = (AIships.search(temp) == -1);
           }
           else checker = false;
         }
+
+        if(!checker) j=-1;
       }
     }while(!checker);
 
@@ -494,19 +498,13 @@ function AIsetup() {
     {
       if(adjuster)
       {
-        if(row+j == 9)
-        {
-          AIships += String.fromCharCode(col+65) + "10";
-        }
-        else
-        {
-          AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
-        }
+        if(row+j == 9) AIships += String.fromCharCode(col+65) + "10";
+        else AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
       }
       else
       {
         AIships += String.fromCharCode(col+j+65);
-        if(col+j < 9) AIships +=String.fromCharCode(row+49);
+        if(row < 9) AIships +=String.fromCharCode(row+49);
         else AIships += "10";
       }
 
@@ -526,8 +524,11 @@ function AIsetup() {
   document.getElementById("playGameBtn").disabled = false;
   fillShipsLoc(p2ShipLoc, AIships);
   p2ShipLocArr = getShipsLocArry(AIships);
+  window.localStorage.setItem("p1ShipLoc", JSON.stringify(p1ShipLoc));
+  window.localStorage.setItem("p1ShipLocArr", JSON.stringify(p1ShipLocArr));
   window.localStorage.setItem("p2ShipLoc", JSON.stringify(p2ShipLoc));
   window.localStorage.setItem("p2ShipLocArr", JSON.stringify(p2ShipLocArr));
+  window.localStorage.setItem("numShips", JSON.stringify(numShips));
 }
 
 //same as above, but with added local storage to transfer pages
