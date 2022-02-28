@@ -1485,7 +1485,7 @@ function hardAttack() { //p1ShipLocArr
 
     for(let i=0; i<3; i++){
       for(let j=0; j<3; j++) {
-        if((row-1+i >= 0 && row-1+i < 10) || (col-1+j >= 0 && col-1+j < 10)) {
+        if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >= 0 && col-1+j < 10)) {
           if(p1ShipLoc[row-1+i][col-1+j] != 0){
             let specAttackHit = "";
             if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
