@@ -811,8 +811,6 @@ function attack(shipArr,attackLocation){
    
 }
 
-
-
 function specialAttack(shipArr, attackLocation) {
     attackLocation = attackLocation.substring(1, (attackLocation.length-1));
     let col = attackLocation.toLowerCase().charCodeAt(0) - 97;
@@ -1216,7 +1214,7 @@ function mediumAttack() {
 
   if(hitship) {
     index = hitCoordinates.length;
-    temp = hitCoordinates[index-1];
+    temp = String(hitCoordinates[index-1]);
     col = temp.charCodeAt(0)-65;
     if(temp.length == 3) row = 10;
     else row = temp.charCodeAt(1)-49;
@@ -1300,6 +1298,25 @@ function mediumAttack() {
   console.log(hitCoordinates);
   temp = "[" + temp + "]";
 
+  if(specCountP2 > 0){
+    if(p1ShipLoc[row][col]==0) hitCoordinates.pop();
+
+    for(let i=0; i<3; i++){
+      for(let j=0; j<3; j++) {
+        if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >=0 && col-1+j < 10)) {
+          if(p1ShipLoc[row-1+i][col-1+j] != 0 && p2sFireLoc[row-1+i][col-1+j] == 0) {
+            let specAttackHit ="";
+            if(row-1+j==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
+            else specAttackHit += String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
+            hitCoordinates.push(specAttackHit);
+            console.log("Array post Special Attack: "+ hitCoordinates);
+            hitship = true;
+          }
+        }
+      }
+    } 
+  }
+
   markAIAttack(temp);
 
   if(p1ShipLoc[row][col] != 0) {
@@ -1326,9 +1343,6 @@ function mediumAttack() {
     if(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
   }
 
-  console.log("sunkCheck variable: " + sunkCheck);
-  console.log("Gameover function: " + Gameover('P2'));
-
   if(sunkCheck != Gameover('P2')) {
     if(differentShips) {
       let shipNumber = p1ShipLoc[row][col];
@@ -1353,6 +1367,82 @@ function mediumAttack() {
       hitCoordinates = [];
       hitship = false;
     }
+  }
+}
+
+function hardAttack() { //p1ShipLocArr
+  let attackCoordinate = "";
+  let length;
+  let index;
+  let temp = "";
+
+  if(!firstTurn)
+  {
+    temp += p1ShipLocArr[0];
+    console.log(temp)
+    enemyShips = temp.split(',');
+    firstTurn = true;
+  }
+
+  length = enemyShips.length;
+  index = Math.floor(Math.random() * length);
+  attackCoordinate += enemyShips[index];
+
+  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
+  attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
+
+  if(specCountP2 > 0)
+  {
+    let specAttackCoordinate = String(enemyShips[index]);
+    let row=0, col=0;
+
+    col = specAttackCoordinate.charCodeAt(0)-65;
+    if(specAttackCoordinate.length == 3) row = 10;
+    else row = specAttackCoordinate.charCodeAt(1)-49;
+
+    for(let i=0; i<3; i++){
+      for(let j=0; j<3; j++) {
+        if((row-1+i >= 0 && row-1+i < 10) || (col-1+j >= 0 && col-1+j < 10)) {
+          if(p1ShipLoc[row-1+i][col-1+j] != 0){
+            let specAttackHit = "";
+            if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
+            else specAttackHit = String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
+
+            enemyShips = enemyShips.filter((value, temp) => value != specAttackHit);
+          }
+        }
+      }
+    }
+  }
+
+  markAIAttack(attackCoordinate);
+}
+
+function markAIAttack(attackCoordinate) {
+
+  let sunkShips = 0;
+
+  if(specCountP2 > 0) {
+    specialAttack(p2sFireLoc, attackCoordinate);
+    specCountP2--;
+  }
+  else attack(p2sFireLoc,attackCoordinate);
+
+  document.getElementById("P2FrCell").innerHTML = attackCoordinate  + " Fire at locations!";
+  showFireLocations('P2');
+  sunkShips = Gameover('P2')
+  document.getElementById("P2FrHitStatus").innerHTML = sunkShips  + " ship down! "+(numShips-sunkShips) + " to go";
+
+  if((numShips-sunkShips)==0)
+  {
+    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
+    document.getElementById("turnByP2Btn").disabled = true;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  } 
+  else
+  {
+    document.getElementById("turnByP1Btn").disabled = false;
+    document.getElementById("frCellByP2Btn").disabled = true;
   }
 }
 
@@ -1452,81 +1542,6 @@ function createBoard(node, rowId, tableId)
   
   //Finally, append table to  node
   node.appendChild(table);
-}
-function hardAttack() { //p1ShipLocArr
-  let attackCoordinate = "";
-  let length;
-  let index;
-  let temp = "";
-
-  if(!firstTurn)
-  {
-    temp += p1ShipLocArr[0];
-    console.log(temp)
-    enemyShips = temp.split(',');
-    firstTurn = true;
-  }
-
-  length = enemyShips.length;
-  index = Math.floor(Math.random() * length);
-  attackCoordinate += enemyShips[index];
-
-  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
-  attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
-
-  if(specCountP2 > 0)
-  {
-    let specAttackCoordinate = String(enemyShips[index]);
-    let row=0, col=0;
-
-    col = specAttackCoordinate.charCodeAt(0)-65;
-    if(specAttackCoordinate.length == 3) row = 10;
-    else row = specAttackCoordinate.charCodeAt(1)-49;
-
-    for(let i=0; i<3; i++){
-      for(let j=0; j<3; j++) {
-        if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >= 0 && col-1+j < 10)) {
-          if(p1ShipLoc[row-1+i][col-1+j] != 0){
-            let specAttackHit = "";
-            if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
-            else specAttackHit = String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
-
-            enemyShips = enemyShips.filter((value, temp) => value != specAttackHit);
-          }
-        }
-      }
-    }
-  }
-
-  markAIAttack(attackCoordinate);
-}
-
-function markAIAttack(attackCoordinate) {
-
-  let sunkShips = 0;
-
-  if(specCountP2 > 0) {
-    specialAttack(p2sFireLoc, attackCoordinate);
-    specCountP2--;
-  }
-  else attack(p2sFireLoc,attackCoordinate);
-
-  document.getElementById("P2FrCell").innerHTML = attackCoordinate  + " Fire at locations!";
-  showFireLocations('P2');
-  sunkShips = Gameover('P2')
-  document.getElementById("P2FrHitStatus").innerHTML = sunkShips  + " ship down! "+(numShips-sunkShips) + " to go";
-
-  if((numShips-sunkShips)==0)
-  {
-    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
-    document.getElementById("turnByP2Btn").disabled = true;
-    document.getElementById("frCellByP2Btn").disabled = true;
-  } 
-  else
-  {
-    document.getElementById("turnByP1Btn").disabled = false;
-    document.getElementById("frCellByP2Btn").disabled = true;
-  }
 }
 
 //Create the players board when the game starts
