@@ -56,6 +56,8 @@ function humanBtn(){
   document.getElementById("AIbtn").disabled = true;
   document.getElementById("getNoOfShipsBtn").disabled = false;
   changeVisibility();
+  document.getElementById("P2Ships").style.removeProperty("display");
+  document.getElementById("showShipsForP2Btn").style.removeProperty("display");
   document.getElementById("Opponent").innerHTML = "Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}";
   document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for P2";
 }
@@ -84,8 +86,6 @@ function changeVisibility()
   document.getElementById("Opponent").style.removeProperty("display");
   document.getElementById("endingLine").style.removeProperty("display");
   document.getElementById("playGameBtn").style.removeProperty("display");
-  document.getElementById("P2Ships").style.removeProperty("display");
-  document.getElementById("showShipsForP2Btn").style.removeProperty("display");
 }
 
 function loadStoredVars() //stores local json variables
@@ -521,7 +521,7 @@ function AIsetup() {
   window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
   window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
 
-  document.getElementById("Opponent").innerHTML = "AI placed their ships at " + AIships + ".";
+  document.getElementById("Opponent").innerHTML = "The AI has set their board.";
   document.getElementById("P2Ships").disabled = false;
   document.getElementById("showShipsForP2Btn").disabled = false;
   document.getElementById("playGameBtn").disabled = false;
@@ -1137,8 +1137,8 @@ function frCellTurnOfP2()
 
   //Enable frCellByP2Btn button
   document.getElementById("frCellByP2Btn").disabled = false;
-  document.getElementById("specAttackP2").disabled = false;
-  document.getElementById("specAttackP2").innerHTML = "Use Special attack Count: " + specCountP2;
+  if(!AIactivated) document.getElementById("specAttackP2").disabled = false;
+  if(!AIactivated)document.getElementById("specAttackP2").innerHTML = "Use Special attack Count: " + specCountP2;
   document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
 
@@ -1466,21 +1466,37 @@ function hardAttack() { //p1ShipLocArr
     enemyShips = temp.split(',');
     firstTurn = true;
   }
-  console.log(enemyShips);
-  console.log(enemyShips[1]);
 
   length = enemyShips.length;
-  console.log(length);
   index = Math.floor(Math.random() * length);
-  console.log(index);
   attackCoordinate += enemyShips[index];
-
-  console.log(attackCoordinate);
 
   enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
   attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
 
-  console.log(attackCoordinate);
+  if(specCountP2 > 0)
+  {
+    let specAttackCoordinate = String(enemyShips[index]);
+    let row=0, col=0;
+
+    col = specAttackCoordinate.charCodeAt(0)-65;
+    if(specAttackCoordinate.length == 3) row = 10;
+    else row = specAttackCoordinate.charCodeAt(1)-49;
+
+    for(let i=0; i<3; i++){
+      for(let j=0; j<3; j++) {
+        if((row-1+i >= 0 && row-1+i < 10) || (col-1+j >= 0 && col-1+j < 10)) {
+          if(p1ShipLoc[row-1+i][col-1+j] != 0){
+            let specAttackHit = "";
+            if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
+            else specAttackHit = String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
+
+            enemyShips = enemyShips.filter((value, temp) => value != specAttackHit);
+          }
+        }
+      }
+    }
+  }
 
   markAIAttack(attackCoordinate);
 }
@@ -1489,7 +1505,12 @@ function markAIAttack(attackCoordinate) {
 
   let sunkShips = 0;
 
-  attack(p2sFireLoc,attackCoordinate);
+  if(specCountP2 > 0) {
+    specialAttack(p2sFireLoc, attackCoordinate);
+    specCountP2--;
+  }
+  else attack(p2sFireLoc,attackCoordinate);
+
   document.getElementById("P2FrCell").innerHTML = attackCoordinate  + " Fire at locations!";
   showFireLocations('P2');
   sunkShips = Gameover('P2')
