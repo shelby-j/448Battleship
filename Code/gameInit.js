@@ -240,6 +240,12 @@ function getNoOfShips() {
 //Return true if the input is valid and false if not
 function validPlayerShips(playerShips)
 {
+  let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
+  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+  if (findDuplicates(shipArray).length != 0) {
+    alert("Duplicate detected!")
+    return false;
+  }
   //First, we need to check if playerShips is valid
   if(playerShips == null)
   {
@@ -365,34 +371,33 @@ function validPlayerShips(playerShips)
 //gets plalyer one's ships, shows the player 1 grid, adds a disabled button
 function getShipsForP1() {
   Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
-  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player1Ships)) { // check for duplicates
-    alert("Wrong input!");
+  while (!validPlayerShips(Player1Ships)) { // check for duplicates
     return
   }
   let isValid = true;
-  console.log(Player1Ships)
-  while (Player1Ships == '') {
-    alert("Wrong input! You gave an empty input");
-    return
-  }
+
   do {
+    
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
     console.log("hello", shipArray.length)
     for (let i = 0; i < shipArray.length; i++) {
       if (i == 1) {
         for (let j = i; j < 2; j++) {
-          
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) {
             isRowSame[0] = false
+            shipArray[j+1].charAt(0)
           }
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false;
+      
+          }
+        
         }
       }
       if (i == 3) {
@@ -400,24 +405,37 @@ function getShipsForP1() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 6) {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 10) {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
     } 
+    console.log(shipArray)
     
     for (let i = 0; i < isRowSame.length; i++) {
-      if (isRowSame[i] == false && isColSame[i] == false) isValid = false;
+      if (isRowSame[i] == false && isColSame[i] == false) {
+        isValid = false;
+      }
+      console.log("Row: ", isRowSame[i], "Col: ", isColSame[i])
     }
     
     
@@ -534,18 +552,10 @@ function AIsetup() {
 function getShipsForP2() {
   Player2Ships = prompt("Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
   let shipArray = Player2Ships.replace(/[\[\]']+/g,'').split(',')
-  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
-  
-  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player2Ships)) {
-    alert("Wrong input!");
+  while (!validPlayerShips(Player2Ships)) { // check for duplicates
     return
   }
-  let isValid = true;
-  
-  while (Player1Ships == null) {
-    alert("Wrong input!");
-    return
-  }
+  let isValid = true
   do {
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
@@ -559,7 +569,9 @@ function getShipsForP2() {
           }
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
-            console.log(shipArray[j], shipArray[j+1]);
+          }
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
           }
         }
       }
@@ -568,18 +580,27 @@ function getShipsForP2() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 6) {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 10) {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
     } 
