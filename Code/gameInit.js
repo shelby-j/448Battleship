@@ -9,10 +9,12 @@ let gameSetup = false;
 let gameShownForP1 = false;
 let gameShownForP2 = false;
 let firstTurn = false;
+
 let enemyShips = []; //used in hardAttack with all of player 1's ship locations
 let hitship = false; //bool representing whether a ship is hit in mediumAttack
 let hitCoordinates = []; //the coordinates of ships hit in mediumAttack
 let differentShips = false; //represents whether there are different ships in the hit coordinate array
+
 
 var p1ShipLoc = matrix(); 
 var p2ShipLoc = matrix();
@@ -243,7 +245,9 @@ function p2ShipHealthAll() {
   return arr;
 }
 
+
 function humanBtn(){ //Changes the board for a human match
+
   document.getElementById("getShipsForP2Btn").style.removeProperty("display");
   document.getElementById("humanBtn").disabled = true;
   document.getElementById("AIbtn").disabled = true;
@@ -433,6 +437,12 @@ function getNoOfShips() {
 //Return true if the input is valid and false if not
 function validPlayerShips(playerShips)
 {
+  let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
+  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+  if (findDuplicates(shipArray).length != 0) {
+    alert("Duplicate detected!")
+    return false;
+  }
   //First, we need to check if playerShips is valid
   if(playerShips == null)
   {
@@ -558,34 +568,33 @@ function validPlayerShips(playerShips)
 //gets plalyer one's ships, shows the player 1 grid, adds a disabled button
 function getShipsForP1() {
   Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
-  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player1Ships)) { // check for duplicates
-    alert("Wrong input!");
+  while (!validPlayerShips(Player1Ships)) { // check for duplicates
     return
   }
   let isValid = true;
-  console.log(Player1Ships)
-  while (Player1Ships == '') {
-    alert("Wrong input! You gave an empty input");
-    return
-  }
+
   do {
+    
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
     console.log("hello", shipArray.length)
     for (let i = 0; i < shipArray.length; i++) {
       if (i == 1) {
         for (let j = i; j < 2; j++) {
-          
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) {
             isRowSame[0] = false
+            shipArray[j+1].charAt(0)
           }
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false;
+      
+          }
+        
         }
       }
       if (i == 3) {
@@ -593,24 +602,37 @@ function getShipsForP1() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 6) {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 10) {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
     } 
+    console.log(shipArray)
     
     for (let i = 0; i < isRowSame.length; i++) {
-      if (isRowSame[i] == false && isColSame[i] == false) isValid = false;
+      if (isRowSame[i] == false && isColSame[i] == false) {
+        isValid = false;
+      }
+      console.log("Row: ", isRowSame[i], "Col: ", isColSame[i])
     }
     
     
@@ -653,12 +675,15 @@ function AIsetup() { //regardless of difficulty, it setups a randomized board fo
 
       for(let j=0; j < i+1; j++) //repeats placement process until all ship spots for that ship can be placed
       {
+
         if(!checker){ //new starting spot if the old one fails
+
           do{
             row = Math.floor(Math.random() * 10); 
             col = Math.floor(Math.random() * 10);
           }while(row == 9-i && col == 9-i);
         }
+
 
         if(adjuster) //the if statements below verify that it is in the grid post adjustment
         {
@@ -669,6 +694,7 @@ function AIsetup() { //regardless of difficulty, it setups a randomized board fo
           else if(row+j == 9){
             temp = String.fromCharCode(col+65) + "10";
             checker = AIships.search(temp) == -1; //checks to see if that spot is already placed
+
           }
           else checker = false;
         }
@@ -726,18 +752,10 @@ function AIsetup() { //regardless of difficulty, it setups a randomized board fo
 function getShipsForP2() {
   Player2Ships = prompt("Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
   let shipArray = Player2Ships.replace(/[\[\]']+/g,'').split(',')
-  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
-  
-  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player2Ships)) {
-    alert("Wrong input!");
+  while (!validPlayerShips(Player2Ships)) { // check for duplicates
     return
   }
-  let isValid = true;
-  
-  while (Player1Ships == null) {
-    alert("Wrong input!");
-    return
-  }
+  let isValid = true
   do {
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
@@ -751,7 +769,9 @@ function getShipsForP2() {
           }
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
-            console.log(shipArray[j], shipArray[j+1]);
+          }
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
           }
         }
       }
@@ -760,18 +780,27 @@ function getShipsForP2() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 6) {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 10) {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
     } 
@@ -1400,6 +1429,7 @@ function mediumAttack() {
   let firstHit; let lastHit;
   let index = 0;
 
+
   if(hitship) { //when a random attack hits a ship, we enter this if statement
     index = hitCoordinates.length;
     temp = String(hitCoordinates[index-1]);
@@ -1408,6 +1438,7 @@ function mediumAttack() {
     else row = temp.charCodeAt(1)-49;
 
     if(index > 1){ //when there is more than one ship, we can determine if it's a vertical or horizontal ship and attack according
+
       firstHit = String(hitCoordinates.slice(index-2));
       lastHit = String(hitCoordinates.slice(index-1));
 
@@ -1421,6 +1452,7 @@ function mediumAttack() {
           alreadyAdjusted = true;
         }
       }
+
       if(!alreadyAdjusted) { //when it can't, it goes back to the starting hit coordinate and goes left
         temp = hitCoordinates[0];
         col = temp.charCodeAt(0)-65;
@@ -1504,7 +1536,6 @@ function mediumAttack() {
   }
 
   markAIAttack(temp);
-
   if(p1ShipLoc[row][col] != 0) { //checks to see if there was a ship present and will sort the array
     hitship = true; 
     if(col < 9) if(p2sFireLoc[row][col+1] == 1 && horizontalShip) hitCoordinates.sort();
@@ -1528,7 +1559,6 @@ function mediumAttack() {
 
     if(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
   }
-
   if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
     if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
       let shipNumber = p1ShipLoc[row][col];
@@ -1554,8 +1584,6 @@ function mediumAttack() {
       hitship = false;
     }
   }
-}
-
 function hardAttack() { //
   let attackCoordinate = "";
   let length;
@@ -1602,6 +1630,7 @@ function hardAttack() { //
 
   markAIAttack(attackCoordinate);
 }
+
 
 function markAIAttack(attackCoordinate) {//adjusts the boards and buttons for the game
 
