@@ -28,6 +28,9 @@ var p2sFireLoc = matrix();//
 var p1ShipLocArr;
 var p2ShipLocArr;
 
+let p1Ship1Sunk = false, p1Ship2Sunk = false, p1Ship3Sunk = false, p1Ship4Sunk = false, p1Ship5Sunk = false;
+let p2Ship1Sunk = false, p2Ship2Sunk = false, p2Ship3Sunk = false, p2Ship4Sunk = false, p2Ship5Sunk = false;
+
 function matrix(){
 
   var arr = [];
@@ -48,6 +51,196 @@ function matrix(){
   }
 
 return arr;
+}
+
+function p1ShipHealth(shipNum) {
+  let health = shipNum;
+  let row, col;
+
+  if (shipNum == 1 && !p1Ship1Sunk) {
+    col = p1ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97;
+    row = Number(p1ShipLocArr[0][0].toLowerCase().substring(1, p1ShipLocArr[0][0].length)) - 1;
+
+    if (p2sFireLoc[row][col] == 1)
+      health--;
+
+    if (health == 0) {
+      alert("Ship 1 has sunk!")
+      p1Ship1Sunk = true;
+      return 0;
+    }
+  }
+
+  else if (shipNum == 2 && !p1Ship2Sunk) {
+    for (let i = 1; i <= 2; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 2 has sunk!")
+        p1Ship2Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 3 && !p1Ship3Sunk) {
+    for (let i = 3; i <= 5; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 3 has sunk!")
+        p1Ship3Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 4 && !p1Ship4Sunk) {
+    for (let i = 6; i <= 9; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 4 has sunk!")
+        p1Ship4Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 5 && !p1Ship5Sunk) {
+    for (let i = 10; i <= 14; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 5 has sunk!")
+        p1Ship5Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else return 0; // if the ship had already sunk in a previous call
+
+  return health;
+}
+
+function p2ShipHealth(shipNum) {
+  let health = shipNum;
+  let row, col;
+
+  if (shipNum == 1 && !p2Ship1Sunk) {
+    col = p2ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97;
+    row = Number(p2ShipLocArr[0][0].toLowerCase().substring(1, p2ShipLocArr[0][0].length)) - 1;
+
+    if (p1sFireLoc[row][col] == 1)
+      health--;
+
+    if (health == 0) {
+      alert("Ship 1 has sunk!")
+      p2Ship1Sunk = true;
+      return 0;
+    }
+  }
+
+  else if (shipNum == 2 && !p2Ship2Sunk) {
+    for (let i = 1; i <= 2; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 2 has sunk!")
+        p2Ship2Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 3 && !p2Ship3Sunk) {
+    for (let i = 3; i <= 5; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 3 has sunk!")
+        p2Ship3Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 4 && !p2Ship4Sunk) {
+    for (let i = 6; i <= 9; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 4 has sunk!")
+        p2Ship4Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 5 && !p2Ship5Sunk) {
+    for (let i = 10; i <= 14; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 5 has sunk!")
+        p2Ship5Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else return 0; // if the ship had already sunk in a previous call
+
+  return health;
+}
+
+function p1ShipHealthAll() {
+  let arr = [];
+  for (let i = 1; i <= numShips; i++)
+    arr.push(p1ShipHealth(i));
+
+  return arr;
+}
+
+function p2ShipHealthAll() {
+  let arr = [];
+  for (let i = 1; i <= numShips; i++)
+    arr.push(p2ShipHealth(i));
+
+  return arr;
 }
 
 function humanBtn(){
