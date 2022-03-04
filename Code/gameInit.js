@@ -1584,7 +1584,8 @@ function mediumAttack() {
       hitship = false;
     }
   }
-function hardAttack() { //
+}
+function hardAttack() {
   let attackCoordinate = "";
   let length;
   let index;
