@@ -1,6 +1,8 @@
 let numShips = 3; //default ship number
 let Player1Ships;
 let Player2Ships;
+let specCountP1 = 2
+let specCountP2 = 2
 let difficulty = "Easy";
 let AIactivated = false;
 let gameSetup = false;
@@ -8,6 +10,9 @@ let gameShownForP1 = false;
 let gameShownForP2 = false;
 let firstTurn = false;
 let enemyShips = [];
+let hitship = false;
+let hitCoordinates = [];
+let differentShips = false;
 
 var p1ShipLoc = matrix();// 
 var p2ShipLoc = matrix();// 
@@ -22,6 +27,9 @@ var p2sFireLoc = matrix();//
 //1 for sunk
 var p1ShipLocArr;
 var p2ShipLocArr;
+
+let p1Ship1Sunk = false, p1Ship2Sunk = false, p1Ship3Sunk = false, p1Ship4Sunk = false, p1Ship5Sunk = false;
+let p2Ship1Sunk = false, p2Ship2Sunk = false, p2Ship3Sunk = false, p2Ship4Sunk = false, p2Ship5Sunk = false;
 
 function matrix(){
 
@@ -45,12 +53,204 @@ function matrix(){
 return arr;
 }
 
+function p1ShipHealth(shipNum) {
+  let health = shipNum;
+  let row, col;
+
+  if (shipNum == 1 && !p1Ship1Sunk) {
+    col = p1ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97;
+    row = Number(p1ShipLocArr[0][0].toLowerCase().substring(1, p1ShipLocArr[0][0].length)) - 1;
+
+    if (p2sFireLoc[row][col] == 1)
+      health--;
+
+    if (health == 0) {
+      alert("Ship 1 has sunk!")
+      p1Ship1Sunk = true;
+      return 0;
+    }
+  }
+
+  else if (shipNum == 2 && !p1Ship2Sunk) {
+    for (let i = 1; i <= 2; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 2 has sunk!")
+        p1Ship2Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 3 && !p1Ship3Sunk) {
+    for (let i = 3; i <= 5; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 3 has sunk!")
+        p1Ship3Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 4 && !p1Ship4Sunk) {
+    for (let i = 6; i <= 9; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 4 has sunk!")
+        p1Ship4Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 5 && !p1Ship5Sunk) {
+    for (let i = 10; i <= 14; i++) {
+      col = p1ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p1ShipLocArr[0][i].toLowerCase().substring(1, p1ShipLocArr[0][i].length)) - 1;
+
+      if (p2sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 5 has sunk!")
+        p1Ship5Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else return 0; // if the ship had already sunk in a previous call
+
+  return health;
+}
+
+function p2ShipHealth(shipNum) {
+  let health = shipNum;
+  let row, col;
+
+  if (shipNum == 1 && !p2Ship1Sunk) {
+    col = p2ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97;
+    row = Number(p2ShipLocArr[0][0].toLowerCase().substring(1, p2ShipLocArr[0][0].length)) - 1;
+
+    if (p1sFireLoc[row][col] == 1)
+      health--;
+
+    if (health == 0) {
+      alert("Ship 1 has sunk!")
+      p2Ship1Sunk = true;
+      return 0;
+    }
+  }
+
+  else if (shipNum == 2 && !p2Ship2Sunk) {
+    for (let i = 1; i <= 2; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 2 has sunk!")
+        p2Ship2Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 3 && !p2Ship3Sunk) {
+    for (let i = 3; i <= 5; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 3 has sunk!")
+        p2Ship3Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 4 && !p2Ship4Sunk) {
+    for (let i = 6; i <= 9; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 4 has sunk!")
+        p2Ship4Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else if (shipNum == 5 && !p2Ship5Sunk) {
+    for (let i = 10; i <= 14; i++) {
+      col = p2ShipLocArr[0][i].toLowerCase().charCodeAt(0) - 97;
+      row = Number(p2ShipLocArr[0][i].toLowerCase().substring(1, p2ShipLocArr[0][i].length)) - 1;
+
+      if (p1sFireLoc[row][col] == 1)
+        health--;
+
+      if (health == 0) {
+        alert("Ship 5 has sunk!")
+        p2Ship5Sunk = true;
+        return 0;
+      }
+    }
+  }
+
+  else return 0; // if the ship had already sunk in a previous call
+
+  return health;
+}
+
+function p1ShipHealthAll() {
+  let arr = [];
+  for (let i = 1; i <= numShips; i++)
+    arr.push(p1ShipHealth(i));
+
+  return arr;
+}
+
+function p2ShipHealthAll() {
+  let arr = [];
+  for (let i = 1; i <= numShips; i++)
+    arr.push(p2ShipHealth(i));
+
+  return arr;
+}
+
 function humanBtn(){
   document.getElementById("getShipsForP2Btn").style.removeProperty("display");
   document.getElementById("humanBtn").disabled = true;
   document.getElementById("AIbtn").disabled = true;
   document.getElementById("getNoOfShipsBtn").disabled = false;
   changeVisibility();
+  document.getElementById("P2Ships").style.removeProperty("display");
+  document.getElementById("showShipsForP2Btn").style.removeProperty("display");
   document.getElementById("Opponent").innerHTML = "Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}";
   document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for P2";
 }
@@ -79,8 +279,6 @@ function changeVisibility()
   document.getElementById("Opponent").style.removeProperty("display");
   document.getElementById("endingLine").style.removeProperty("display");
   document.getElementById("playGameBtn").style.removeProperty("display");
-  document.getElementById("P2Ships").style.removeProperty("display");
-  document.getElementById("showShipsForP2Btn").style.removeProperty("display");
 }
 
 function loadStoredVars() //stores local json variables
@@ -367,15 +565,15 @@ function getShipsForP1() {
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0) {
-    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-    shipArray = Player1Ships.split(',')
+  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player1Ships)) { // check for duplicates
+    alert("Wrong input!");
+    return
   }
   let isValid = true;
-  
-  while (Player1Ships == null) {
-    Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-    shipArray = Player1Ships.split(',')
+  console.log(Player1Ships)
+  while (Player1Ships == '') {
+    alert("Wrong input! You gave an empty input");
+    return
   }
   do {
     let isRowSame = [true, true, true, true, true]
@@ -420,8 +618,8 @@ function getShipsForP1() {
     
     
     if (!isValid) {
-      Player1Ships = prompt("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-      shipArray = Player1Ships.split(',')
+      alert("Wrong input! Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
+      return
     }
   }while (!isValid)
   
@@ -458,33 +656,37 @@ function AIsetup() {
 
       for(let j=0; j < i+1; j++)
       {
+        if(!checker){
+          do{
+            row = Math.floor(Math.random() * 10); 
+            col = Math.floor(Math.random() * 10);
+          }while(row == 9-i && col == 9-i);
+        }
+
         if(adjuster)
         {
-          if(row+j < 9)
-          {
+          if(row+j < 9){
             temp = String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
-            checker = AIships.search(temp) < 0;
+            checker = (AIships.search(temp) == -1);
           }
-          else if(row+j == 9)
-          {
+          else if(row+j == 9){
             temp = String.fromCharCode(col+65) + "10";
-            checker = AIships.search(temp) < 0;
+            checker = AIships.search(temp) == -1;
           }
           else checker = false;
         }
-        else
-        {
-          if(col+j <= 9)
-          {
+        else{
+          if(col+j <= 9){
             temp = String.fromCharCode(col+j+65);
-
             if(row < 9) temp +=String.fromCharCode(row+49);
             else temp += "10";
 
-            checker = AIships.search(temp) < 0;
+            checker = (AIships.search(temp) == -1);
           }
           else checker = false;
         }
+
+        if(!checker) j=-1;
       }
     }while(!checker);
 
@@ -492,19 +694,13 @@ function AIsetup() {
     {
       if(adjuster)
       {
-        if(row+j == 9)
-        {
-          AIships += String.fromCharCode(col+65) + "10";
-        }
-        else
-        {
-          AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
-        }
+        if(row+j == 9) AIships += String.fromCharCode(col+65) + "10";
+        else AIships += String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
       }
       else
       {
         AIships += String.fromCharCode(col+j+65);
-        if(col+j < 9) AIships +=String.fromCharCode(row+49);
+        if(row < 9) AIships +=String.fromCharCode(row+49);
         else AIships += "10";
       }
 
@@ -518,14 +714,17 @@ function AIsetup() {
   window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
   window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
 
-  document.getElementById("Opponent").innerHTML = "AI placed their ships at " + AIships + ".";
+  document.getElementById("Opponent").innerHTML = "The AI has set their board.";
   document.getElementById("P2Ships").disabled = false;
   document.getElementById("showShipsForP2Btn").disabled = false;
   document.getElementById("playGameBtn").disabled = false;
   fillShipsLoc(p2ShipLoc, AIships);
   p2ShipLocArr = getShipsLocArry(AIships);
+  window.localStorage.setItem("p1ShipLoc", JSON.stringify(p1ShipLoc));
+  window.localStorage.setItem("p1ShipLocArr", JSON.stringify(p1ShipLocArr));
   window.localStorage.setItem("p2ShipLoc", JSON.stringify(p2ShipLoc));
   window.localStorage.setItem("p2ShipLocArr", JSON.stringify(p2ShipLocArr));
+  window.localStorage.setItem("numShips", JSON.stringify(numShips));
 }
 
 //same as above, but with added local storage to transfer pages
@@ -534,15 +733,15 @@ function getShipsForP2() {
   let shipArray = Player2Ships.replace(/[\[\]']+/g,'').split(',')
   let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0) {
-    Player2Ships = prompt("Wrong input! Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-    shipArray = Player2Ships.split(',')
+  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player2Ships)) {
+    alert("Wrong input!");
+    return
   }
   let isValid = true;
   
   while (Player1Ships == null) {
-    Player2Ships = prompt("Wrong input! Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-    shipArray = Player2Ships.split(',')
+    alert("Wrong input!");
+    return
   }
   do {
     let isRowSame = [true, true, true, true, true]
@@ -589,8 +788,8 @@ function getShipsForP2() {
     
     
     if (!isValid) {
-      Player2Ships = prompt("Wrong input! Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
-      shipArray = Player2Ships.split(',')
+      alert("Wrong input!");
+      return
     }
   }while (!isValid)
   
@@ -649,6 +848,7 @@ function showShips(plyrNo) {
         }
       }   
     }
+    
     if(AIactivated){
       document.getElementById(btnId).innerHTML = "Hide Ships of AI";
       document.getElementById(tblId).style.removeProperty("display");
@@ -690,7 +890,104 @@ function showShips(plyrNo) {
     document.getElementById(btnId).disabled = true;
     document.getElementById(tblId).style.setProperty("display","none");
   }
-    
+  
+}
+
+function askForSpecial() {
+  if (!specCountP1) {
+    document.getElementById("specAttack").style.setProperty("display","none");
+    return
+  }
+  let nShipsDn=0;
+  let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
+  
+  let row, col;
+  col = frCell.toUpperCase().charCodeAt(1)-65;
+ 
+  if(frCell.length == 4)
+  { row = frCell.substring(2,3)-1;}
+  else if(frCell.length == 5)
+  { row = frCell.substring(2,4)-1;}
+
+  if(row < 0 || row > 9 || col < 0 || col > 9)
+  {
+    window.alert("Attack coordinate out of bounds. Try again.");
+  }
+
+  if (p1sFireLoc[row][col] == 0) { // check if sunk
+    specialAttack(p1sFireLoc,frCell);
+
+    document.getElementById("P1FrCell").innerHTML = frCell  + " Fire at locations!";
+    showFireLocations('P1');
+    nShipsDn=Gameover('P1');
+    document.getElementById("P1FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    specCountP1--
+    document.getElementById("specAttack").innerHTML = "Use Special attack Count: " + specCountP1;
+    if((numShips-nShipsDn)==0)
+    {
+      document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
+      document.getElementById("turnByP2Btn").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
+    } else
+    {
+      document.getElementById("turnByP2Btn").disabled = false;
+      document.getElementById("specAttack").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
+    }
+  }
+  else{
+    window.alert("Invalid attack coordinate. Try again.");
+  }
+
+  
+}
+
+function askForSpecialP2() {
+  if (!specCountP2) {
+    document.getElementById("specAttackP2").style.setProperty("display","none");
+    return
+  }
+  let nShipsDn=0;
+  let frCell = prompt("Pick a space on the opponent's board to 'fire' at.", "[J10]");
+  
+  let row, col;
+  col = frCell.toUpperCase().charCodeAt(1)-65;
+ 
+  if(frCell.length == 4)
+  { row = frCell.substring(2,3)-1;}
+  else if(frCell.length == 5)
+  { row = frCell.substring(2,4)-1;}
+
+  if(row < 0 || row > 9 || col < 0 || col > 9)
+  {
+    window.alert("Attack coordinate out of bounds. Try again.");
+  }
+
+  if (p2sFireLoc[row][col] == 0) { // check if sunk
+    specialAttack(p2sFireLoc,frCell);
+
+    document.getElementById("P2FrCell").innerHTML = frCell  + " Fire at locations!";
+    showFireLocations('P2');
+    nShipsDn=Gameover('P2');
+    document.getElementById("P2FrHitStatus").innerHTML = nShipsDn  + " ship down! "+(numShips-nShipsDn) + " to go";
+    specCountP2--
+    document.getElementById("specAttackP2").innerHTML = "Use Special attack Count: " + specCountP2;
+    if((numShips-nShipsDn)==0)
+    {
+      document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
+      document.getElementById("turnByP1Btn").disabled = true;
+      document.getElementById("frCellByP1Btn").disabled = true;
+    } else
+    {
+      document.getElementById("turnByP1Btn").disabled = false;
+      document.getElementById("specAttackP2").disabled = true;
+      document.getElementById("frCellByP2Btn").disabled = true;
+    }
+  }
+  else{
+    window.alert("Invalid attack coordinate. Try again.");
+  }
+
 }
 
 function attack(shipArr,attackLocation){
@@ -703,8 +1000,42 @@ function attack(shipArr,attackLocation){
   col=attackLocation.toLowerCase().charCodeAt(0) - 97;
   row=Number(attackLocation.toLowerCase().substring(1,attackLocation.length))-1;
   shipArr[row][col]= 1;
-  
+
+  //Update the healthbars for Player 1 and Player2/AI
+  updateShipHealthBar(1);
+  updateShipHealthBar(2);
    
+}
+
+function specialAttack(shipArr, attackLocation) {
+    attackLocation = attackLocation.substring(1, (attackLocation.length-1));
+    let col = attackLocation.toLowerCase().charCodeAt(0) - 97;
+    let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1;
+
+    if (shipArr[row][col] != 0) {
+        alert("Invalid attack position.");
+        return;
+    }
+
+    let originalCol = attackLocation.toLowerCase().charCodeAt(0) - 97;
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (row - 1 < 0 || col - 1 < 0) {
+              
+            } else {
+              if (row > 10 || col > 10) break
+              shipArr[row - 1][col - 1] = 1;
+            }
+            col++
+        }
+        row++;
+        col = originalCol;
+    }
+
+  //Update the healthbars of Player 1 and Player 2
+  updateShipHealthBar(1);
+  updateShipHealthBar(2);
 }
 
 //Shows the player's view of their opponent
@@ -906,10 +1237,12 @@ function frCellByP1() {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 1.";
       document.getElementById("turnByP2Btn").disabled = true;
       document.getElementById("frCellByP1Btn").disabled = true;
+      document.getElementById("specAttack").disabled = true;
     } else
     {
       document.getElementById("turnByP2Btn").disabled = false;
       document.getElementById("frCellByP1Btn").disabled = true;
+      document.getElementById("specAttack").disabled = true;
     }
   }
   else{
@@ -945,10 +1278,12 @@ function frCellByP2() {
       document.getElementById("gameStatus").innerHTML = " Congratulations! game won by player 2.";
       document.getElementById("turnByP2Btn").disabled = true;
       document.getElementById("frCellByP2Btn").disabled = true;
+      document.getElementById("specAttackP2").disabled = true;
     } else
     {
       document.getElementById("turnByP1Btn").disabled = false;
       document.getElementById("frCellByP2Btn").disabled = true;
+      document.getElementById("specAttackP2").disabled = true;
     }
   }
   else{
@@ -980,6 +1315,10 @@ function frCellTurnOfP1()
   showOrHidePlayerShips(1, true);
 
   //Show all attacks on Player's 1 Board
+  document.getElementById("specAttack").disabled = false;
+  document.getElementById("specAttack").innerHTML = "Use Special attack Count: " + specCountP1;
+  // document.getElementById("tlbCellFrAtByP2").style.setProperty("display","none");
+  document.getElementById("tlbCellFrAtByP1").style.removeProperty("display");
   showFireLocations('P1');
 
   //Hide Player 2's/AI's Ships
@@ -996,8 +1335,9 @@ function frCellTurnOfP2()
 
   //Enable frCellByP2Btn button
   document.getElementById("frCellByP2Btn").disabled = false;
-
-  //Show all attack on Player's 2/AI's Board
+  if(!AIactivated) document.getElementById("specAttackP2").disabled = false;
+  if(!AIactivated)document.getElementById("specAttackP2").innerHTML = "Use Special attack Count: " + specCountP2;
+  document.getElementById("tlbCellFrAtByP2").style.removeProperty("display");
   showFireLocations('P2');
 
   //Next, determine whether to hide or show player 1's and player's ships
@@ -1019,11 +1359,13 @@ function frCellTurnOfP2()
 function opponentNaming() {
   document.getElementById("turnByP2Btn").style.removeProperty("display");
   document.getElementById("frCellByP2Btn").style.removeProperty("display");
-
+  document.getElementById("specAttackP2").style.removeProperty("display");
   if(AIactivated) 
   {
     document.getElementById("turnByP2Btn").innerHTML = "Start AI's turn";
     document.getElementById("frCellByP2Btn").innerHTML = "Launch AI attack";
+    document.getElementById('specAttackP2').style.setProperty("display","none")
+    document.getElementById('specAttackP2').id = 'null'
   }
   else
   {
@@ -1062,7 +1404,246 @@ function easyAttack() {
 }
 
 function mediumAttack() {
+  let row = 0, col = 0;
+  let temp = "";
+  let sunkCheck = Gameover('P2');
+  let alreadyAdjusted = false;
+  let verticalShip = false, horizontalShip = false;
+  let firstHit; let lastHit;
+  let index = 0;
 
+  if(hitship) {
+    index = hitCoordinates.length;
+    temp = String(hitCoordinates[index-1]);
+    col = temp.charCodeAt(0)-65;
+    if(temp.length == 3) row = 10;
+    else row = temp.charCodeAt(1)-49;
+
+    if(index > 1){
+      firstHit = String(hitCoordinates.slice(index-2));
+      lastHit = String(hitCoordinates.slice(index-1));
+
+      if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true;
+      else horizontalShip = true;
+    }
+    if(horizontalShip) {
+      if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { 
+        if(p2sFireLoc[row][col+1] == 0) {
+          col += 1;
+          alreadyAdjusted = true;
+        }
+      }
+      if(!alreadyAdjusted) {
+        temp = hitCoordinates[0];
+        col = temp.charCodeAt(0)-65;
+        if(temp.length == 3) row = 10;
+        else row = temp.charCodeAt(1)-49;
+
+        col -= 1;
+        alreadyAdjusted = true;
+      }
+    }
+    else if(verticalShip) { 
+      if(firstHit.length == 3) firstHit = 9;
+      else firstHit = firstHit.charCodeAt(1)-49;
+
+      if(firstHit > lastHit.charCodeAt(1)-49 && row > 0) {
+        if(p2sFireLoc[row-1][col] == 0) {
+          row -= 1;
+          alreadyAdjusted = true;
+        }
+      }
+      if(!alreadyAdjusted) {
+        row += 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(row-1 >= 0 && !alreadyAdjusted){ //Up
+      if(p2sFireLoc[row-1][col] == 0) {
+        row -= 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(col+1 < 10 && !alreadyAdjusted){ //right
+      if(p2sFireLoc[row][col+1] == 0) {
+        col += 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(row+1 < 10 && !alreadyAdjusted){ //down
+      if(p2sFireLoc[row+1][col] == 0) {
+        row += 1;
+        alreadyAdjusted = true;
+      }
+    }
+    if(col-1 >= 0 && !alreadyAdjusted){ //left
+      if(p2sFireLoc[row][col-1] == 0) {
+        col -= 1;
+        alreadyAdjusted = true;
+      }
+    }
+  }
+  else {
+    do{
+      row = Math.floor(Math.random() * 10); 
+      col = Math.floor(Math.random() * 10);
+    }while(p2sFireLoc[row][col] != 0);  
+  }
+
+  temp = "";
+  if(row == 9) temp += String.fromCharCode(col+65) + "10";
+  else temp += String.fromCharCode(col+65) + String.fromCharCode(row+49);
+
+  hitCoordinates.push(temp);
+  console.log(hitCoordinates);
+  temp = "[" + temp + "]";
+
+  if(specCountP2 > 0){
+    if(p1ShipLoc[row][col]==0) hitCoordinates.pop();
+
+    for(let i=0; i<3; i++){
+      for(let j=0; j<3; j++) {
+        if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >=0 && col-1+j < 10)) {
+          if(p1ShipLoc[row-1+i][col-1+j] != 0 && p2sFireLoc[row-1+i][col-1+j] == 0) {
+            let specAttackHit ="";
+            if(row-1+j==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
+            else specAttackHit += String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
+            hitCoordinates.push(specAttackHit);
+            console.log("Array post Special Attack: "+ hitCoordinates);
+            hitship = true;
+          }
+        }
+      }
+    } 
+  }
+
+  markAIAttack(temp);
+
+  if(p1ShipLoc[row][col] != 0) {
+    hitship = true; 
+    if(col < 9) if(p2sFireLoc[row][col+1] == 1 && horizontalShip) hitCoordinates.sort();
+    else if(col == 9 && horizontalShip) hitCoordinates.sort();
+    if(row > 0) if(p2sFireLoc[row-1][col] == 1 && verticalShip) hitCoordinates.sort();
+    else if(row == 0 && verticalShip) hitCoordinates.sort();
+  }
+  else {
+    hitCoordinates.pop();
+    if(hitship && index>1) hitCoordinates.sort();
+  }
+
+  if(hitship && index>1){
+    let tempValue = "";
+    let tempRow = 0; tempCol = 0;
+
+    tempValue = hitCoordinates[index-2];
+    tempCol = tempValue.charCodeAt(0)-65;
+    if(tempValue == 3) tempRow = 10;
+    else tempRow = tempValue.charCodeAt(1)-49;
+
+    if(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
+  }
+
+  if(sunkCheck != Gameover('P2')) {
+    if(differentShips) {
+      let shipNumber = p1ShipLoc[row][col];
+
+      for(let i=0; i<hitCoordinates.length; i++)
+      {
+        let tempValue = "";
+        let tempRow = 0; tempCol = 0;
+
+        tempValue = hitCoordinates[i];
+        tempCol = tempValue.charCodeAt(0)-65;
+        if(tempValue == 3) tempRow = 10;
+        else tempRow = tempValue.charCodeAt(1)-49;
+
+        if(p1ShipLoc[tempRow][tempCol] == shipNumber) {
+          hitCoordinates.filter((value) => value != tempValue);
+        }
+      }
+      differentShips = false;
+    }
+    else{
+      hitCoordinates = [];
+      hitship = false;
+    }
+  }
+}
+
+function hardAttack() { //p1ShipLocArr
+  let attackCoordinate = "";
+  let length;
+  let index;
+  let temp = "";
+
+  if(!firstTurn)
+  {
+    temp += p1ShipLocArr[0];
+    console.log(temp)
+    enemyShips = temp.split(',');
+    firstTurn = true;
+  }
+
+  length = enemyShips.length;
+  index = Math.floor(Math.random() * length);
+  attackCoordinate += enemyShips[index];
+
+  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
+  attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
+
+  if(specCountP2 > 0)
+  {
+    let specAttackCoordinate = String(enemyShips[index]);
+    let row=0, col=0;
+
+    col = specAttackCoordinate.charCodeAt(0)-65;
+    if(specAttackCoordinate.length == 3) row = 10;
+    else row = specAttackCoordinate.charCodeAt(1)-49;
+
+    for(let i=0; i<3; i++){
+      for(let j=0; j<3; j++) {
+        if((row-1+i >= 0 && row-1+i < 10) || (col-1+j >= 0 && col-1+j < 10)) {
+          if(p1ShipLoc[row-1+i][col-1+j] != 0){
+            let specAttackHit = "";
+            if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
+            else specAttackHit = String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
+
+            enemyShips = enemyShips.filter((value, temp) => value != specAttackHit);
+          }
+        }
+      }
+    }
+  }
+
+  markAIAttack(attackCoordinate);
+}
+
+function markAIAttack(attackCoordinate) {
+
+  let sunkShips = 0;
+
+  if(specCountP2 > 0) {
+    specialAttack(p2sFireLoc, attackCoordinate);
+    specCountP2--;
+  }
+  else attack(p2sFireLoc,attackCoordinate);
+
+  document.getElementById("P2FrCell").innerHTML = attackCoordinate  + " Fire at locations!";
+  showFireLocations('P2');
+  sunkShips = Gameover('P2')
+  document.getElementById("P2FrHitStatus").innerHTML = sunkShips  + " ship down! "+(numShips-sunkShips) + " to go";
+
+  if((numShips-sunkShips)==0)
+  {
+    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
+    document.getElementById("turnByP2Btn").disabled = true;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  } 
+  else
+  {
+    document.getElementById("turnByP1Btn").disabled = false;
+    document.getElementById("frCellByP2Btn").disabled = true;
+  }
 }
 
 //Create a new board by taking in a node, rowId, and tableId
@@ -1162,60 +1743,6 @@ function createBoard(node, rowId, tableId)
   //Finally, append table to  node
   node.appendChild(table);
 }
-function hardAttack() { //p1ShipLocArr
-  let attackCoordinate = "";
-  let length;
-  let index;
-  let temp = "";
-
-  if(!firstTurn)
-  {
-    temp += p1ShipLocArr[0];
-    console.log(temp)
-    enemyShips = temp.split(',');
-    firstTurn = true;
-  }
-  console.log(enemyShips);
-  console.log(enemyShips[1]);
-
-  length = enemyShips.length;
-  console.log(length);
-  index = Math.floor(Math.random() * length);
-  console.log(index);
-  attackCoordinate += enemyShips[index];
-
-  console.log(attackCoordinate);
-
-  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
-  attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
-
-  console.log(attackCoordinate);
-
-  markAIAttack(attackCoordinate);
-}
-
-function markAIAttack(attackCoordinate) {
-
-  let sunkShips = 0;
-
-  attack(p2sFireLoc,attackCoordinate);
-  document.getElementById("P2FrCell").innerHTML = attackCoordinate  + " Fire at locations!";
-  showFireLocations('P2');
-  sunkShips = Gameover('P2')
-  document.getElementById("P2FrHitStatus").innerHTML = sunkShips  + " ship down! "+(numShips-sunkShips) + " to go";
-
-  if((numShips-sunkShips)==0)
-  {
-    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
-    document.getElementById("turnByP2Btn").disabled = true;
-    document.getElementById("frCellByP2Btn").disabled = true;
-  } 
-  else
-  {
-    document.getElementById("turnByP1Btn").disabled = false;
-    document.getElementById("frCellByP2Btn").disabled = true;
-  }
-}
 
 //Create the players board when the game starts
 //Can only be used in game.html not index.html
@@ -1259,18 +1786,6 @@ function createPlayerBoards()
   //So FrAtP1 is where the Player 2 will attack and FrAtP2 is where Player 1 will attack
   //That is why Player 1's Board is FrAtP2 and Player 2's Board/AI's is FrAtP1
 }
-
-//This eventListener create two boards in game.html
-//Adds an event listener to window when game.html loads
-window.addEventListener("load", () => {
-  //Create both player's board in game.html
-  //Use a try and catch block to catch an error if createPlayerBoards is use in index.html
-  //rather than in game.html
-  try {
-    createPlayerBoards();
-  } catch (error) {
-  }
-});
 
 //Show a Player's Ships on their board
 //It takes in playerNum, either 1 or 2, which represent Player 1 and Plyaer 2
@@ -1348,3 +1863,183 @@ function showOrHidePlayerShips(playerNum, showShips)
     //Otherwise, the ship is sunk and do not display the ship
   }
 }
+
+//Creates the health bar for each ship of the player
+//Takes in a node, the html tag where the healthbar will attached to
+//id, the id of the healthbar, and name, the name of the healthbar
+function createShipHealthBar(node, id, name)
+{
+  //Firstly, create a new div tag that will store the health bar for the player
+  let player = document.createElement("div");
+
+  //Next, set the id of player to be id
+  player.setAttribute("id", id);
+
+  //Next, set the innerhtml of player to be name + 's  Ships:
+  player.innerHTML = name + '\'s Ships:';
+
+  //Set the padding-left of player to be 100px
+  //player.style = "padding-left:100px";
+
+  //Next, create a new table that will store the healthbar of the ships
+  let healthbar = document.createElement("table");
+
+  //Create a new tbody for healthbar
+  let tbody = document.createElement("tbody");
+  
+  //Next, create a new row that will contain the health of each ship
+  let health = document.createElement("tr");
+
+  //Next, loop for numShips of times and add the helath of each ship to healthbar
+  for(let i = 1; i <= numShips; i++)
+  {
+    //Create a new column that will contain a new ship
+    let ship = document.createElement("td")
+
+    //Next, set the value of ship, which represents the health of the ship
+    ship.setAttribute("value", i);
+
+    //Set the innerhtml of ship to be Ship i: value
+    ship.innerHTML = "Ship " + i.toString() + ": " + ship.getAttribute("value");
+
+    //If i does not equal to 1
+    if(i != 1)
+    {
+      //Set the padding-left of ship to be 100 px
+      ship.style = "padding-left: 75px";
+    }
+
+    //Finally, add ship to health
+    health.appendChild(ship);
+  }
+  
+  //Next, append health to tbody
+  tbody.appendChild(health);
+
+  //Next append tbody to healthbar
+  healthbar.appendChild(tbody);
+
+  //Next, append healthbar to player
+  player.appendChild(healthbar);
+
+  //Finally, append player to node
+  node.appendChild(player);
+}
+
+//Used to create the health bar for each player
+//Takes nothing
+//Can only be used in game.html
+function createPlayerShipHealthBars()
+{
+  //Firstly, use the querySelector to find shipHealth 
+  //and store it in shipHealth
+  let shipHealth = window.document.querySelector('#shipHealth');
+
+  //Next, add a table for player 1 to shipHealth
+  //using createShipHealthBar
+  //pass shipHealth as the node, P1ShipHealthBar as id, and Player 1 as name
+  createShipHealthBar(shipHealth, "P1ShipHealthBar", "Player 1");
+
+  //Next, add another table for player 2, but its name depend on whether the AI is activated or not
+  //Thus, create a varible that will store the name of player 2
+  let name = "";
+
+  //If the AI is not activated
+  if(AIactivated == false)
+  {
+    //Set the name to be Player 2
+    name = "Player 2";
+  }
+  //Otherwise, if AI is activated
+  else
+  {
+    //Set the name to be AI
+    name = "AI";
+  }
+
+  //Next, add another for player 2 using createShipHealthBar
+  //Pass shipHealth to as node, name as name, and P2ShipHealthBar as id
+  createShipHealthBar(shipHealth, "P2ShipHealthBar", name);
+
+  //Next, get P1ShipHealthBar from game.html
+  let P1ShipHealthBar = window.document.querySelector("#P1ShipHealthBar");
+
+  //Next, set the padding-bottom of P1ShipHealthBar to be 30 px
+  P1ShipHealthBar.style = "padding-bottom:20px";
+
+  //Next, set the padding-top of shipHealth to be 125 px
+  shipHealth.style = "padding-top: 125px"
+}
+
+//This functions updates the health of ship by getting number of the player
+function updateShipHealthBar(playerNum)
+{
+  //Firstly, create two varaibles
+  //id which the id of the player's health bar
+  //and shipsHealth, an array that the stores the health of each ship
+  let id;
+  let shipsHealth;
+
+  //Next, use playerNum to determine the value of id and shipHealth
+  //If playerNum is 1
+  if(playerNum == 1)
+  {
+    //Set id to be P1ShipHealthBar
+    id = "P1ShipHealthBar";
+
+    //Set shipsHealth to be the arrary return by p1ShipHealthAll
+    //p1ShipHealthAll will also check if a ship for Player 1 is sunk or not
+    shipsHealth = p1ShipHealthAll();
+  }
+  //Otherwise, if playerNum is 2
+  else
+  {
+    //Set the id to be P2ShipHealthBar
+    id = "P2ShipHealthBar";
+
+    //Set shipsHealth to be the arrary return by p2ShipHealthAll
+    shipsHealth = p2ShipHealthAll()
+  }
+
+  //Next, get the div tag that has a player's health bar using id
+  let player = window.document.querySelector("#" + id);
+
+  //Next, get the table of the player, which should be the last child of player
+  let table = player.lastChild;
+
+  //Next, get the tbody of table, which is the first child of table
+  let tbody = table.firstChild;
+
+  //Next, get the row of table, which contains each ship of the shiphelath bar
+  //Called this row health bar
+  let healthBar = tbody.firstChild;
+
+  //Next, get the children of healthBar, which represents the ships the player has
+  //and the health of each ship
+  let ships = healthBar.childNodes;
+
+  //Loop through each ship in ships
+  for(let i = 0; i < ships.length; i++)
+  {
+    //Set the value of ships[i] to be the ith value of shipsHealth
+    ships[i].setAttribute("value", shipsHealth[i]);
+
+    //Set the innerHTMLto be Ship + i + ships[i]'s value
+    ships[i].innerHTML = "Ship " + (i+1).toString() + ": " + ships[i].getAttribute("value")
+  }
+}
+
+//This eventListener create two boards and two ship health bars in game.html
+//Adds an event listener to window when game.html loads
+window.addEventListener("load", () => {
+  //Use a try and catch block to catch an error if createPlayerBoards and createPlayerShipHealthBars
+  //is used in index.html rather than in game.html
+  try {
+    //Create both player's board in game.html
+    createPlayerBoards();
+
+    //Create both player's ship healthbar in game.html
+    createPlayerShipHealthBars();
+  } catch (error) {
+  }
+});
