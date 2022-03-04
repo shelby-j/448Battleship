@@ -45,7 +45,8 @@
 
 <!-- Create a divider, which will contain the boards for Player 1 and Player 2/AI -->
 <!-- Set the div's id to be boards. -->
-<div id="boards">
+<!-- Set the float to be left so that boards is next to shipHealth-->
+<div id="boards" style="float:left">
     <!-- Create a new table so that both boards will be side by side-->
     <table>
         <!-- Create a new tbody-->
@@ -68,6 +69,12 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Create a new divider that will store the health of each ship-->
+<!-- Set the id of the divider to be shipHealth-->
+<!-- Set the style to be float so that shipHealth is next to boards-->
+<div id="shipHealth" style="float:left">
 </div>
 
 </body>

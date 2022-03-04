@@ -1024,7 +1024,10 @@ function attack(shipArr,attackLocation){
   col=attackLocation.toLowerCase().charCodeAt(0) - 97;
   row=Number(attackLocation.toLowerCase().substring(1,attackLocation.length))-1;
   shipArr[row][col]= 1;
-  
+
+  //Update the healthbars for Player 1 and Player2/AI
+  updateShipHealthBar(1);
+  updateShipHealthBar(2);
    
 }
 
@@ -1053,6 +1056,10 @@ function specialAttack(shipArr, attackLocation) {
         row++;
         col = originalCol;
     }
+
+  //Update the healthbars of Player 1 and Player 2
+  updateShipHealthBar(1);
+  updateShipHealthBar(2);
 }
 
 //Shows the player's view of their opponent
@@ -1802,18 +1809,6 @@ function createPlayerBoards()
   //That is why Player 1's Board is FrAtP2 and Player 2's Board/AI's is FrAtP1
 }
 
-//This eventListener create two boards in game.html
-//Adds an event listener to window when game.html loads
-window.addEventListener("load", () => {
-  //Create both player's board in game.html
-  //Use a try and catch block to catch an error if createPlayerBoards is use in index.html
-  //rather than in game.html
-  try {
-    createPlayerBoards();
-  } catch (error) {
-  }
-});
-
 //Show a Player's Ships on their board
 //It takes in playerNum, either 1 or 2, which represent Player 1 and Plyaer 2
 //It also take a boolean value, showShips, to either to show or hide the ship
@@ -1890,3 +1885,183 @@ function showOrHidePlayerShips(playerNum, showShips)
     //Otherwise, the ship is sunk and do not display the ship
   }
 }
+
+//Creates the health bar for each ship of the player
+//Takes in a node, the html tag where the healthbar will attached to
+//id, the id of the healthbar, and name, the name of the healthbar
+function createShipHealthBar(node, id, name)
+{
+  //Firstly, create a new div tag that will store the health bar for the player
+  let player = document.createElement("div");
+
+  //Next, set the id of player to be id
+  player.setAttribute("id", id);
+
+  //Next, set the innerhtml of player to be name + 's  Ships:
+  player.innerHTML = name + '\'s Ships:';
+
+  //Set the padding-left of player to be 100px
+  //player.style = "padding-left:100px";
+
+  //Next, create a new table that will store the healthbar of the ships
+  let healthbar = document.createElement("table");
+
+  //Create a new tbody for healthbar
+  let tbody = document.createElement("tbody");
+  
+  //Next, create a new row that will contain the health of each ship
+  let health = document.createElement("tr");
+
+  //Next, loop for numShips of times and add the helath of each ship to healthbar
+  for(let i = 1; i <= numShips; i++)
+  {
+    //Create a new column that will contain a new ship
+    let ship = document.createElement("td")
+
+    //Next, set the value of ship, which represents the health of the ship
+    ship.setAttribute("value", i);
+
+    //Set the innerhtml of ship to be Ship i: value
+    ship.innerHTML = "Ship " + i.toString() + ": " + ship.getAttribute("value");
+
+    //If i does not equal to 1
+    if(i != 1)
+    {
+      //Set the padding-left of ship to be 100 px
+      ship.style = "padding-left: 75px";
+    }
+
+    //Finally, add ship to health
+    health.appendChild(ship);
+  }
+  
+  //Next, append health to tbody
+  tbody.appendChild(health);
+
+  //Next append tbody to healthbar
+  healthbar.appendChild(tbody);
+
+  //Next, append healthbar to player
+  player.appendChild(healthbar);
+
+  //Finally, append player to node
+  node.appendChild(player);
+}
+
+//Used to create the health bar for each player
+//Takes nothing
+//Can only be used in game.html
+function createPlayerShipHealthBars()
+{
+  //Firstly, use the querySelector to find shipHealth 
+  //and store it in shipHealth
+  let shipHealth = window.document.querySelector('#shipHealth');
+
+  //Next, add a table for player 1 to shipHealth
+  //using createShipHealthBar
+  //pass shipHealth as the node, P1ShipHealthBar as id, and Player 1 as name
+  createShipHealthBar(shipHealth, "P1ShipHealthBar", "Player 1");
+
+  //Next, add another table for player 2, but its name depend on whether the AI is activated or not
+  //Thus, create a varible that will store the name of player 2
+  let name = "";
+
+  //If the AI is not activated
+  if(AIactivated == false)
+  {
+    //Set the name to be Player 2
+    name = "Player 2";
+  }
+  //Otherwise, if AI is activated
+  else
+  {
+    //Set the name to be AI
+    name = "AI";
+  }
+
+  //Next, add another for player 2 using createShipHealthBar
+  //Pass shipHealth to as node, name as name, and P2ShipHealthBar as id
+  createShipHealthBar(shipHealth, "P2ShipHealthBar", name);
+
+  //Next, get P1ShipHealthBar from game.html
+  let P1ShipHealthBar = window.document.querySelector("#P1ShipHealthBar");
+
+  //Next, set the padding-bottom of P1ShipHealthBar to be 30 px
+  P1ShipHealthBar.style = "padding-bottom:20px";
+
+  //Next, set the padding-top of shipHealth to be 125 px
+  shipHealth.style = "padding-top: 125px"
+}
+
+//This functions updates the health of ship by getting number of the player
+function updateShipHealthBar(playerNum)
+{
+  //Firstly, create two varaibles
+  //id which the id of the player's health bar
+  //and shipsHealth, an array that the stores the health of each ship
+  let id;
+  let shipsHealth;
+
+  //Next, use playerNum to determine the value of id and shipHealth
+  //If playerNum is 1
+  if(playerNum == 1)
+  {
+    //Set id to be P1ShipHealthBar
+    id = "P1ShipHealthBar";
+
+    //Set shipsHealth to be the arrary return by p1ShipHealthAll
+    //p1ShipHealthAll will also check if a ship for Player 1 is sunk or not
+    shipsHealth = p1ShipHealthAll();
+  }
+  //Otherwise, if playerNum is 2
+  else
+  {
+    //Set the id to be P2ShipHealthBar
+    id = "P2ShipHealthBar";
+
+    //Set shipsHealth to be the arrary return by p2ShipHealthAll
+    shipsHealth = p2ShipHealthAll()
+  }
+
+  //Next, get the div tag that has a player's health bar using id
+  let player = window.document.querySelector("#" + id);
+
+  //Next, get the table of the player, which should be the last child of player
+  let table = player.lastChild;
+
+  //Next, get the tbody of table, which is the first child of table
+  let tbody = table.firstChild;
+
+  //Next, get the row of table, which contains each ship of the shiphelath bar
+  //Called this row health bar
+  let healthBar = tbody.firstChild;
+
+  //Next, get the children of healthBar, which represents the ships the player has
+  //and the health of each ship
+  let ships = healthBar.childNodes;
+
+  //Loop through each ship in ships
+  for(let i = 0; i < ships.length; i++)
+  {
+    //Set the value of ships[i] to be the ith value of shipsHealth
+    ships[i].setAttribute("value", shipsHealth[i]);
+
+    //Set the innerHTMLto be Ship + i + ships[i]'s value
+    ships[i].innerHTML = "Ship " + (i+1).toString() + ": " + ships[i].getAttribute("value")
+  }
+}
+
+//This eventListener create two boards and two ship health bars in game.html
+//Adds an event listener to window when game.html loads
+window.addEventListener("load", () => {
+  //Use a try and catch block to catch an error if createPlayerBoards and createPlayerShipHealthBars
+  //is used in index.html rather than in game.html
+  try {
+    //Create both player's board in game.html
+    createPlayerBoards();
+
+    //Create both player's ship healthbar in game.html
+    createPlayerShipHealthBars();
+  } catch (error) {
+  }
+});
