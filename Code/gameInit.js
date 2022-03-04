@@ -1898,7 +1898,7 @@ function createShipHealthBar(node, id, name)
   player.setAttribute("id", id);
 
   //Next, set the innerhtml of player to be name + 's  Ships:
-  player.innerHTML = name + '\'s Ships:';
+  player.innerHTML = name + '\'s Ships\' Health:';
 
   //Set the padding-left of player to be 100px
   //player.style = "padding-left:100px";
