@@ -1650,7 +1650,7 @@ function markAIAttack(attackCoordinate) {//adjusts the boards and buttons for th
 
   if((numShips-sunkShips)==0)
   {
-    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
+    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the " + difficulty + " AI.";
     document.getElementById("turnByP2Btn").disabled = true;
     document.getElementById("frCellByP2Btn").disabled = true;
   } 
