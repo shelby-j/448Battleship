@@ -3,21 +3,23 @@ let Player1Ships;
 let Player2Ships;
 let specCountP1 = 2
 let specCountP2 = 2
-let difficulty = "Easy";
-let AIactivated = false;
-let gameSetup = false;
+let difficulty = "Easy"; //The difficulty of the AI
+let AIactivated = false; //bool representing whether the AI is activated
+let gameSetup = false; 
 let gameShownForP1 = false;
 let gameShownForP2 = false;
 let firstTurn = false;
-let enemyShips = [];
-let hitship = false;
-let hitCoordinates = [];
-let differentShips = false;
 
-var p1ShipLoc = matrix();// 
-var p2ShipLoc = matrix();// 
-var p1sFireLoc = matrix();// 
-var p2sFireLoc = matrix();// 
+let enemyShips = []; //used in hardAttack with all of player 1's ship locations
+let hitship = false; //bool representing whether a ship is hit in mediumAttack
+let hitCoordinates = []; //the coordinates of ships hit in mediumAttack
+let differentShips = false; //represents whether there are different ships in the hit coordinate array
+
+
+var p1ShipLoc = matrix(); 
+var p2ShipLoc = matrix();
+var p1sFireLoc = matrix();
+var p2sFireLoc = matrix();
 
 //These two contains the location of all ships for each ship
 //Each variable contains two arrays
@@ -243,23 +245,25 @@ function p2ShipHealthAll() {
   return arr;
 }
 
-function humanBtn(){
+
+function humanBtn(){ //Changes the board for a human match
+
   document.getElementById("getShipsForP2Btn").style.removeProperty("display");
   document.getElementById("humanBtn").disabled = true;
   document.getElementById("AIbtn").disabled = true;
   document.getElementById("getNoOfShipsBtn").disabled = false;
-  changeVisibility();
+  changeVisibility(); //changes the visibility of buttons and text
   document.getElementById("P2Ships").style.removeProperty("display");
   document.getElementById("showShipsForP2Btn").style.removeProperty("display");
   document.getElementById("Opponent").innerHTML = "Select Player 2's ships location in grid  of 10X10.{ex. [C4,E3,E4] for 2 ships.}";
   document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for P2";
 }
 
-function AIbtn() {
+function AIbtn() { //changes the board for a AI match
   difficulty = prompt("What difficulty would you like to play? (Easy, Medium, or Hard)", difficulty);
   difficulty = difficulty.toLowerCase();
 
-  if(difficulty == "easy" || difficulty == "medium" || difficulty == "hard") {
+  if(difficulty == "easy" || difficulty == "medium" || difficulty == "hard") { //only accepts easy, medium, hard otherwise rejected
     document.getElementById("difficulty").innerHTML = "The AI's difficulty is set to " + difficulty + " .";
     document.getElementById("AIbtn").disabled = true;
     document.getElementById("humanBtn").disabled = true;
@@ -268,10 +272,7 @@ function AIbtn() {
     document.getElementById("showShipsForP2Btn").innerHTML = "Show ships for AI";
     AIactivated = true;
   }
-  else
-  {
-    window.alert("Invalid difficulty option. Try again.");
-  }
+  else window.alert("Invalid difficulty option. Try again.");
 }
 
 function changeVisibility()
@@ -436,6 +437,12 @@ function getNoOfShips() {
 //Return true if the input is valid and false if not
 function validPlayerShips(playerShips)
 {
+  let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
+  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+  if (findDuplicates(shipArray).length != 0) {
+    alert("Duplicate detected!")
+    return false;
+  }
   //First, we need to check if playerShips is valid
   if(playerShips == null)
   {
@@ -561,34 +568,33 @@ function validPlayerShips(playerShips)
 //gets plalyer one's ships, shows the player 1 grid, adds a disabled button
 function getShipsForP1() {
   Player1Ships = prompt("Enter ships location in grid for Player 1", "[A10,B3,C3,D3,D4,D5]");
-
   let shipArray = Player1Ships.replace(/[\[\]']+/g,'').split(',')
-  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
   
-  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player1Ships)) { // check for duplicates
-    alert("Wrong input!");
+  while (!validPlayerShips(Player1Ships)) { // check for duplicates
     return
   }
   let isValid = true;
-  console.log(Player1Ships)
-  while (Player1Ships == '') {
-    alert("Wrong input! You gave an empty input");
-    return
-  }
+
   do {
+    
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
     console.log("hello", shipArray.length)
     for (let i = 0; i < shipArray.length; i++) {
       if (i == 1) {
         for (let j = i; j < 2; j++) {
-          
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) {
             isRowSame[0] = false
+            shipArray[j+1].charAt(0)
           }
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false;
+      
+          }
+        
         }
       }
       if (i == 3) {
@@ -596,24 +602,37 @@ function getShipsForP1() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 6) {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 10) {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
     } 
+    console.log(shipArray)
     
     for (let i = 0; i < isRowSame.length; i++) {
-      if (isRowSame[i] == false && isColSame[i] == false) isValid = false;
+      if (isRowSame[i] == false && isColSame[i] == false) {
+        isValid = false;
+      }
+      console.log("Row: ", isRowSame[i], "Col: ", isColSame[i])
     }
     
     
@@ -635,16 +654,16 @@ function getShipsForP1() {
   }
 }
 
-function AIsetup() { 
+function AIsetup() { //regardless of difficulty, it setups a randomized board for the AI
   let AIships = "[";
   let row = 0, col = 0;
   let temp;
   let adjuster = true; 
   let checker = true;
 
-  for(let i=0; i<numShips; i++)
+  for(let i=0; i<numShips; i++) 
   {
-    adjuster = Math.random() < .5;
+    adjuster = Math.random() < .5; //determines whether it will be a horizontal or vertical ship
 
     do{
       temp = "";
@@ -654,24 +673,28 @@ function AIsetup() {
         col = Math.floor(Math.random() * 10);
       }while(row == 9-i && col == 9-i);
 
-      for(let j=0; j < i+1; j++)
+      for(let j=0; j < i+1; j++) //repeats placement process until all ship spots for that ship can be placed
       {
-        if(!checker){
+
+        if(!checker){ //new starting spot if the old one fails
+
           do{
             row = Math.floor(Math.random() * 10); 
             col = Math.floor(Math.random() * 10);
           }while(row == 9-i && col == 9-i);
         }
 
-        if(adjuster)
+
+        if(adjuster) //the if statements below verify that it is in the grid post adjustment
         {
-          if(row+j < 9){
+          if(row+j < 9){ 
             temp = String.fromCharCode(col+65) + String.fromCharCode(row+j+49);
-            checker = (AIships.search(temp) == -1);
+            checker = (AIships.search(temp) == -1); //checks to see if that spot is already placed
           }
           else if(row+j == 9){
             temp = String.fromCharCode(col+65) + "10";
-            checker = AIships.search(temp) == -1;
+            checker = AIships.search(temp) == -1; //checks to see if that spot is already placed
+
           }
           else checker = false;
         }
@@ -688,9 +711,9 @@ function AIsetup() {
 
         if(!checker) j=-1;
       }
-    }while(!checker);
+    }while(!checker); //if it fails a boundary check or repeat of location restart
 
-    for(let j=0; j< i+1; j++)
+    for(let j=0; j< i+1; j++) //actually sets the ships to the array
     {
       if(adjuster)
       {
@@ -709,18 +732,16 @@ function AIsetup() {
   }
   AIships += "]";
 
-  console.log(AIships);
-
-  window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated));
+  window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated)); //saving
   window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
 
   document.getElementById("Opponent").innerHTML = "The AI has set their board.";
   document.getElementById("P2Ships").disabled = false;
   document.getElementById("showShipsForP2Btn").disabled = false;
   document.getElementById("playGameBtn").disabled = false;
-  fillShipsLoc(p2ShipLoc, AIships);
+  fillShipsLoc(p2ShipLoc, AIships); //marks the board
   p2ShipLocArr = getShipsLocArry(AIships);
-  window.localStorage.setItem("p1ShipLoc", JSON.stringify(p1ShipLoc));
+  window.localStorage.setItem("p1ShipLoc", JSON.stringify(p1ShipLoc)); //saving
   window.localStorage.setItem("p1ShipLocArr", JSON.stringify(p1ShipLocArr));
   window.localStorage.setItem("p2ShipLoc", JSON.stringify(p2ShipLoc));
   window.localStorage.setItem("p2ShipLocArr", JSON.stringify(p2ShipLocArr));
@@ -731,18 +752,10 @@ function AIsetup() {
 function getShipsForP2() {
   Player2Ships = prompt("Enter ships location in grid for Player 2", "[J10,E3,E4,F1,F2,F3]");
   let shipArray = Player2Ships.replace(/[\[\]']+/g,'').split(',')
-  let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
-  
-  while (findDuplicates(shipArray).length != 0 || !validPlayerShips(Player2Ships)) {
-    alert("Wrong input!");
+  while (!validPlayerShips(Player2Ships)) { // check for duplicates
     return
   }
-  let isValid = true;
-  
-  while (Player1Ships == null) {
-    alert("Wrong input!");
-    return
-  }
+  let isValid = true
   do {
     let isRowSame = [true, true, true, true, true]
     let isColSame = [true, true, true, true, true]
@@ -756,7 +769,9 @@ function getShipsForP2() {
           }
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
-            console.log(shipArray[j], shipArray[j+1]);
+          }
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
           }
         }
       }
@@ -765,18 +780,27 @@ function getShipsForP2() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 6) {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
       if (i == 10) {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+            isValid = false
+          }
         }
       }
     } 
@@ -1349,7 +1373,7 @@ function frCellTurnOfP2()
   //or hide Player's 1 Ships
 }
 
-function opponentNaming() {
+function opponentNaming() { //names the game.html section with the appropriate player (human or AI)
   document.getElementById("turnByP2Btn").style.removeProperty("display");
   document.getElementById("frCellByP2Btn").style.removeProperty("display");
   document.getElementById("specAttackP2").style.removeProperty("display");
@@ -1357,7 +1381,7 @@ function opponentNaming() {
   {
     document.getElementById("turnByP2Btn").innerHTML = "Start AI's turn";
     document.getElementById("frCellByP2Btn").innerHTML = "Launch AI attack";
-    document.getElementById('specAttackP2').style.setProperty("display","none")
+    document.getElementById('specAttackP2').style.setProperty("display","none") //wont show AI ships
     document.getElementById('specAttackP2').id = 'null'
   }
   else
@@ -1367,7 +1391,7 @@ function opponentNaming() {
   }
 }
 
-function secondAttacker(){
+function secondAttacker(){ //helper function that passes off control to the correct attack for the second player
   if(AIactivated)
   {
     if(difficulty == "easy") easyAttack();
@@ -1384,16 +1408,16 @@ function easyAttack() {
   let row = 0, col = 0;
   let attackCoordinate = "[";
 
-  do{
+  do{ //randomized attack
     row = Math.floor(Math.random() * 10); 
     col = Math.floor(Math.random() * 10);
-  }while(p2sFireLoc[row][col] != 0);
+  }while(p2sFireLoc[row][col] != 0); //checks to make sure it hasn't already been fired on
 
   if(row == 9) attackCoordinate += String.fromCharCode(col+65) + "10";
   else attackCoordinate += String.fromCharCode(col+65) + String.fromCharCode(row+49);
   attackCoordinate += "]";
 
-  markAIAttack(attackCoordinate);
+  markAIAttack(attackCoordinate); //calls helper function to actually mark the board and change buttons etc.
 }
 
 function mediumAttack() {
@@ -1405,14 +1429,16 @@ function mediumAttack() {
   let firstHit; let lastHit;
   let index = 0;
 
-  if(hitship) {
+
+  if(hitship) { //when a random attack hits a ship, we enter this if statement
     index = hitCoordinates.length;
     temp = String(hitCoordinates[index-1]);
-    col = temp.charCodeAt(0)-65;
-    if(temp.length == 3) row = 10;
+    col = temp.charCodeAt(0)-65; //establishes col value
+    if(temp.length == 3) row = 10; //establishes row value
     else row = temp.charCodeAt(1)-49;
 
-    if(index > 1){
+    if(index > 1){ //when there is more than one ship, we can determine if it's a vertical or horizontal ship and attack according
+
       firstHit = String(hitCoordinates.slice(index-2));
       lastHit = String(hitCoordinates.slice(index-1));
 
@@ -1420,13 +1446,14 @@ function mediumAttack() {
       else horizontalShip = true;
     }
     if(horizontalShip) {
-      if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { 
+      if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { //tries to fire to the right until it can't anymore
         if(p2sFireLoc[row][col+1] == 0) {
           col += 1;
           alreadyAdjusted = true;
         }
       }
-      if(!alreadyAdjusted) {
+
+      if(!alreadyAdjusted) { //when it can't, it goes back to the starting hit coordinate and goes left
         temp = hitCoordinates[0];
         col = temp.charCodeAt(0)-65;
         if(temp.length == 3) row = 10;
@@ -1436,62 +1463,61 @@ function mediumAttack() {
         alreadyAdjusted = true;
       }
     }
-    else if(verticalShip) { 
+    else if(verticalShip) { //same thing but vertically
       if(firstHit.length == 3) firstHit = 9;
       else firstHit = firstHit.charCodeAt(1)-49;
 
-      if(firstHit > lastHit.charCodeAt(1)-49 && row > 0) {
+      if(firstHit > lastHit.charCodeAt(1)-49 && row > 0) { //tries up
         if(p2sFireLoc[row-1][col] == 0) {
           row -= 1;
           alreadyAdjusted = true;
         }
       }
-      if(!alreadyAdjusted) {
+      if(!alreadyAdjusted) { //resets and goes down
         row += 1;
         alreadyAdjusted = true;
       }
     }
-    if(row-1 >= 0 && !alreadyAdjusted){ //Up
+    if(row-1 >= 0 && !alreadyAdjusted){ //before there are two hits, it will first try to attack above the initial hit
       if(p2sFireLoc[row-1][col] == 0) {
         row -= 1;
         alreadyAdjusted = true;
       }
     }
-    if(col+1 < 10 && !alreadyAdjusted){ //right
+    if(col+1 < 10 && !alreadyAdjusted){ //if that fails, then right
       if(p2sFireLoc[row][col+1] == 0) {
         col += 1;
         alreadyAdjusted = true;
       }
     }
-    if(row+1 < 10 && !alreadyAdjusted){ //down
+    if(row+1 < 10 && !alreadyAdjusted){ //then down
       if(p2sFireLoc[row+1][col] == 0) {
         row += 1;
         alreadyAdjusted = true;
       }
     }
-    if(col-1 >= 0 && !alreadyAdjusted){ //left
+    if(col-1 >= 0 && !alreadyAdjusted){ //then to the left
       if(p2sFireLoc[row][col-1] == 0) {
         col -= 1;
         alreadyAdjusted = true;
       }
     }
   }
-  else {
+  else { //with no hits in the hit coordinates array, it will just fire random attacks
     do{
       row = Math.floor(Math.random() * 10); 
       col = Math.floor(Math.random() * 10);
-    }while(p2sFireLoc[row][col] != 0);  
+    }while(p2sFireLoc[row][col] != 0); //has to be a place when it hasn't fired already
   }
 
   temp = "";
   if(row == 9) temp += String.fromCharCode(col+65) + "10";
   else temp += String.fromCharCode(col+65) + String.fromCharCode(row+49);
 
-  hitCoordinates.push(temp);
-  console.log(hitCoordinates);
+  hitCoordinates.push(temp); //adds value to the hit coordinates array
   temp = "[" + temp + "]";
 
-  if(specCountP2 > 0){
+  if(specCountP2 > 0){ //special action to handle the first two special attacks to make sure that all possible hits are accounted for
     if(p1ShipLoc[row][col]==0) hitCoordinates.pop();
 
     for(let i=0; i<3; i++){
@@ -1502,7 +1528,6 @@ function mediumAttack() {
             if(row-1+j==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
             else specAttackHit += String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
             hitCoordinates.push(specAttackHit);
-            console.log("Array post Special Attack: "+ hitCoordinates);
             hitship = true;
           }
         }
@@ -1511,8 +1536,7 @@ function mediumAttack() {
   }
 
   markAIAttack(temp);
-
-  if(p1ShipLoc[row][col] != 0) {
+  if(p1ShipLoc[row][col] != 0) { //checks to see if there was a ship present and will sort the array
     hitship = true; 
     if(col < 9) if(p2sFireLoc[row][col+1] == 1 && horizontalShip) hitCoordinates.sort();
     else if(col == 9 && horizontalShip) hitCoordinates.sort();
@@ -1520,11 +1544,11 @@ function mediumAttack() {
     else if(row == 0 && verticalShip) hitCoordinates.sort();
   }
   else {
-    hitCoordinates.pop();
+    hitCoordinates.pop(); //no hit, then it will pop off the most recent "hit" entry that wasn't actually a hit
     if(hitship && index>1) hitCoordinates.sort();
   }
 
-  if(hitship && index>1){
+  if(hitship && index>1){ //checks to see if there are different ships in the hit coordinates array
     let tempValue = "";
     let tempRow = 0; tempCol = 0;
 
@@ -1535,9 +1559,8 @@ function mediumAttack() {
 
     if(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
   }
-
-  if(sunkCheck != Gameover('P2')) {
-    if(differentShips) {
+  if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
+    if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
       let shipNumber = p1ShipLoc[row][col];
 
       for(let i=0; i<hitCoordinates.length; i++)
@@ -1556,35 +1579,33 @@ function mediumAttack() {
       }
       differentShips = false;
     }
-    else{
+    else{ //only one ship activate, then it will clear out the array and set hitship false again
       hitCoordinates = [];
       hitship = false;
     }
   }
 }
-
-function hardAttack() { //p1ShipLocArr
+function hardAttack() {
   let attackCoordinate = "";
   let length;
   let index;
   let temp = "";
 
-  if(!firstTurn)
+  if(!firstTurn) //creates the enemy ships array from player one's ship locations
   {
     temp += p1ShipLocArr[0];
-    console.log(temp)
     enemyShips = temp.split(',');
     firstTurn = true;
   }
 
   length = enemyShips.length;
-  index = Math.floor(Math.random() * length);
-  attackCoordinate += enemyShips[index];
+  index = Math.floor(Math.random() * length); //randomizes an index of the enemy ships
+  attackCoordinate += enemyShips[index]; //sets that spot as the attack location
 
-  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate);
+  enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate); //removes that spot from the array
   attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
 
-  if(specCountP2 > 0)
+  if(specCountP2 > 0) //handling the special case of the special attack
   {
     let specAttackCoordinate = String(enemyShips[index]);
     let row=0, col=0;
@@ -1611,11 +1632,12 @@ function hardAttack() { //p1ShipLocArr
   markAIAttack(attackCoordinate);
 }
 
-function markAIAttack(attackCoordinate) {
+
+function markAIAttack(attackCoordinate) {//adjusts the boards and buttons for the game
 
   let sunkShips = 0;
 
-  if(specCountP2 > 0) {
+  if(specCountP2 > 0) { //automatically calls special attack on its first two turns
     specialAttack(p2sFireLoc, attackCoordinate);
     specCountP2--;
   }
@@ -1628,7 +1650,7 @@ function markAIAttack(attackCoordinate) {
 
   if((numShips-sunkShips)==0)
   {
-    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the" + difficulty + " AI.";
+    document.getElementById("gameStatus").innerHTML = " Gameover. You lost to the " + difficulty + " AI.";
     document.getElementById("turnByP2Btn").disabled = true;
     document.getElementById("frCellByP2Btn").disabled = true;
   } 
