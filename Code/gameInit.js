@@ -14,6 +14,7 @@ let enemyShips = []; //used in hardAttack with all of player 1's ship locations
 let hitship = false; //bool representing whether a ship is hit in mediumAttack
 let hitCoordinates = []; //the coordinates of ships hit in mediumAttack
 let differentShips = false; //represents whether there are different ships in the hit coordinate array
+let hitShipNum = 0;//Number of the ship being attack by the medium ai
 
 
 var p1ShipLoc = matrix(); 
@@ -56,14 +57,14 @@ return arr;
 }
 
 function p1ShipHealth(shipNum) {
-  let health = shipNum;
+  let health = shipNum; // by default, a ship's health equals its size
   let row, col;
 
-  if (shipNum == 1 && !p1Ship1Sunk) {
-    col = p1ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97;
-    row = Number(p1ShipLocArr[0][0].toLowerCase().substring(1, p1ShipLocArr[0][0].length)) - 1;
+  if (shipNum == 1 && !p1Ship1Sunk) { // if ship 1 is the one we're checking, and it's not sunk,
+    col = p1ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97; // extracts the column appropriately from the ships' location array
+    row = Number(p1ShipLocArr[0][0].toLowerCase().substring(1, p1ShipLocArr[0][0].length)) - 1; // extracts the row
 
-    if (p2sFireLoc[row][col] == 1)
+    if (p2sFireLoc[row][col] == 1) // 1 signifies that the ship at that index was attacked
       health--;
 
     if (health == 0) {
@@ -139,10 +140,10 @@ function p1ShipHealth(shipNum) {
 
   else return 0; // if the ship had already sunk in a previous call
 
-  return health;
+  return health; // otherwise, return the ship's health
 }
 
-function p2ShipHealth(shipNum) {
+function p2ShipHealth(shipNum) { // same as p1ShipHealth but for Player 2
   let health = shipNum;
   let row, col;
 
@@ -229,7 +230,7 @@ function p2ShipHealth(shipNum) {
   return health;
 }
 
-function p1ShipHealthAll() {
+function p1ShipHealthAll() { // calls p1ShipHealth for all the ships and returns an array of these individual healths
   let arr = [];
   for (let i = 1; i <= numShips; i++)
     arr.push(p1ShipHealth(i));
@@ -237,7 +238,7 @@ function p1ShipHealthAll() {
   return arr;
 }
 
-function p2ShipHealthAll() {
+function p2ShipHealthAll() { // same as p1ShipHealthAll but for Player 2
   let arr = [];
   for (let i = 1; i <= numShips; i++)
     arr.push(p2ShipHealth(i));
@@ -590,7 +591,7 @@ function getShipsForP1() {
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1))) > 1) {
             isValid = false;
       
           }
@@ -602,7 +603,7 @@ function getShipsForP1() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -611,7 +612,7 @@ function getShipsForP1() {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -620,7 +621,7 @@ function getShipsForP1() {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -773,7 +774,7 @@ function getShipsForP2() {
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -783,7 +784,7 @@ function getShipsForP2() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -792,7 +793,7 @@ function getShipsForP2() {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -1036,11 +1037,11 @@ function attack(shipArr,attackLocation){
 }
 
 function specialAttack(shipArr, attackLocation) {
-    attackLocation = attackLocation.substring(1, (attackLocation.length-1));
-    let col = attackLocation.toLowerCase().charCodeAt(0) - 97;
-    let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1;
+    attackLocation = attackLocation.substring(1, (attackLocation.length-1)); // remove the '[' at the start
+    let col = attackLocation.toLowerCase().charCodeAt(0) - 97; // extract the column appropriately
+    let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1; // extract the row appropriately
 
-    if (shipArr[row][col] != 0) {
+    if (shipArr[row][col] != 0) { // if the parameter array (to be attacked) at that location has already been attacked
         alert("Invalid attack position.");
         return;
     }
@@ -1049,16 +1050,16 @@ function specialAttack(shipArr, attackLocation) {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (row - 1 < 0 || col - 1 < 0) {
-              
+            if (row - 1 < 0 || col - 1 < 0) { // if the position to attack is less than the bounds
+              // pass
             } else {
-              if (row > 10 || col > 10) break
-              shipArr[row - 1][col - 1] = 1;
+              if (row > 10 || col > 10) break // if more than the bounds, break
+              shipArr[row - 1][col - 1] = 1; // otherwise, attack the position by marking the array with 1
             }
-            col++
+            col++ // to proceed to the right
         }
-        row++;
-        col = originalCol;
+        row++; // to advance to the next row
+        col = originalCol; // the column has to be reverted because it was incremented 3 times, but we want to attack the new row at the same original column
     }
 
   //Update the healthbars of Player 1 and Player 2
@@ -1431,57 +1432,52 @@ function easyAttack() {
   markAIAttack(attackCoordinate); //calls helper function to actually mark the board and change buttons etc.
 }
 
-
 function mediumAttack() {
-  //Row and col represent the row and column of the attack position
   let row = 0, col = 0;
-
-  //Uses temp keep track o
   let temp = "";
-
-  //Check the number ships that are sunk
   let sunkCheck = Gameover('P2');
-
-  //Check if the the ship traveling right or up
   let alreadyAdjusted = false;
-
-  //VerticalShip check if the ship is traveling in the vertical direction
-  //HorizontalShip checks if the ship is traveling in the horizontal direction
   let verticalShip = false, horizontalShip = false;
-
-  //Keeps track on what ship is attacked first and what is last attacked
   let firstHit; let lastHit;
-
-  //The index of the attack cordinates
   let index = 0;
-
-  //Chceks if a special attack leads to a hit
   let specBoolHit = false;
 
 
-  if(hitship) { //when a random attack hits a ship, we enter this if statement
-    //Let index be the length of hitCoordinates
+  if(hitship/*&& hitCoordinates.length != 0*/) { //when a random attack hits a ship, we enter this if statement
     index = hitCoordinates.length;
-    console.log("index: " + index);
-
-    //Set temp to be the last string of hit coordinates
     temp = String(hitCoordinates[index-1]);
-    console.log("temp: " + temp +" "+ typeof temp);
-    console.log(hitCoordinates[index-1]);
-    console.log(hitCoordinates);
     col = temp.charCodeAt(0)-65; //establishes col value
     if(temp.length == 3) row = 10; //establishes row value
     else row = temp.charCodeAt(1)-49;
-    console.log("col:" + col);
-    console.log("row:" + row);
 
     if(index > 1){ //when there is more than one ship, we can determine if it's a vertical or horizontal ship and attack according
 
-      firstHit = String(hitCoordinates.slice(index-2));
-      lastHit = String(hitCoordinates.slice(index-1));
+      firstHit = String(hitCoordinates.slice(index-2, index-1)); //second to last entry of hitCoordinates
+      lastHit = String(hitCoordinates.slice(index-1)); //last array entry of hitCoordinates
 
-      if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true;
-      else horizontalShip = true;
+      if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true; //if the col is the same between the two entries then the ship was placed vertically
+      else horizontalShip = true; //if it wasn't placed vertically then it was horizontally placed
+
+      //Get the ships Number of firstHit and lastHit
+      let firstCol = firstHit.charCodeAt(0) - 65;
+      let lastCol = lastHit.charCodeAt(0) - 65;
+
+      let firstRow = Number(firstHit.substring(1, firstHit.length))-1;
+      let lastRow = Number(lastHit.substring(1, lastHit.length))-1;
+
+      console.log(firstCol + " " + firstCol);
+      console.log(lastRow + " " + lastCol);
+
+      console.log(p1ShipLoc);
+
+      console.log(p1ShipLoc[firstRow]);
+      console.log( p1ShipLoc[lastRow]);
+
+      if(p1ShipLoc[firstRow][firstCol] != p1ShipLoc[lastRow][lastCol])
+      {
+        verticalShip = false;
+        horizontalShip = false;
+      }
     }
     if(horizontalShip) {
       if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { //tries to fire to the right until it can't anymore
@@ -1505,20 +1501,28 @@ function mediumAttack() {
       if(firstHit.length == 3) firstHit = 9;
       else firstHit = firstHit.charCodeAt(1)-49;
 
-      if(firstHit > lastHit.charCodeAt(1)-49 && row > 0) { //tries up
-        if(p2sFireLoc[row-1][col] == 0) {
-          row -= 1;
+      if(firstHit < lastHit.charCodeAt(1)-49 && row < 9) { //tries down
+        if(p2sFireLoc[row+1][col] == 0) {
+          row += 1;
           alreadyAdjusted = true;
         }
       }
-      if(!alreadyAdjusted) { //resets and goes down
-        row += 1;
+      if(!alreadyAdjusted) { //resets and goes up
+        temp = hitCoordinates[0];
+        col = temp.charCodeAt(0)-65;
+        if(temp.length == 3) row = 10;
+        else row = temp.charCodeAt(1)-49;
+        
+        row -= 1;
+        while(p2sFireLoc[row][col] != 0) {
+          if (row != 0) row += Math.round(Math.random()) * 2 - 1 
+        }
         alreadyAdjusted = true;
       }
     }
-    if(row-1 >= 0 && !alreadyAdjusted){ //before there are two hits, it will first try to attack above the initial hit
-      if(p2sFireLoc[row-1][col] == 0) {
-        row -= 1;
+    if(row+1 < 10 && !alreadyAdjusted){ //before there are two hits, it will first try to attack below the initial hit
+      if(p2sFireLoc[row+1][col] == 0) {
+        row += 1;
         alreadyAdjusted = true;
       }
     }
@@ -1528,9 +1532,9 @@ function mediumAttack() {
         alreadyAdjusted = true;
       }
     }
-    if(row+1 < 10 && !alreadyAdjusted){ //then down
-      if(p2sFireLoc[row+1][col] == 0) {
-        row += 1;
+    if(row-1 >= 0 && !alreadyAdjusted){ //then down
+      if(p2sFireLoc[row-1][col] == 0) {
+        row -= 1;
         alreadyAdjusted = true;
       }
     }
@@ -1547,7 +1551,7 @@ function mediumAttack() {
       col = Math.floor(Math.random() * 10);
       row = Number(prompt());
       col = Number(prompt());
-    }while(p2sFireLoc[row][col] != 0); //has to be a place when it hasn't fired already
+    }while(p2sFireLoc[row][col] != 0); //has to be a place where it hasn't fired already at
   }
 
   temp = "";
@@ -1557,6 +1561,7 @@ function mediumAttack() {
   hitCoordinates.push(temp); //adds value to the hit coordinates array
   temp = "[" + temp + "]";
 
+  console.log(hitCoordinates);
   if(specCountP2 > 0){ //special action to handle the first two special attacks to make sure that all possible hits are accounted for
     if(p1ShipLoc[row][col]==0) hitCoordinates.pop();
 
@@ -1564,19 +1569,20 @@ function mediumAttack() {
       for(let j=0; j<3; j++) {
         if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >=0 && col-1+j < 10)) {
           if(p1ShipLoc[row-1+i][col-1+j] != 0 && p2sFireLoc[row-1+i][col-1+j] == 0) {
+            if(i==1 && j==1) continue; //so that hit won't be added to the hit coordinates twice
             let specAttackHit ="";
             if(row-1+i==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
             else specAttackHit += String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
             hitCoordinates.push(specAttackHit);
-            console.log("Hit Coordinates: " + hitCoordinates);
             hitship = true;
             specBoolHit = true;
+            hitCoordinates.sort();
           }
         }
       }
-    } 
+    }
   }
-
+  console.log(hitCoordinates);
   markAIAttack(temp);
   if(p1ShipLoc[row][col] != 0 || specBoolHit) { //checks to see if there was a ship present and will sort the array
     hitship = true; 
@@ -1590,58 +1596,240 @@ function mediumAttack() {
     if(hitship && index>1) hitCoordinates.sort();
   }
 
-  index = hitCoordinates.length;
+  index = hitCoordinates.length; //updates the length of array
 
   if(hitship && index>1){ //checks to see if there are different ships in the hit coordinates array
     let tempValue = "";
     let tempRow = 0; tempCol = 0;
 
-    tempValue = hitCoordinates[index-2];
-    console.log(tempValue);
-    console.log(hitCoordinates);
-    tempCol = tempValue.charCodeAt(0)-65;
-    if(tempValue == 3) tempRow = 10;
-    else tempRow = tempValue.charCodeAt(1)-49;
+    if(specBoolHit) {
+      for(let i=1; i<index; i++)
+      {
+        let compare = "";
+        let compareRow=0, compareCol=0;
+        compare = hitCoordinates[index-i];
+        tempValue = hitCoordinates[index-i-1];
 
-    console.log(p1ShipLoc[row][col]);
-    console.log(p1ShipLoc[tempRow][tempCol]);
-    console.log(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]);
+        compareCol = compare.charCodeAt(0)-65;
+        if(compare == 3) compareRow = 10;
+        else compareRow = compare.charCodeAt(1)-49;
 
-    if((p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) && (p1ShipLoc[row][col] !=0 && p1ShipLoc[tempRow][tempCol] !=0)) {
-      differentShips = true;
+        tempCol = tempValue.charCodeAt(0)-65;
+        if(tempValue == 3) tempRow = 10;
+        else tempRow = tempValue.charCodeAt(1)-49;
+
+        if(p1ShipLoc[compareRow][compareCol] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
+      }
     }
-    console.log(differentShips);
+    else {
+      tempValue = hitCoordinates[index-2];
+      tempCol = tempValue.charCodeAt(0)-65;
+      if(tempValue == 3) tempRow = 10;
+      else tempRow = tempValue.charCodeAt(1)-49;
+
+      if((p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) && (p1ShipLoc[row][col] !=0 && p1ShipLoc[tempRow][tempCol] !=0)) {
+        differentShips = true;
+      }
+    }
+
   }
+
+  /*
+  console.log(differentShips);
+
+  //First, check if the special attack is an hit is true
+  if(specBoolHit == true)
+  {
+    //If there are different ships that get attacked 
+    if(differentShips == true)
+    {
+      //Firstly, get the array of all ships that are sunk
+      let shipsHealth = p1ShipHealthAll();
+
+      console.log("Hello");
+      console.log(shipsHealth);
+      console.log(hitShipNum);
+
+      //Next, check if the number of ships got sunk
+      //If there are ships that got sunk
+      if(sunkCheck != Gameover('P2'))
+      {
+        //Next, go through each health of shipsHealth
+        for(let j = 0; j < shipsHealth.length; j++)
+        {
+          //Next, get the shipNumber
+          let shipNumber = j + 1;
+
+          //If the health of ship is not 0
+          if(shipsHealth[j] == 0)
+          {
+            //Remove all cordinates that equal to shipsHealth
+            //Next, filter through the array 
+            hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
+          
+            function callback(currentHit) 
+            {
+              let currentRow=0, currentCol=0;
+
+              currentCol = currentHit.charCodeAt(0)-65;
+              if(currentHit == 3) currentRow = 10;
+              else currentRow = currentHit.charCodeAt(1)-49;
+
+              return (p1ShipLoc[currentRow][currentCol] != shipNumber);
+            }
+          }
+        }
+        console.log(hitCoordinates);
+      }
+      //Next, check if the list is not empty
+      //If the list is not empty
+      if(hitCoordinates.length != 0)
+      {
+        //Next, check the number of ship, 
+        //if hitShipNum is 0 or the ship of the number is sunked
+        if(hitShipNum == 0 || shipsHealth[hitShipNum-1] == 0)
+        {
+          //Firstly, get the first string of hitcodinates, that will be are starting cordinates
+          let startCor = hitCoordinates[0];
+          console.log("startCor: " + startCor);
+
+          //Next, get the shipNumber of startCor
+          //We need to get the row and col of start
+
+          //Let col be the first character of startCor - 65
+          let startCorCol = startCor.charCodeAt(0) -65;
+
+          //Let row be the rest of startCor
+          let startCorRow = Number(startCor.substring(1, startCor.length)) - 1;
+          console.log(startCorCol);
+          console.log(startCorRow);
+
+          //Next, get the number of the ship at startCor
+          let shipNumber = p1ShipLoc[startCorRow][startCorCol];
+
+          //Next, filter through the array 
+          hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
+          
+          function callback(currentHit) 
+          {
+            let currentRow=0, currentCol=0;
+
+            currentCol = currentHit.charCodeAt(0)-65;
+            if(currentHit == 3) currentRow = 10;
+            else currentRow = currentHit.charCodeAt(1)-49;
+
+            return (p1ShipLoc[currentRow][currentCol] == shipNumber);
+          }
+
+          console.log(hitCoordinates);
+
+          //Set shipNumber to hitShipNum
+          hitShipNum = shipNumber;
+
+          console.log("Hit Ship: " + hitShipNum);
+        }
+        //Otherwise,
+        else
+        {
+          //Filter hitCoordinates of all number to see if they equqal to shipNumber
+          let shipNumber = hitShipNum;
+
+          hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
+          
+          function callback(currentHit) 
+          {
+            let currentRow=0, currentCol=0;
+
+            currentCol = currentHit.charCodeAt(0)-65;
+            if(currentHit == 3) currentRow = 10;
+            else currentRow = currentHit.charCodeAt(1)-49;
+
+            return (p1ShipLoc[currentRow][currentCol] == shipNumber);
+          }
+
+          console.log(hitCoordinates);
+        }
+      }
+    
+    }
+    //Otherwise, if there are not different ships
+    else
+    {
+      //Get the ship number of the first cor
+      //Firstly, get the first string of hitcodinates, that will be are starting cordinates
+      let startCor = hitCoordinates[0];
+      console.log("startCor: " + startCor);
+
+      //Next, get the shipNumber of startCor
+      //We need to get the row and col of start
+
+      //Let col be the first character of startCor - 65
+      let startCorCol = startCor.charCodeAt(0) -65;
+
+      //Let row be the rest of startCor
+      let startCorRow = Number(startCor.substring(1, startCor.length)) - 1;
+      console.log(startCorCol);
+      console.log(startCorRow);
+
+      //Next, get the number of the ship at startCor
+      hitShipNum = p1ShipLoc[startCorRow][startCorCol];
+
+    }
+  }
+  */
+  console.log(p1ShipLocArr);
   if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
     if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
-      let shipNumber = p1ShipLoc[row][col];
+      let shipNumber = 0;
 
-      console.log("check one");
-
-      for(let i=0; i<hitCoordinates.length; i++)
+      for(let i=0; i<hitCoordinates.length; i++) //goes through all the hitCoordinates
       {
-        let tempValue = "";
+        let tempValue = " ";
         let tempRow = 0; tempCol = 0;
+        let tally = 0;
 
-        console.log("tempValue:" + tempValue);
         tempValue = hitCoordinates[i];
         tempCol = tempValue.charCodeAt(0)-65;
         if(tempValue == 3) tempRow = 10;
         else tempRow = tempValue.charCodeAt(1)-49;
 
-        if(p1ShipLoc[tempRow][tempCol] == shipNumber) {
-          hitCoordinates.filter((value) => value != tempValue);
+        shipNumber= p1ShipLoc[tempRow][tempCol]; //declares the ship number
+
+        for(let j=0; j<hitCoordinates.length; j++) { //compares each hit coordinate based off the one at index i
+          let compare = "";
+          let compareRow = 0, compareCol = 0;
+
+          compare = hitCoordinates[j];
+          compareCol = compare.charCodeAt(0)-65;
+          if(compare == 3) compareRow = 10;
+          else compareRow = compare.charCodeAt(1)-49;
+
+          if(shipNumber == p1ShipLoc[compareRow][compareCol]) tally++; //if the ship numbers are the same add a tally
+
+          if(tally == shipNumber) { //if they equal each other that means a ship has all of its spots in hitCoordinates meaning its sunk
+            hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
+
+            function callback(currentHit) {
+              let currentRow=0, currentCol=0;
+
+              currentCol = currentHit.charCodeAt(0)-65;
+              if(currentHit == 3) currentRow = 10;
+              else currentRow = currentHit.charCodeAt(1)-49;
+
+              return (p1ShipLoc[currentRow][currentCol] != shipNumber);
+            }
+
+            i = -1; //resets i to so that it won't skip other potential ships sunk due to special attack
+          }
         }
       }
       differentShips = false;
     }
     else{ //only one ship activate, then it will clear out the array and set hitship false again
-      console.log("check two");
       hitCoordinates = [];
       hitship = false;
     }
   }
-
   console.log(hitCoordinates);
 }
 
