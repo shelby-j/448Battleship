@@ -14,6 +14,7 @@ let enemyShips = []; //used in hardAttack with all of player 1's ship locations
 let hitship = false; //bool representing whether a ship is hit in mediumAttack
 let hitCoordinates = []; //the coordinates of ships hit in mediumAttack
 let differentShips = false; //represents whether there are different ships in the hit coordinate array
+let hitShipNum = 0;//Number of the ship being attack by the medium ai
 
 
 var p1ShipLoc = matrix(); 
@@ -1451,11 +1452,29 @@ function mediumAttack() {
 
     if(index > 1){ //when there is more than one ship, we can determine if it's a vertical or horizontal ship and attack according
 
-      firstHit = String(hitCoordinates.slice(index-2)); //second to last entry of hitCoordinates
+      firstHit = String(hitCoordinates.slice(index-2, index-1)); //second to last entry of hitCoordinates
       lastHit = String(hitCoordinates.slice(index-1)); //last array entry of hitCoordinates
 
       if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true; //if the col is the same between the two entries then the ship was placed vertically
       else horizontalShip = true; //if it wasn't placed vertically then it was horizontally placed
+
+      //Get the ships Number of firstHit and lastHit
+      //Get the column for firstCol and LastCol
+      let firstCol = firstHit.charCodeAt(0) - 65;
+      let lastCol = lastHit.charCodeAt(0) - 65;
+
+      //Get the row for firstRow and lastRow
+      let firstRow = Number(firstHit.substring(1, firstHit.length))-1;
+      let lastRow = Number(lastHit.substring(1, lastHit.length))-1;
+
+
+      //If both the first and last hit are not the same ship, 
+      if(p1ShipLoc[firstRow][firstCol] != p1ShipLoc[lastRow][lastCol])
+      {
+        //Set verticalShip and horizontalShip to be false
+        verticalShip = false;
+        horizontalShip = false;
+      }
     }
     if(horizontalShip) {
       if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { //tries to fire to the right until it can't anymore
@@ -1537,6 +1556,7 @@ function mediumAttack() {
   hitCoordinates.push(temp); //adds value to the hit coordinates array
   temp = "[" + temp + "]";
 
+  console.log(hitCoordinates);
   if(specCountP2 > 0){ //special action to handle the first two special attacks to make sure that all possible hits are accounted for
     if(p1ShipLoc[row][col]==0) hitCoordinates.pop();
 
@@ -1555,9 +1575,9 @@ function mediumAttack() {
           }
         }
       }
-    } 
+    }
   }
-
+  console.log(hitCoordinates);
   markAIAttack(temp);
   if(p1ShipLoc[row][col] != 0 || specBoolHit) { //checks to see if there was a ship present and will sort the array
     hitship = true; 
@@ -1608,51 +1628,42 @@ function mediumAttack() {
     }
 
   }
+
   if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
     if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
-      let shipNumber = 0;
+      //Firstly, get the array of all ships that are sunk
+      let shipsHealth = p1ShipHealthAll();
 
-      for(let i=0; i<hitCoordinates.length; i++) //goes through all the hitCoordinates
+      //Next, go through each health of shipsHealth
+      for(let j = 0; j < shipsHealth.length; j++)
       {
-        let tempValue = " ";
-        let tempRow = 0; tempCol = 0;
-        let tally = 0;
+        //Next, get the shipNumber
+        let shipNumber = j + 1;
 
-        tempValue = hitCoordinates[i];
-        tempCol = tempValue.charCodeAt(0)-65;
-        if(tempValue == 3) tempRow = 10;
-        else tempRow = tempValue.charCodeAt(1)-49;
+        //If the health of ship is not 0
+        if(shipsHealth[j] == 0)
+        {
+          //Remove all cordinates that equal to shipsHealth
+          //Next, filter through the array 
+          hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
+        
+          //Callback will go through each item in hitCoordiantes
+          function callback(currentHit) 
+          {
+            //The row and col of currentHit
+            let currentRow=0, currentCol=0;
 
-        shipNumber= p1ShipLoc[tempRow][tempCol]; //declares the ship number
+            //Set currentCol and currentRow
+            currentCol = currentHit.charCodeAt(0)-65;
+            if(currentHit == 3) currentRow = 10;
+            else currentRow = currentHit.charCodeAt(1)-49;
 
-        for(let j=0; j<hitCoordinates.length; j++) { //compares each hit coordinate based off the one at index i
-          let compare = "";
-          let compareRow = 0, compareCol = 0;
-
-          compare = hitCoordinates[j];
-          compareCol = compare.charCodeAt(0)-65;
-          if(compare == 3) compareRow = 10;
-          else compareRow = compare.charCodeAt(1)-49;
-
-          if(shipNumber == p1ShipLoc[compareRow][compareCol]) tally++; //if the ship numbers are the same add a tally
-
-          if(tally == shipNumber) { //if they equal each other that means a ship has all of its spots in hitCoordinates meaning its sunk
-            hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
-
-            function callback(currentHit) {
-              let currentRow=0, currentCol=0;
-
-              currentCol = currentHit.charCodeAt(0)-65;
-              if(currentHit == 3) currentRow = 10;
-              else currentRow = currentHit.charCodeAt(1)-49;
-
-              return (p1ShipLoc[currentRow][currentCol] != shipNumber);
-            }
-
-            i = -1; //resets i to so that it won't skip other potential ships sunk due to special attack
+            return (p1ShipLoc[currentRow][currentCol] != shipNumber);
           }
         }
       }
+      console.log(hitCoordinates);
+
       differentShips = false;
     }
     else{ //only one ship activate, then it will clear out the array and set hitship false again
@@ -1660,6 +1671,7 @@ function mediumAttack() {
       hitship = false;
     }
   }
+  console.log(hitCoordinates);
 }
 
 function hardAttack() {
