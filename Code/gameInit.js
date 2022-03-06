@@ -1618,7 +1618,7 @@ function hardAttack() {
     let specAttackCoordinate = String(enemyShips[index]);
     let row=0, col=0;
 
-    col = specAttackCoordinate.charCodeAt(0)-65;
+    col = specAttackCoordinate.charCodeAt(0)-97;
     if(specAttackCoordinate.length == 3) row = 10;
     else row = specAttackCoordinate.charCodeAt(1)-49;
     console.log("col:" + String.fromCharCode(col+65));
