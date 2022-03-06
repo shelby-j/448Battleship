@@ -647,7 +647,8 @@ function getShipsForP1() {
     p1ShipLocArr= getShipsLocArry(Player1Ships);
     document.getElementById("getShipsForP2Btn").disabled = false;
     document.getElementById("showShipsForP1Btn").disabled = false;
-    document.getElementById("P1Ships").innerHTML = Player1Ships  + " ships locations!";
+    //In the paragraph with id P1Ships, tell the user that Player 1's Board is set up
+    document.getElementById("P1Ships").innerHTML = "Player 1 has set their board";
     document.getElementById("getShipsForP1Btn").disabled = true;
 
     if(AIactivated) AIsetup();
@@ -822,7 +823,8 @@ function getShipsForP2() {
     p2ShipLocArr= getShipsLocArry(Player2Ships);
     document.getElementById("showShipsForP1Btn").disabled = true;
     document.getElementById("showShipsForP2Btn").disabled = false;
-    document.getElementById("P2Ships").innerHTML = Player2Ships  + " ships locations!";
+    //Tells Player 2 that their board is set up
+    document.getElementById("P2Ships").innerHTML = "Player 2 has set their board";
     document.getElementById("getShipsForP2Btn").disabled = true;
     document.getElementById("playGameBtn").disabled = false;
     window.localStorage.setItem("p1ShipLoc", JSON.stringify(p1ShipLoc)); // Saving
