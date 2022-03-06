@@ -1431,20 +1431,40 @@ function easyAttack() {
   markAIAttack(attackCoordinate); //calls helper function to actually mark the board and change buttons etc.
 }
 
+
 function mediumAttack() {
+  //Row and col represent the row and column of the attack position
   let row = 0, col = 0;
+
+  //Uses temp keep track o
   let temp = "";
+
+  //Check the number ships that are sunk
   let sunkCheck = Gameover('P2');
+
+  //Check if the the ship traveling right or up
   let alreadyAdjusted = false;
+
+  //VerticalShip check if the ship is traveling in the vertical direction
+  //HorizontalShip checks if the ship is traveling in the horizontal direction
   let verticalShip = false, horizontalShip = false;
+
+  //Keeps track on what ship is attacked first and what is last attacked
   let firstHit; let lastHit;
+
+  //The index of the attack cordinates
   let index = 0;
+
+  //Chceks if a special attack leads to a hit
   let specBoolHit = false;
 
 
   if(hitship) { //when a random attack hits a ship, we enter this if statement
+    //Let index be the length of hitCoordinates
     index = hitCoordinates.length;
     console.log("index: " + index);
+
+    //Set temp to be the last string of hit coordinates
     temp = String(hitCoordinates[index-1]);
     console.log("temp: " + temp +" "+ typeof temp);
     console.log(hitCoordinates[index-1]);
@@ -1525,6 +1545,8 @@ function mediumAttack() {
     do{
       row = Math.floor(Math.random() * 10); 
       col = Math.floor(Math.random() * 10);
+      row = Number(prompt());
+      col = Number(prompt());
     }while(p2sFireLoc[row][col] != 0); //has to be a place when it hasn't fired already
   }
 
