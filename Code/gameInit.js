@@ -1443,7 +1443,7 @@ function mediumAttack() {
   let specBoolHit = false;
 
 
-  if(hitship/*&& hitCoordinates.length != 0*/) { //when a random attack hits a ship, we enter this if statement
+  if(hitship) { //when a random attack hits a ship, we enter this if statement
     index = hitCoordinates.length;
     temp = String(hitCoordinates[index-1]);
     col = temp.charCodeAt(0)-65; //establishes col value
@@ -1469,7 +1469,6 @@ function mediumAttack() {
 
 
       //If both the first and last hit are not the same ship, 
-
       if(p1ShipLoc[firstRow][firstCol] != p1ShipLoc[lastRow][lastCol])
       {
         //Set verticalShip and horizontalShip to be false
@@ -1547,8 +1546,6 @@ function mediumAttack() {
     do{
       row = Math.floor(Math.random() * 10); 
       col = Math.floor(Math.random() * 10);
-      row = Number(prompt());
-      col = Number(prompt());
     }while(p2sFireLoc[row][col] != 0); //has to be a place where it hasn't fired already at
   }
 
@@ -1632,195 +1629,41 @@ function mediumAttack() {
 
   }
 
-  /*
-  console.log(differentShips);
-
-  //First, check if the special attack is an hit is true
-  if(specBoolHit == true)
-  {
-    //If there are different ships that get attacked 
-    if(differentShips == true)
-    {
+  if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
+    if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
       //Firstly, get the array of all ships that are sunk
       let shipsHealth = p1ShipHealthAll();
 
-      console.log("Hello");
-      console.log(shipsHealth);
-      console.log(hitShipNum);
-
-      //Next, check if the number of ships got sunk
-      //If there are ships that got sunk
-      if(sunkCheck != Gameover('P2'))
+      //Next, go through each health of shipsHealth
+      for(let j = 0; j < shipsHealth.length; j++)
       {
-        //Next, go through each health of shipsHealth
-        for(let j = 0; j < shipsHealth.length; j++)
+        //Next, get the shipNumber
+        let shipNumber = j + 1;
+
+        //If the health of ship is not 0
+        if(shipsHealth[j] == 0)
         {
-          //Next, get the shipNumber
-          let shipNumber = j + 1;
-
-          //If the health of ship is not 0
-          if(shipsHealth[j] == 0)
-          {
-            //Remove all cordinates that equal to shipsHealth
-            //Next, filter through the array 
-            hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
-          
-            function callback(currentHit) 
-            {
-              let currentRow=0, currentCol=0;
-
-              currentCol = currentHit.charCodeAt(0)-65;
-              if(currentHit == 3) currentRow = 10;
-              else currentRow = currentHit.charCodeAt(1)-49;
-
-              return (p1ShipLoc[currentRow][currentCol] != shipNumber);
-            }
-          }
-        }
-        console.log(hitCoordinates);
-      }
-      //Next, check if the list is not empty
-      //If the list is not empty
-      if(hitCoordinates.length != 0)
-      {
-        //Next, check the number of ship, 
-        //if hitShipNum is 0 or the ship of the number is sunked
-        if(hitShipNum == 0 || shipsHealth[hitShipNum-1] == 0)
-        {
-          //Firstly, get the first string of hitcodinates, that will be are starting cordinates
-          let startCor = hitCoordinates[0];
-          console.log("startCor: " + startCor);
-
-          //Next, get the shipNumber of startCor
-          //We need to get the row and col of start
-
-          //Let col be the first character of startCor - 65
-          let startCorCol = startCor.charCodeAt(0) -65;
-
-          //Let row be the rest of startCor
-          let startCorRow = Number(startCor.substring(1, startCor.length)) - 1;
-          console.log(startCorCol);
-          console.log(startCorRow);
-
-          //Next, get the number of the ship at startCor
-          let shipNumber = p1ShipLoc[startCorRow][startCorCol];
-
+          //Remove all cordinates that equal to shipsHealth
           //Next, filter through the array 
           hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
-          
+        
+          //Callback will go through each item in hitCoordiantes
           function callback(currentHit) 
           {
+            //The row and col of currentHit
             let currentRow=0, currentCol=0;
 
+            //Set currentCol and currentRow
             currentCol = currentHit.charCodeAt(0)-65;
             if(currentHit == 3) currentRow = 10;
             else currentRow = currentHit.charCodeAt(1)-49;
 
-            return (p1ShipLoc[currentRow][currentCol] == shipNumber);
-          }
-
-          console.log(hitCoordinates);
-
-          //Set shipNumber to hitShipNum
-          hitShipNum = shipNumber;
-
-          console.log("Hit Ship: " + hitShipNum);
-        }
-        //Otherwise,
-        else
-        {
-          //Filter hitCoordinates of all number to see if they equqal to shipNumber
-          let shipNumber = hitShipNum;
-
-          hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
-          
-          function callback(currentHit) 
-          {
-            let currentRow=0, currentCol=0;
-
-            currentCol = currentHit.charCodeAt(0)-65;
-            if(currentHit == 3) currentRow = 10;
-            else currentRow = currentHit.charCodeAt(1)-49;
-
-            return (p1ShipLoc[currentRow][currentCol] == shipNumber);
-          }
-
-          console.log(hitCoordinates);
-        }
-      }
-    
-    }
-    //Otherwise, if there are not different ships
-    else
-    {
-      //Get the ship number of the first cor
-      //Firstly, get the first string of hitcodinates, that will be are starting cordinates
-      let startCor = hitCoordinates[0];
-      console.log("startCor: " + startCor);
-
-      //Next, get the shipNumber of startCor
-      //We need to get the row and col of start
-
-      //Let col be the first character of startCor - 65
-      let startCorCol = startCor.charCodeAt(0) -65;
-
-      //Let row be the rest of startCor
-      let startCorRow = Number(startCor.substring(1, startCor.length)) - 1;
-      console.log(startCorCol);
-      console.log(startCorRow);
-
-      //Next, get the number of the ship at startCor
-      hitShipNum = p1ShipLoc[startCorRow][startCorCol];
-
-    }
-  }
-  */
-  console.log(p1ShipLocArr);
-  if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
-    if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
-      let shipNumber = 0;
-
-      for(let i=0; i<hitCoordinates.length; i++) //goes through all the hitCoordinates
-      {
-        let tempValue = " ";
-        let tempRow = 0; tempCol = 0;
-        let tally = 0;
-
-        tempValue = hitCoordinates[i];
-        tempCol = tempValue.charCodeAt(0)-65;
-        if(tempValue == 3) tempRow = 10;
-        else tempRow = tempValue.charCodeAt(1)-49;
-
-        shipNumber= p1ShipLoc[tempRow][tempCol]; //declares the ship number
-
-        for(let j=0; j<hitCoordinates.length; j++) { //compares each hit coordinate based off the one at index i
-          let compare = "";
-          let compareRow = 0, compareCol = 0;
-
-          compare = hitCoordinates[j];
-          compareCol = compare.charCodeAt(0)-65;
-          if(compare == 3) compareRow = 10;
-          else compareRow = compare.charCodeAt(1)-49;
-
-          if(shipNumber == p1ShipLoc[compareRow][compareCol]) tally++; //if the ship numbers are the same add a tally
-
-          if(tally == shipNumber) { //if they equal each other that means a ship has all of its spots in hitCoordinates meaning its sunk
-            hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
-
-            function callback(currentHit) {
-              let currentRow=0, currentCol=0;
-
-              currentCol = currentHit.charCodeAt(0)-65;
-              if(currentHit == 3) currentRow = 10;
-              else currentRow = currentHit.charCodeAt(1)-49;
-
-              return (p1ShipLoc[currentRow][currentCol] != shipNumber);
-            }
-
-            i = -1; //resets i to so that it won't skip other potential ships sunk due to special attack
+            return (p1ShipLoc[currentRow][currentCol] != shipNumber);
           }
         }
       }
+      console.log(hitCoordinates);
+
       differentShips = false;
     }
     else{ //only one ship activate, then it will clear out the array and set hitship false again
