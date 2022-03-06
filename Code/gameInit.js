@@ -1492,6 +1492,9 @@ function mediumAttack() {
         else row = temp.charCodeAt(1)-49;
         
         row -= 1;
+        while(p2sFireLoc[row][col] != 0) {
+          if (row != 0) row += Math.round(Math.random()) * 2 - 1 
+        }
         alreadyAdjusted = true;
       }
     }
