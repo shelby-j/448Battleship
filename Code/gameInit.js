@@ -590,7 +590,7 @@ function getShipsForP1() {
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1))) > 1) {
             isValid = false;
       
           }
@@ -602,7 +602,7 @@ function getShipsForP1() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -611,7 +611,7 @@ function getShipsForP1() {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -620,7 +620,7 @@ function getShipsForP1() {
         for (let j = i; j < 14; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[3] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[3] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -773,7 +773,7 @@ function getShipsForP2() {
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) {
             isColSame[0] = false
           }
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -783,7 +783,7 @@ function getShipsForP2() {
           
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[1] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[1] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
@@ -792,7 +792,7 @@ function getShipsForP2() {
         for (let j = i; j < 9; j++) {
           if (shipArray[j].charAt(0) != (shipArray[j+1].charAt(0))) isRowSame[2] = false
           if (shipArray[j].charAt(1) != (shipArray[j+1].charAt(1))) isColSame[2] = false
-          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].charAt(1) - shipArray[j+1].charAt(1)) > 1)) {
+          if (Math.abs(shipArray[j].charAt(0).charCodeAt(0) - shipArray[j+1].charAt(0).charCodeAt(0)) > 1 || (Math.abs(shipArray[j].substring(1) - shipArray[j+1].substring(1)) > 1)) {
             isValid = false
           }
         }
