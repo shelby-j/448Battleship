@@ -1527,6 +1527,8 @@ function mediumAttack() {
     do{
       row = Math.floor(Math.random() * 10); 
       col = Math.floor(Math.random() * 10);
+      row = Number(prompt());
+      col = Number(prompt());
     }while(p2sFireLoc[row][col] != 0); //has to be a place where it hasn't fired already at
   }
 
