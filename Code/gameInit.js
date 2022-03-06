@@ -56,14 +56,14 @@ return arr;
 }
 
 function p1ShipHealth(shipNum) {
-  let health = shipNum;
+  let health = shipNum; // by default, a ship's health equals its size
   let row, col;
 
-  if (shipNum == 1 && !p1Ship1Sunk) {
-    col = p1ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97;
-    row = Number(p1ShipLocArr[0][0].toLowerCase().substring(1, p1ShipLocArr[0][0].length)) - 1;
+  if (shipNum == 1 && !p1Ship1Sunk) { // if ship 1 is the one we're checking, and it's not sunk,
+    col = p1ShipLocArr[0][0].toLowerCase().charCodeAt(0) - 97; // extracts the column appropriately from the ships' location array
+    row = Number(p1ShipLocArr[0][0].toLowerCase().substring(1, p1ShipLocArr[0][0].length)) - 1; // extracts the row
 
-    if (p2sFireLoc[row][col] == 1)
+    if (p2sFireLoc[row][col] == 1) // 1 signifies that the ship at that index was attacked
       health--;
 
     if (health == 0) {
@@ -139,10 +139,10 @@ function p1ShipHealth(shipNum) {
 
   else return 0; // if the ship had already sunk in a previous call
 
-  return health;
+  return health; // otherwise, return the ship's health
 }
 
-function p2ShipHealth(shipNum) {
+function p2ShipHealth(shipNum) { // same as p1ShipHealth but for Player 2
   let health = shipNum;
   let row, col;
 
@@ -229,7 +229,7 @@ function p2ShipHealth(shipNum) {
   return health;
 }
 
-function p1ShipHealthAll() {
+function p1ShipHealthAll() { // calls p1ShipHealth for all the ships and returns an array of these individual healths
   let arr = [];
   for (let i = 1; i <= numShips; i++)
     arr.push(p1ShipHealth(i));
@@ -237,7 +237,7 @@ function p1ShipHealthAll() {
   return arr;
 }
 
-function p2ShipHealthAll() {
+function p2ShipHealthAll() { // same as p1ShipHealthAll but for Player 2
   let arr = [];
   for (let i = 1; i <= numShips; i++)
     arr.push(p2ShipHealth(i));
@@ -1036,11 +1036,11 @@ function attack(shipArr,attackLocation){
 }
 
 function specialAttack(shipArr, attackLocation) {
-    attackLocation = attackLocation.substring(1, (attackLocation.length-1));
-    let col = attackLocation.toLowerCase().charCodeAt(0) - 97;
-    let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1;
+    attackLocation = attackLocation.substring(1, (attackLocation.length-1)); // remove the '[' at the start
+    let col = attackLocation.toLowerCase().charCodeAt(0) - 97; // extract the column appropriately
+    let row = Number(attackLocation.toLowerCase().substring(1, attackLocation.length)) - 1; // extract the row appropriately
 
-    if (shipArr[row][col] != 0) {
+    if (shipArr[row][col] != 0) { // if the parameter array (to be attacked) at that location has already been attacked
         alert("Invalid attack position.");
         return;
     }
@@ -1049,16 +1049,16 @@ function specialAttack(shipArr, attackLocation) {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (row - 1 < 0 || col - 1 < 0) {
-              
+            if (row - 1 < 0 || col - 1 < 0) { // if the position to attack is less than the bounds
+              // pass
             } else {
-              if (row > 10 || col > 10) break
-              shipArr[row - 1][col - 1] = 1;
+              if (row > 10 || col > 10) break // if more than the bounds, break
+              shipArr[row - 1][col - 1] = 1; // otherwise, attack the position by marking the array with 1
             }
-            col++
+            col++ // to proceed to the right
         }
-        row++;
-        col = originalCol;
+        row++; // to advance to the next row
+        col = originalCol; // the column has to be reverted because it was incremented 3 times, but we want to attack the new row at the same original column
     }
 
   //Update the healthbars of Player 1 and Player 2
