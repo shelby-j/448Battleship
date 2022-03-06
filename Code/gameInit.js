@@ -1451,11 +1451,11 @@ function mediumAttack() {
 
     if(index > 1){ //when there is more than one ship, we can determine if it's a vertical or horizontal ship and attack according
 
-      firstHit = String(hitCoordinates.slice(index-2));
-      lastHit = String(hitCoordinates.slice(index-1));
+      firstHit = String(hitCoordinates.slice(index-2)); //second to last entry of hitCoordinates
+      lastHit = String(hitCoordinates.slice(index-1)); //last array entry of hitCoordinates
 
-      if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true;
-      else horizontalShip = true;
+      if(firstHit.charCodeAt(0) == lastHit.charCodeAt(0)) verticalShip = true; //if the col is the same between the two entries then the ship was placed vertically
+      else horizontalShip = true; //if it wasn't placed vertically then it was horizontally placed
     }
     if(horizontalShip) {
       if(firstHit.charCodeAt(0) < lastHit.charCodeAt(0) && col < 9) { //tries to fire to the right until it can't anymore
@@ -1485,7 +1485,7 @@ function mediumAttack() {
           alreadyAdjusted = true;
         }
       }
-      if(!alreadyAdjusted) { //resets and goes down
+      if(!alreadyAdjusted) { //resets and goes up
         temp = hitCoordinates[0];
         col = temp.charCodeAt(0)-65;
         if(temp.length == 3) row = 10;
@@ -1527,7 +1527,7 @@ function mediumAttack() {
     do{
       row = Math.floor(Math.random() * 10); 
       col = Math.floor(Math.random() * 10);
-    }while(p2sFireLoc[row][col] != 0); //has to be a place when it hasn't fired already
+    }while(p2sFireLoc[row][col] != 0); //has to be a place where it hasn't fired already at
   }
 
   temp = "";
@@ -1544,7 +1544,7 @@ function mediumAttack() {
       for(let j=0; j<3; j++) {
         if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >=0 && col-1+j < 10)) {
           if(p1ShipLoc[row-1+i][col-1+j] != 0 && p2sFireLoc[row-1+i][col-1+j] == 0) {
-            if(i==1 && j==1) continue;
+            if(i==1 && j==1) continue; //so that hit won't be added to the hit coordinates twice
             let specAttackHit ="";
             if(row-1+i==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
             else specAttackHit += String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
@@ -1571,7 +1571,7 @@ function mediumAttack() {
     if(hitship && index>1) hitCoordinates.sort();
   }
 
-  index = hitCoordinates.length;
+  index = hitCoordinates.length; //updates the length of array
 
   if(hitship && index>1){ //checks to see if there are different ships in the hit coordinates array
     let tempValue = "";
@@ -1612,7 +1612,7 @@ function mediumAttack() {
     if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
       let shipNumber = 0;
 
-      for(let i=0; i<hitCoordinates.length; i++)
+      for(let i=0; i<hitCoordinates.length; i++) //goes through all the hitCoordinates
       {
         let tempValue = " ";
         let tempRow = 0; tempCol = 0;
@@ -1623,9 +1623,9 @@ function mediumAttack() {
         if(tempValue == 3) tempRow = 10;
         else tempRow = tempValue.charCodeAt(1)-49;
 
-        shipNumber= p1ShipLoc[tempRow][tempCol];
+        shipNumber= p1ShipLoc[tempRow][tempCol]; //declares the ship number
 
-        for(let j=0; j<hitCoordinates.length; j++) {
+        for(let j=0; j<hitCoordinates.length; j++) { //compares each hit coordinate based off the one at index i
           let compare = "";
           let compareRow = 0, compareCol = 0;
 
@@ -1634,10 +1634,10 @@ function mediumAttack() {
           if(compare == 3) compareRow = 10;
           else compareRow = compare.charCodeAt(1)-49;
 
-          if(shipNumber == p1ShipLoc[compareRow][compareCol]) tally++;
+          if(shipNumber == p1ShipLoc[compareRow][compareCol]) tally++; //if the ship numbers are the same add a tally
 
-          if(tally == shipNumber) {
-            hitCoordinates = hitCoordinates.filter(callback);
+          if(tally == shipNumber) { //if they equal each other that means a ship has all of its spots in hitCoordinates meaning its sunk
+            hitCoordinates = hitCoordinates.filter(callback); //removes each hitCoordinate with that shipNumber sunk
 
             function callback(currentHit) {
               let currentRow=0, currentCol=0;
@@ -1649,7 +1649,7 @@ function mediumAttack() {
               return (p1ShipLoc[currentRow][currentCol] != shipNumber);
             }
 
-            i = -1;
+            i = -1; //resets i to so that it won't skip other potential ships sunk due to special attack
           }
         }
       }
