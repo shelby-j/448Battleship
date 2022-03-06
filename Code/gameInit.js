@@ -733,6 +733,8 @@ function AIsetup() { //regardless of difficulty, it setups a randomized board fo
   }
   AIships += "]";
 
+  console.log(AIships);
+
   window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated)); //saving
   window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
 
@@ -1613,6 +1615,7 @@ function hardAttack() {
 
   enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate); //removes that spot from the array
   attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
+  console.log(enemyShips);
 
   if(specCountP2 > 0) //handling the special case of the special attack
   {
@@ -1622,7 +1625,9 @@ function hardAttack() {
     col = specAttackCoordinate.charCodeAt(0)-65;
     if(specAttackCoordinate.length == 3) row = 10;
     else row = specAttackCoordinate.charCodeAt(1)-49;
-
+    console.log(col);
+    console.log(row);
+    console.log(p1ShipLoc);
     for(let i=0; i<3; i++){
       for(let j=0; j<3; j++) {
         if((row-1+i >= 0 && row-1+i < 10) || (col-1+j >= 0 && col-1+j < 10)) {
@@ -1638,6 +1643,7 @@ function hardAttack() {
     }
   }
 
+  console.log(enemyShips);
   markAIAttack(attackCoordinate);
 }
 
