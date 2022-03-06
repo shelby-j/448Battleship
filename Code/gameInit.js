@@ -1592,6 +1592,7 @@ function mediumAttack() {
     }
   }
 }
+
 function hardAttack() {
   let attackCoordinate = "";
   let length;
@@ -1620,6 +1621,10 @@ function hardAttack() {
     col = specAttackCoordinate.charCodeAt(0)-65;
     if(specAttackCoordinate.length == 3) row = 10;
     else row = specAttackCoordinate.charCodeAt(1)-49;
+    console.log("col:" + String.fromCharCode(col+65));
+    if (row == 9) console.log("row: 10");
+    else console.log("row: " + String.fromCharCode(row+49));
+
 
     for(let i=0; i<3; i++){
       for(let j=0; j<3; j++) {
@@ -1629,16 +1634,19 @@ function hardAttack() {
             if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
             else specAttackHit = String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
 
+            console.log("specAtttackHit: " + specAttackHit)
+
             enemyShips = enemyShips.filter((value, temp) => value != specAttackHit);
+            console.log("EnemyShips: " + enemyShips);
           }
         }
       }
     }
   }
+  console.log("Temp: " + temp);
 
   markAIAttack(attackCoordinate);
 }
-
 
 function markAIAttack(attackCoordinate) {//adjusts the boards and buttons for the game
 
