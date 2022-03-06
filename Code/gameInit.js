@@ -1459,22 +1459,20 @@ function mediumAttack() {
       else horizontalShip = true; //if it wasn't placed vertically then it was horizontally placed
 
       //Get the ships Number of firstHit and lastHit
+      //Get the column for firstCol and LastCol
       let firstCol = firstHit.charCodeAt(0) - 65;
       let lastCol = lastHit.charCodeAt(0) - 65;
 
+      //Get the row for firstRow and lastRow
       let firstRow = Number(firstHit.substring(1, firstHit.length))-1;
       let lastRow = Number(lastHit.substring(1, lastHit.length))-1;
 
-      console.log(firstCol + " " + firstCol);
-      console.log(lastRow + " " + lastCol);
 
-      console.log(p1ShipLoc);
-
-      console.log(p1ShipLoc[firstRow]);
-      console.log( p1ShipLoc[lastRow]);
+      //If both the first and last hit are not the same ship, 
 
       if(p1ShipLoc[firstRow][firstCol] != p1ShipLoc[lastRow][lastCol])
       {
+        //Set verticalShip and horizontalShip to be false
         verticalShip = false;
         horizontalShip = false;
       }
