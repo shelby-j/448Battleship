@@ -647,7 +647,8 @@ function getShipsForP1() {
     p1ShipLocArr= getShipsLocArry(Player1Ships);
     document.getElementById("getShipsForP2Btn").disabled = false;
     document.getElementById("showShipsForP1Btn").disabled = false;
-    document.getElementById("P1Ships").innerHTML = Player1Ships  + " ships locations!";
+    //In the paragraph with id P1Ships, tell the user that Player 1's Board is set up
+    document.getElementById("P1Ships").innerHTML = "Player 1 has set their board";
     document.getElementById("getShipsForP1Btn").disabled = true;
 
     if(AIactivated) AIsetup();
@@ -731,6 +732,8 @@ function AIsetup() { //regardless of difficulty, it setups a randomized board fo
     }
   }
   AIships += "]";
+
+  console.log(AIships);
 
   window.localStorage.setItem("AIactivated", JSON.stringify(AIactivated)); //saving
   window.localStorage.setItem("difficulty", JSON.stringify(difficulty));
@@ -822,7 +825,8 @@ function getShipsForP2() {
     p2ShipLocArr= getShipsLocArry(Player2Ships);
     document.getElementById("showShipsForP1Btn").disabled = true;
     document.getElementById("showShipsForP2Btn").disabled = false;
-    document.getElementById("P2Ships").innerHTML = Player2Ships  + " ships locations!";
+    //Tells Player 2 that their board is set up
+    document.getElementById("P2Ships").innerHTML = "Player 2 has set their board";
     document.getElementById("getShipsForP2Btn").disabled = true;
     document.getElementById("playGameBtn").disabled = false;
     window.localStorage.setItem("p1ShipLoc", JSON.stringify(p1ShipLoc)); // Saving
@@ -1592,6 +1596,7 @@ function mediumAttack() {
     }
   }
 }
+
 function hardAttack() {
   let attackCoordinate = "";
   let length;
@@ -1609,36 +1614,63 @@ function hardAttack() {
   index = Math.floor(Math.random() * length); //randomizes an index of the enemy ships
   attackCoordinate += enemyShips[index]; //sets that spot as the attack location
 
+  //Create and set specAttackCoordinate to attackCoordinate
+  //Only used for special attack
+  let specAttackCoordinate = String(attackCoordinate);
+
   enemyShips = enemyShips.filter((value, temp) => value != attackCoordinate); //removes that spot from the array
   attackCoordinate = "[" + attackCoordinate.toUpperCase() + "]";
+  console.log(enemyShips);
 
   if(specCountP2 > 0) //handling the special case of the special attack
   {
-    let specAttackCoordinate = String(enemyShips[index]);
     let row=0, col=0;
 
-    col = specAttackCoordinate.charCodeAt(0)-65;
-    if(specAttackCoordinate.length == 3) row = 10;
+    //Set col to the first character of specAttackCoordainte by 97
+    col = specAttackCoordinate.charCodeAt(0)-97;
+
+    //If specAttackCoordinate length is 3, set row to 9
+    //Otherwise, let it bet the first carhacter of specAttackCoordiante - 49
+    if(specAttackCoordinate.length == 3) row = 9;
     else row = specAttackCoordinate.charCodeAt(1)-49;
+    console.log("col:" + String.fromCharCode(col+65));
+    if (row == 9) console.log("row: 10");
+    else console.log("row: " + String.fromCharCode(row+49));
+
+
+    //Console logs
+    console.log(specAttackCoordinate);
+    console.log(col);
+    console.log(row);
+    console.log(p1ShipLoc);
+
 
     for(let i=0; i<3; i++){
       for(let j=0; j<3; j++) {
-        if((row-1+i >= 0 && row-1+i < 10) || (col-1+j >= 0 && col-1+j < 10)) {
+        //Changed || to && so that only when both row and col is valid can they be accepted
+        if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >= 0 && col-1+j < 10)) {
           if(p1ShipLoc[row-1+i][col-1+j] != 0){
             let specAttackHit = "";
-            if(row == 9) specAttackHit = String.fromCharCode(col+64+j) + "10";
-            else specAttackHit = String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
 
+            console.log("specAtttackHit: " + specAttackHit)
+
+            //For each specAttackHit, change the first character to be col + 99 + j
+            if(row == 9) specAttackHit = String.fromCharCode(col+96+j) + "10";
+            else specAttackHit = String.fromCharCode(col+96+j) + String.fromCharCode(row+48+i);
+
+            console.log(specAttackHit);
             enemyShips = enemyShips.filter((value, temp) => value != specAttackHit);
+            console.log("EnemyShips: " + enemyShips);
           }
         }
       }
     }
   }
+  console.log("Temp: " + temp);
 
+  console.log(enemyShips);
   markAIAttack(attackCoordinate);
 }
-
 
 function markAIAttack(attackCoordinate) {//adjusts the boards and buttons for the game
 
