@@ -1581,7 +1581,14 @@ function mediumAttack() {
     if(tempValue == 3) tempRow = 10;
     else tempRow = tempValue.charCodeAt(1)-49;
 
-    if(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) differentShips = true;
+    console.log(p1ShipLoc[row][col]);
+    console.log(p1ShipLoc[tempRow][tempCol]);
+    console.log(p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]);
+
+    if((p1ShipLoc[row][col] != p1ShipLoc[tempRow][tempCol]) && (p1ShipLoc[row][col] !=0 && p1ShipLoc[tempRow][tempCol] !=0)) {
+      differentShips = true;
+    }
+    console.log(differentShips);
   }
   if(sunkCheck != Gameover('P2')) { //when the number of sunk ships changes, it will activate
     if(differentShips) { //only removes the ship spots where the ship was sunk assuming there were two ships in the hit coordinates
@@ -1594,6 +1601,7 @@ function mediumAttack() {
         let tempValue = "";
         let tempRow = 0; tempCol = 0;
 
+        console.log("tempValue:" + tempValue);
         tempValue = hitCoordinates[i];
         tempCol = tempValue.charCodeAt(0)-65;
         if(tempValue == 3) tempRow = 10;
