@@ -1439,14 +1439,21 @@ function mediumAttack() {
   let verticalShip = false, horizontalShip = false;
   let firstHit; let lastHit;
   let index = 0;
+  let specBoolHit = false;
 
 
   if(hitship) { //when a random attack hits a ship, we enter this if statement
     index = hitCoordinates.length;
+    console.log("index: " + index);
     temp = String(hitCoordinates[index-1]);
+    console.log("temp: " + temp +" "+ typeof temp);
+    console.log(hitCoordinates[index-1]);
+    console.log(hitCoordinates);
     col = temp.charCodeAt(0)-65; //establishes col value
     if(temp.length == 3) row = 10; //establishes row value
     else row = temp.charCodeAt(1)-49;
+    console.log("col:" + col);
+    console.log("row:" + row);
 
     if(index > 1){ //when there is more than one ship, we can determine if it's a vertical or horizontal ship and attack according
 
@@ -1536,10 +1543,12 @@ function mediumAttack() {
         if((row-1+i >= 0 && row-1+i < 10) && (col-1+j >=0 && col-1+j < 10)) {
           if(p1ShipLoc[row-1+i][col-1+j] != 0 && p2sFireLoc[row-1+i][col-1+j] == 0) {
             let specAttackHit ="";
-            if(row-1+j==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
+            if(row-1+i==9) specAttackHit += String.fromCharCode(col+64+j) + "10";
             else specAttackHit += String.fromCharCode(col+64+j) + String.fromCharCode(row+48+i);
             hitCoordinates.push(specAttackHit);
+            console.log("Hit Coordinates: " + hitCoordinates);
             hitship = true;
+            specBoolHit = true;
           }
         }
       }
@@ -1547,7 +1556,7 @@ function mediumAttack() {
   }
 
   markAIAttack(temp);
-  if(p1ShipLoc[row][col] != 0) { //checks to see if there was a ship present and will sort the array
+  if(p1ShipLoc[row][col] != 0 || specBoolHit) { //checks to see if there was a ship present and will sort the array
     hitship = true; 
     if(col < 9) if(p2sFireLoc[row][col+1] == 1 && horizontalShip) hitCoordinates.sort();
     else if(col == 9 && horizontalShip) hitCoordinates.sort();
@@ -1595,6 +1604,8 @@ function mediumAttack() {
       hitship = false;
     }
   }
+
+  console.log(hitCoordinates);
 }
 
 function hardAttack() {
